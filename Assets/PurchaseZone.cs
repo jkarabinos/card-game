@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//John Karabinos
+
 public class PurchaseZone : MonoBehaviour {
 
 	// Use this for initialization

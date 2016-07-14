@@ -10,7 +10,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	public int cardCount = 10;
 
 
-	public Draggable.Type typeOfCard = Draggable.Type.ACTION;
+	public CardObject.Type typeOfCard = CardObject.Type.ACTION;
 
 
 	public void OnPointerEnter(PointerEventData eventData){
@@ -27,16 +27,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	public void OnDrop(PointerEventData eventData){
 		Debug.Log (eventData.pointerDrag.name + "OnDrop to " + gameObject.name);
 
+		CardObject c = eventData.pointerDrag.GetComponent<CardObject>();
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
-		if(d != null){
-			if(typeOfCard == d.typeOfCard){
+		if(c != null){
+			if(typeOfCard == c.typeOfCard){
 				d.newParent = this.transform;
 
 				//if the card is a treasure card
-				if(d.typeOfCard == Draggable.Type.TREASURE){
+				if(c.typeOfCard == CardObject.Type.TREASURE){
 					Text textBox = this.transform.parent.GetComponentInChildren<Text>();
 					int currentValue = int.Parse(textBox.text);
-					currentValue += d.value;
+					currentValue += c.value;
 					textBox.text  = currentValue.ToString();
 				}
 			}
@@ -65,16 +66,16 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		for( int i = 0; i < cardCount; i++ ){
 
 			GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
-			var draggable = card.GetComponent<Draggable>();
-			draggable.value = 1;
+			var cardScript = card.GetComponent<CardObject>();
+			cardScript.value = 1;
 
 			Sprite spr = Resources.Load <Sprite> ("card_game/copper");
 
 			//for arrows
 			if(i>6){
 				spr = Resources.Load <Sprite> ("card_game/arrow");
-				draggable.value = 0;
-				draggable.damage = 1;
+				cardScript.value = 0;
+				cardScript.damage = 1;
 			}
 
 			Image cardImage = card.GetComponent<Image>();

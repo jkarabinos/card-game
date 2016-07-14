@@ -15,9 +15,9 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 
 
 		GameObject card = eventData.pointerEnter;
-		var draggable = card.GetComponent<Draggable>();
-		
-		if ( draggable.cost > 3 ){
+		CardObject cardScript = card.GetComponent<CardObject>();
+
+		if ( cardScript.cost > 3 ){
 			//for testing purposes
 			Debug.Log( "I can buy this card" );
 		}else{

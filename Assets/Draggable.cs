@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+//test
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
 

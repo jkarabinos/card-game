@@ -14,6 +14,7 @@ GameObject:
   - 114: {fileID: 11462760}
   - 225: {fileID: 22553360}
   - 114: {fileID: 11422142}
+  - 114: {fileID: 11489078}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -89,10 +90,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newParent: {fileID: 0}
-  typeOfCard: 0
-  value: 1
+--- !u!114 &11489078
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 127234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39770749f74cb43d890beba741f62a2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeOfCard: 5
+  value: 0
   cost: 0
   damage: 0
+  isPurchasable: 0
+  isDraggable: 0
 --- !u!222 &22250458
 CanvasRenderer:
   m_ObjectHideFlags: 1

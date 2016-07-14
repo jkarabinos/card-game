@@ -19,5 +19,8 @@ public class CardObject : MonoBehaviour {
 	//if the card if purchasable
 	public bool isPurchasable;
 
+	//if we want the card to be able to be dragged by the user
+	public bool isDraggable;
+
 
 }

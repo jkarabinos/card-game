@@ -17,15 +17,29 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 		GameObject card = eventData.pointerEnter;
 		CardObject cardScript = card.GetComponent<CardObject>();
 
-		if ( cardScript.cost > 3 ){
-			//for testing purposes
-			Debug.Log( "I can buy this card" );
+
+		if(cardScript.isPurchasable){
+			if ( cardScript.cost > 3 ){
+				//for testing purposes
+				purchaseCard(card);
+				
+			}else{
+				Debug.Log( "this card costs 3 or less" ); 
+			}
 		}else{
-			Debug.Log( "this card costs 3 or less" ); 
+			Debug.Log( "this card is not purchasable" );
 		}
+		
 
 	}
 
+
+	//subtract the cost from the user's coins add a copy of the card to the discard pile
+	public void purchaseCard(GameObject card){
+		Debug.Log( "Purchase the card" ); 
+		
+		
+	}
 
 
 	// Use this for initialization

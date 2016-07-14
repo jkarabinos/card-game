@@ -28,6 +28,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Debug.Log (eventData.pointerDrag.name + "OnDrop to " + gameObject.name);
 
 		CardObject c = eventData.pointerDrag.GetComponent<CardObject>();
+		if(!c.isDraggable){
+			return;
+		}
+
+
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
 			if(typeOfCard == c.typeOfCard){
@@ -68,6 +73,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
 			var cardScript = card.GetComponent<CardObject>();
 			cardScript.value = 1;
+			cardScript.isDraggable = true;
+			cardScript.isPurchasable = false;
 
 			Sprite spr = Resources.Load <Sprite> ("card_game/copper");
 

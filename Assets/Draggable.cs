@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
 //test
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
@@ -32,8 +34,19 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		typeOfCard = Type.TREASURE;
 	}
 
+	GameObject placeholder = null;
+
 	public void OnBeginDrag(PointerEventData eventData){
 		Debug.Log ("OnBeginDrag");
+
+		placeholder = new GameObject();
+		placeholder.transform.SetParent( this.transform.parent.parent);
+		LayoutElement le = placeholder.AddComponent<LayoutElement> ();
+		le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
+		le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
+		le.flexibleWidth = 0;
+		le.flexibleHeight = 0;
+
 
 		//the original parent is the hand, the new parent might change if we move the card
 		originalParent = this.transform.parent;

@@ -86,7 +86,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	//arrange the cards in the deck array in a random order
 	public void shuffleDeck(){
-		//GameObject[] tempDeck1 = new GameObject[cardCount];
 		var tempDeck = new List<GameObject>(deck);
 
 		System.Random rnd = new System.Random();
@@ -100,23 +99,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			
 
 		}
-		/*
 
-		for(int i = 0; i < cardCount; i++ ){
-			int index = i;
-			GameObject[] tempDeck2 = new GameObject[cardCount-i];
-			Array.Copy(tempDeck1, 0, tempDeck2, 0, i);
-			//Array.Copy(tempDeck1, index + 1, tempDeck2, index, tempDeck2.Length - index - 1);
-			//GameObject card = tempDeck1[index];
-			//tempDeck1 = tempDeck2;
-
-			//deck[i] = card;
-		}
-*/
-
-
-		//Random rnd = new Random();
-		//int randIndex = rnd.Next(0, cardCount); 
 	}
 
 

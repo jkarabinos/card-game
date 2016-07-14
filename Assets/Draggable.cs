@@ -13,7 +13,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 	Transform originalParent = null;
 	public Transform newParent = null;
 	int siblingIndex = 0;
-
+	GameObject placeholder = null;
 
 	//the type of card
 	public enum Type { ACTION, ATTACK, MONSTER, HERO, BUILDING, TREASURE }
@@ -34,14 +34,14 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		typeOfCard = Type.TREASURE;
 	}
 
-	GameObject placeholder = null;
+	
 
 	public void OnBeginDrag(PointerEventData eventData){
 		Debug.Log ("OnBeginDrag");
 
 		placeholder = new GameObject();
-		placeholder.transform.SetParent( this.transform.parent.parent);
-		LayoutElement le = placeholder.AddComponent<LayoutElement> ();
+		placeholder.transform.SetParent( this.transform.parent );
+		LayoutElement le = placeholder.AddComponent<LayoutElement>();
 		le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
 		le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
 		le.flexibleWidth = 0;
@@ -64,6 +64,21 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		//Debug.Log ("OnDrag");
 
 		this.transform.position = eventData.position;
+
+		int newSiblingIndex = originalParent.childCount;
+
+		for (int i = 0; i < originalParent.childCount; i++) {
+			if(this.transform.position.x < originalParent.GetChild(i).position.x){
+
+				newSiblingIndex = i;
+
+				if (placeholder.transform.GetSiblingIndex() < newSiblingIndex)
+					newSiblingIndex--;
+
+				break;
+			}
+		}
+		placeholder.transform.SetSiblingIndex(newSiblingIndex);
 	}
 
 	public void OnEndDrag(PointerEventData eventData){
@@ -75,8 +90,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		//to keep the card in the same place in the hand
 		if(originalParent == newParent){
 			//if the card will remain in the hand of the user, keep it at the same sibling index
-			this.transform.SetSiblingIndex( siblingIndex );
+			//this.transform.SetSiblingIndex( siblingIndex );
+			this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() );
+
+
 		}
+		Destroy(placeholder);
 
 		GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}

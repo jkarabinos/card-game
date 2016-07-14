@@ -3,7 +3,10 @@ using System.Collections;
 
 public class CardObject : MonoBehaviour {
 
+	//the id of the card
+	public int id;
 
+	//the type of card
 	public enum Type { ACTION, ATTACK, MONSTER, HERO, BUILDING, TREASURE }
 	public Type typeOfCard = Type.TREASURE;
 	
@@ -21,6 +24,8 @@ public class CardObject : MonoBehaviour {
 
 	//if we want the card to be able to be dragged by the user
 	public bool isDraggable;
+
+
 
 
 }

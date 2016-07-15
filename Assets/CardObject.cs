@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CardObject : MonoBehaviour {
@@ -8,6 +8,7 @@ public class CardObject : MonoBehaviour {
 
 	//the type of card
 	public enum Type { ACTION, ATTACK, MONSTER, HERO, BUILDING, TREASURE }
+	
 	public Type typeOfCard = Type.TREASURE;
 	
 	//the coin value of the card

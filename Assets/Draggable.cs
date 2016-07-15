@@ -92,6 +92,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
 
 		}
+		else{
+			cardScript.isDraggable = false;
+		}
 		Destroy(placeholder);
 
 		GetComponent<CanvasGroup>().blocksRaycasts = true;

@@ -44,6 +44,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 					int currentValue = int.Parse(textBox.text);
 					currentValue += c.value;
 					textBox.text  = currentValue.ToString();
+
 				}
 			}
 		}
@@ -78,20 +79,27 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			
 			GameObject card;
 
+			CardObject cardScript;
+
 			if( i < 7){
 				card = createCardForId(0, globalDict);
+				cardScript = card.GetComponent<CardObject>();
+				cardScript.typeOfCard = CardObject.Type.TREASURE;
+
 			}else{
 				card = createCardForId(1, globalDict);
+				cardScript = card.GetComponent<CardObject>();
+				cardScript.typeOfCard = CardObject.Type.ATTACK;
 			}
 
+			cardScript.isDraggable = true;
+			cardScript.isPurchasable = false;
 
 			/*GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
 			var cardScript = card.GetComponent<CardObject>();
 			cardScript.value = 1;*/
 
-			var cardScript = card.GetComponent<CardObject>();
-			cardScript.isDraggable = true;
-			cardScript.isPurchasable = false;
+		
 
 			/*Sprite spr = Resources.Load <Sprite> ("card_game/copper");
 

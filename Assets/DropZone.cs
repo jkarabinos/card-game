@@ -70,16 +70,30 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 		CardDictionary cardDictionary = new CardDictionary();
 		cardDictionary.readFile();
+		Dictionary< string, Dictionary<string, string> > globalDict = cardDictionary.globalDictionary;
+		Debug.Log (globalDict.Count + " is the number of cards");
 		
 		for( int i = 0; i < cardCount; i++ ){
 
-			GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
+			
+			GameObject card;
+
+			if( i < 7){
+				card = createCardForId(0, globalDict);
+			}else{
+				card = createCardForId(1, globalDict);
+			}
+
+
+			/*GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
 			var cardScript = card.GetComponent<CardObject>();
-			cardScript.value = 1;
+			cardScript.value = 1;*/
+
+			var cardScript = card.GetComponent<CardObject>();
 			cardScript.isDraggable = true;
 			cardScript.isPurchasable = false;
 
-			Sprite spr = Resources.Load <Sprite> ("card_game/copper");
+			/*Sprite spr = Resources.Load <Sprite> ("card_game/copper");
 
 			//for arrows
 			if(i>6){
@@ -89,10 +103,34 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			}
 
 			Image cardImage = card.GetComponent<Image>();
-			cardImage.sprite = spr;
+			cardImage.sprite = spr;*/
+
+
 
 			deck[i] = card; 
 		}
+	}
+
+
+	public GameObject createCardForId(int id, Dictionary< string, Dictionary<string, string> > globalDict){
+		//get the dictionary for the individual card, this will hold values like cost and damage
+		string idString = id.ToString();
+		Dictionary<string, string> individualCardDict;
+		individualCardDict = globalDict[idString];
+
+		//set the basic properties of the card
+		GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
+		var cardScript = card.GetComponent<CardObject>();
+		cardScript.value = int.Parse(individualCardDict["value"]);
+		cardScript.damage = int.Parse(individualCardDict["damage"]);
+		
+		//set the appropriate image of the card
+		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
+		Image cardImage = card.GetComponent<Image>();
+		cardImage.sprite = spr;
+
+
+		return card;
 	}
 
 	//arrange the cards in the deck array in a random order

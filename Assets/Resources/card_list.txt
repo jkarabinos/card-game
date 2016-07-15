@@ -1,0 +1,6 @@
+"name":"Copper",
+"value":"1",
+"damage":"0",
+"imageName":"copper",
+"cost":"0"
+"id":"0"

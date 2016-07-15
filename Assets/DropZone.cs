@@ -67,6 +67,9 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	//set the deck with 7 coppers and 3 arrows to start the game
 	public void initializeDeck(){
 		deck = new GameObject[cardCount];
+
+		CardDictionary cardDictionary = new CardDictionary();
+		cardDictionary.readFile();
 		
 		for( int i = 0; i < cardCount; i++ ){
 

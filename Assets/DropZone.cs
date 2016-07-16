@@ -189,9 +189,22 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 		return null;
 	}
+
+	public void clearDropZone(DropZone dropZone){
+		var childList = new List<Transform>();
+		foreach(Transform child in dropZone.transform){
+			childList.Add(child);
+		}
+		while(childList.Count > 0){
+			childList[0].SetParent(null);
+			childList.RemoveAt(0);			
+		}
+	}
 	public void endTurn(){
 		DropZone tabletop = dropZoneForName("Tabletop");
 		Debug.Log(tabletop.zoneName);
+		clearDropZone(tabletop);
+		clearDropZone(this);
 		drawHand();
 	}
 

@@ -62,6 +62,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	public void startGame(){
 		initializeDeck();
+		initializeDiscard();
 		shuffleDeck();
 		drawHand();
 	}
@@ -120,6 +121,10 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 	}
 
+	public void initializeDiscard(){
+		var dicardPile = new List<GameObject>();
+
+	}
 
 	public GameObject createCardForId(int id, Dictionary< string, Dictionary<string, string> > globalDict){
 		//get the dictionary for the individual card, this will hold values like cost and damage
@@ -169,6 +174,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 
 
+	}
+
+	public void endTurn(){
+
+		drawHand();
 	}
 
 }

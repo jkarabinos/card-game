@@ -46,6 +46,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 					textBox.text  = currentValue.ToString();
 
 				}
+				
 			}
 		}
 		

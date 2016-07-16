@@ -3,12 +3,13 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler {
 
 	public GameObject[] deck;
 	public int cardCount = 10;
-
+	public string zoneName;
 
 	public CardObject.Type typeOfCard = CardObject.Type.ACTION;
 
@@ -122,6 +123,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	}
 
 	public void initializeDiscard(){
+		//create a discard pile to store used cards
 		var dicardPile = new List<GameObject>();
 
 	}
@@ -175,9 +177,21 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 
 	}
-
+	public DropZone dropZoneForName(string name){
+		Transform canvas = this.transform.parent;
+		foreach(Transform child in canvas){
+			DropZone dropZone = child.GetComponent<DropZone>();
+			if (dropZone != null){
+				if (String.Compare (name, dropZone.zoneName) == 0){
+					return dropZone;
+				}
+			}
+		}
+		return null;
+	}
 	public void endTurn(){
-
+		DropZone tabletop = dropZoneForName("Tabletop");
+		Debug.Log(tabletop.zoneName);
 		drawHand();
 	}
 

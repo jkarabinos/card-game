@@ -7,10 +7,9 @@ using System;
 
 public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler {
 
-	public GameObject[] deck;
-	public int cardCount = 10;
+	public List<GameObject> deck;
 	public string zoneName;
-
+	public List<GameObject> discardPile;
 	public CardObject.Type typeOfCard = CardObject.Type.ACTION;
 
 
@@ -53,9 +52,19 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		
 	}
 
+	//draws a card and checks to see if the deck is empty
 	public void drawCard(){
-		GameObject card = deck[cardCount-1];
-		cardCount --; 
+		if (deck.Count <= 0){
+			int cardCount = discardPile.Count;
+			for( int i = 0; i <cardCount; i ++ ){
+				deck.Add(discardPile[0]);
+				discardPile.RemoveAt(0);
+			}
+			shuffleDeck();
+
+		}
+		GameObject card = deck[deck.Count - 1];
+		deck.RemoveAt(deck.Count - 1);		
 
 		card.transform.SetParent( this.transform );
 	}
@@ -70,14 +79,14 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	//set the deck with 7 coppers and 3 arrows to start the game
 	public void initializeDeck(){
-		deck = new GameObject[cardCount];
+		deck = new List<GameObject>();
 
 		CardDictionary cardDictionary = new CardDictionary();
 		cardDictionary.readFile();
 		Dictionary< string, Dictionary<string, string> > globalDict = cardDictionary.globalDictionary;
 		Debug.Log (globalDict.Count + " is the number of cards");
 		
-		for( int i = 0; i < cardCount; i++ ){
+		for( int i = 0; i < 10; i++ ){
 
 			
 			GameObject card;
@@ -118,14 +127,13 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 
 
-			deck[i] = card; 
+			deck.Add(card); 
 		}
-	}
+			}
 
+	//create a discard pile to store used cards
 	public void initializeDiscard(){
-		//create a discard pile to store used cards
-		var dicardPile = new List<GameObject>();
-
+		discardPile = new List<GameObject>();
 	}
 
 	public GameObject createCardForId(int id, Dictionary< string, Dictionary<string, string> > globalDict){
@@ -151,19 +159,26 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	//arrange the cards in the deck array in a random order
 	public void shuffleDeck(){
-		var tempDeck = new List<GameObject>(deck);
+		List <GameObject> tempDeck = new List<GameObject>();
+		int cardCount = deck.Count;
+
+		for( int i = 0; i <cardCount; i ++ ){
+			tempDeck.Add(deck[0]);
+			deck.RemoveAt(0);
+		}
 
 		System.Random rnd = new System.Random();
+		
 		
 
 		for( int i = 0; i < cardCount; i++ ){
 			int randIndex = rnd.Next(0, tempDeck.Count); 
 			GameObject card = tempDeck[randIndex];
 			tempDeck.RemoveAt(randIndex);
-			deck[i] = card;
-			
+			deck.Add(card);			
 
 		}
+		
 
 	}
 
@@ -177,6 +192,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 
 	}
+
+	//returns a DropZone script for the given name
 	public DropZone dropZoneForName(string name){
 		Transform canvas = this.transform.parent;
 		foreach(Transform child in canvas){
@@ -190,9 +207,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		return null;
 	}
 
+	//clears a dropzone for the given dropZone
 	public void clearDropZone(DropZone dropZone){
 		var childList = new List<Transform>();
 		foreach(Transform child in dropZone.transform){
+			discardPile.Add(child.gameObject);
 			childList.Add(child);
 		}
 		while(childList.Count > 0){
@@ -200,12 +219,15 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			childList.RemoveAt(0);			
 		}
 	}
+
+	//Ends your turn.  Clears the tabletop and hand.  Draws a new hand.
 	public void endTurn(){
 		DropZone tabletop = dropZoneForName("Tabletop");
-		Debug.Log(tabletop.zoneName);
 		clearDropZone(tabletop);
 		clearDropZone(this);
+		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		drawHand();
 	}
+
 
 }

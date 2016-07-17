@@ -15,25 +15,36 @@ public class GameLogic : MonoBehaviour {
 	public DropZone hand;
 	public Dictionary< string, Dictionary<string, string> > globalDict;
 	public int totalCoin;
+	public int totalBuys;
 	
 	public void purchaseCard (int cardID){
 		GameObject card = createCardForId(cardID, globalDict);
 		CardObject cardScript = card.GetComponent<CardObject>();
 		int costOfCard = cardScript.cost;
-		if(totalCoin >= costOfCard){
-			DropZone tabletop = dropZoneForName("Tabletop");
-			card.transform.SetParent(tabletop.transform);
-			updateMoneyCounter(-costOfCard);
+		if(totalBuys > 0){
+			if(totalCoin >= costOfCard){
+				DropZone tabletop = dropZoneForName("Tabletop");
+				card.transform.SetParent(tabletop.transform);
+				updateMoneyCounter(-costOfCard);
+			}
+			totalBuys --; 
 		}
 		Debug.Log("The card ID is " +cardScript.id);
 	}
 
+	//draws the correct number of cards if a player plays a card that draws cards
 	public void drawDuringTurn(int drawNumber){
 		for (int i = 0; i < drawNumber; i++ ){
 		drawCard();
 		}
 	}
 
+	//updates totalBuys.  Is called from dropzone like drawDuringTurn()
+	public void updateBuys(int buyNumber){
+		totalBuys += buyNumber;
+	}
+
+	//is called in the DropZone script when a player drops a treasure onto the tabletop.  Updates the total coin and textual representation
 	public void updateMoneyCounter(int money){
 		Text textBox = this.transform.GetComponentInChildren<Text>();
 		totalCoin += money;
@@ -71,6 +82,7 @@ public class GameLogic : MonoBehaviour {
 		shuffleDeck();
 		setPurchase();
 		totalCoin = 0;
+		totalBuys = 1;
 		drawHand();
 	}
 
@@ -129,6 +141,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.damage = int.Parse(individualCardDict["damage"]);
 		cardScript.cost = int.Parse(individualCardDict["cost"]);
 		cardScript.draw = int.Parse(individualCardDict["draw"]);
+		cardScript.buys = int.Parse(individualCardDict["buys"]);
 		cardScript.id = id;
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
@@ -208,6 +221,7 @@ public class GameLogic : MonoBehaviour {
 		clearDropZone(hand);
 		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		updateMoneyCounter(-totalCoin);
+		totalBuys = 1;
 		drawHand();
 	}
 }

@@ -4,6 +4,7 @@ damage:0
 imagePath:card_game/copper
 cost:0
 draw:0
+buys:0
 id:0
 ---
 name:Silver
@@ -12,6 +13,7 @@ damage:0
 imagePath:card_game/silver
 cost:3
 draw:0
+buys:0
 id:1
 ---
 name:Gold
@@ -20,6 +22,7 @@ damage:0
 imagePath:card_game/gold
 cost:6
 draw:0
+buys:0
 id:2
 ---
 name:Arrow
@@ -28,6 +31,7 @@ damage:1
 imagePath:card_game/arrow
 cost:2
 draw:0
+buys:0
 id:3
 ---
 name:BrightLance
@@ -36,6 +40,7 @@ damage:0
 imagePath:card_game/bright_lance
 cost:4
 draw:0
+buys:0
 id:4
 ---
 name:TactfulNegotiations
@@ -44,5 +49,6 @@ damage:0
 imagePath:card_game/tactful
 cost:5
 draw:2
+buys:1
 id:5
 ---

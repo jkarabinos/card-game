@@ -29,5 +29,7 @@ public class CardObject : MonoBehaviour {
 	//the number of cards we draw when this card is played
 	public int draw;
 
+	//the number of buys a player has
+	public int buys;
 
 }

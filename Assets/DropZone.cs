@@ -41,7 +41,8 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			if(typeOfCard == c.typeOfCard){
 				d.newParent = dropZoneForName("Tabletop").transform;
 				increaseTotalCoin(c);
-				gameLogic.drawDuringTurn(c.draw);				
+				gameLogic.drawDuringTurn(c.draw);
+				gameLogic.updateBuys(c.buys);				
 			}
 		}
 		

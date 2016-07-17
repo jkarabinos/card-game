@@ -7,6 +7,8 @@ using System;
 
 public class PurchasePanel : MonoBehaviour {
 
+	public string purchasePanelName;
+
 	public void initializePurchasePanel(GameLogic gameLogic, List<int> userBuild){
 		Debug.Log("Purchase Panel Operational!");
 		
@@ -21,7 +23,9 @@ public class PurchasePanel : MonoBehaviour {
 	void addCard(int cardID, GameLogic gameLogic){
 
 		GameObject card = gameLogic.createCardForId(cardID, gameLogic.globalDict);
-		setPurchasable(card);
+		if(String.Compare(purchasePanelName, "EnemyPurchasePanel") != 0 ){
+			setPurchasable(card);
+		}
 		card.transform.SetParent( this.transform ); 
 
 	}

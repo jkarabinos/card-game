@@ -15,22 +15,7 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 
 
 		GameObject card = eventData.pointerEnter;
-		CardObject cardScript = card.GetComponent<CardObject>();
-
-
-		if(cardScript.isPurchasable){
-			if ( cardScript.cost > 3 ){
-				//for testing purposes
-				purchaseCard(card);
-				
-			}else{
-				Debug.Log( "this card costs 3 or less" ); 
-			}
-		}else{
-			Debug.Log( "this card is not purchasable" );
-		}
-		
-
+		purchaseCard(card);
 	}
 
 
@@ -40,8 +25,9 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 		Transform canvas = this.transform.parent.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		CardObject cardObject = card.GetComponent<CardObject>();
-		gameLogic.purchaseCard(cardObject.id);
-
+		if(cardObject.isPurchasable == true){
+			gameLogic.purchaseCard(cardObject.id);
+		}	
 
 	}
 

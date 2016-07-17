@@ -37,21 +37,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		if(c != null){
 			if(typeOfCard == c.typeOfCard){
 				d.newParent = dropZoneForName("Tabletop").transform;
-
-				//if the card is a treasure card
-				if(c.typeOfCard == CardObject.Type.TREASURE){
-					Text textBox = this.transform.parent.GetComponentInChildren<Text>();
-					int currentValue = int.Parse(textBox.text);
-					currentValue += c.value;
-					textBox.text  = currentValue.ToString();
-
-				}
-				
+				increaseTotalCoin(c);				
 			}
 		}
 		
 	}
 
+	public void increaseTotalCoin(CardObject c){
+		Transform canvas = this.transform.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		gameLogic.updateMoneyCounter(c.value);
+	}
 	
 	//returns a DropZone script for the given name
 	public DropZone dropZoneForName(string name){

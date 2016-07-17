@@ -14,14 +14,25 @@ public class GameLogic : MonoBehaviour {
 	public List<GameObject> discardPile;
 	public DropZone hand;
 	public Dictionary< string, Dictionary<string, string> > globalDict;
+	public int totalCoin;
 	
 	public void purchaseCard (int cardID){
 		GameObject card = createCardForId(cardID, globalDict);
 		CardObject cardScript = card.GetComponent<CardObject>();
-
+		int costOfCard = cardScript.cost;
+		if(totalCoin >= costOfCard){
+			DropZone tabletop = dropZoneForName("Tabletop");
+			card.transform.SetParent(tabletop.transform);
+			updateMoneyCounter(-costOfCard);
+		}
 		Debug.Log("the card costs this " +cardScript.cost);
 	}
 
+	public void updateMoneyCounter(int money){
+		Text textBox = this.transform.GetComponentInChildren<Text>();
+		totalCoin += money;
+		textBox.text  = totalCoin.ToString();
+	}
 	//draws a card and checks to see if the deck is empty
 	public void drawCard(){
 		if (deck.Count <= 0){
@@ -34,8 +45,9 @@ public class GameLogic : MonoBehaviour {
 
 		}
 		GameObject card = deck[deck.Count - 1];
-		deck.RemoveAt(deck.Count - 1);		
-
+		deck.RemoveAt(deck.Count - 1);
+		CardObject cardObject = card.GetComponent<CardObject>();		
+		cardObject.isDraggable = true;
 		//move a card into the hand once it is drawn
 		card.transform.SetParent( hand.transform );
 	}
@@ -51,6 +63,7 @@ public class GameLogic : MonoBehaviour {
 		initializeDeck();
 		initializeDiscard();
 		shuffleDeck();
+		totalCoin = 0;
 		drawHand();
 	}
 
@@ -80,7 +93,6 @@ public class GameLogic : MonoBehaviour {
 				cardScript.typeOfCard = CardObject.Type.ATTACK;
 			}
 
-			cardScript.isDraggable = true;
 			cardScript.isPurchasable = false;
 
 			deck.Add(card); 
@@ -181,6 +193,7 @@ public class GameLogic : MonoBehaviour {
 		clearDropZone(tabletop);
 		clearDropZone(hand);
 		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
+		updateMoneyCounter(-totalCoin);
 		drawHand();
 	}
 }

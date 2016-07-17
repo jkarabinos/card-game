@@ -26,7 +26,8 @@ public class CardObject : MonoBehaviour {
 	//if we want the card to be able to be dragged by the user
 	public bool isDraggable;
 
-
+	//the number of cards we draw when this card is played
+	public int draw;
 
 
 }

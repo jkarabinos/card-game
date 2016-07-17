@@ -28,6 +28,12 @@ public class GameLogic : MonoBehaviour {
 		Debug.Log("The card ID is " +cardScript.id);
 	}
 
+	public void drawDuringTurn(int drawNumber){
+		for (int i = 0; i < drawNumber; i++ ){
+		drawCard();
+		}
+	}
+
 	public void updateMoneyCounter(int money){
 		Text textBox = this.transform.GetComponentInChildren<Text>();
 		totalCoin += money;
@@ -122,6 +128,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.value = int.Parse(individualCardDict["value"]);
 		cardScript.damage = int.Parse(individualCardDict["damage"]);
 		cardScript.cost = int.Parse(individualCardDict["cost"]);
+		cardScript.draw = int.Parse(individualCardDict["draw"]);
 		cardScript.id = id;
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);

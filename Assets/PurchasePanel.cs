@@ -7,10 +7,13 @@ public class PurchasePanel : MonoBehaviour {
 		Debug.Log("Purchase Panel Operational!");
 		GameObject silver = gameLogic.createCardForId(1, gameLogic.globalDict);
 		GameObject gold = gameLogic.createCardForId(2, gameLogic.globalDict);
+		GameObject tactfulNegotiations = gameLogic.createCardForId(5, gameLogic.globalDict);
 		setPurchasable(silver);
 		setPurchasable(gold);
+		setPurchasable(tactfulNegotiations);
 		silver.transform.SetParent(this.transform);
 		gold.transform.SetParent(this.transform);
+		tactfulNegotiations.transform.SetParent(this.transform);
 	}	
 
 	void setPurchasable(GameObject card){

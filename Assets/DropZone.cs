@@ -32,12 +32,16 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			return;
 		}
 
+		Transform canvas = this.transform.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
 			if(typeOfCard == c.typeOfCard){
 				d.newParent = dropZoneForName("Tabletop").transform;
-				increaseTotalCoin(c);				
+				increaseTotalCoin(c);
+				gameLogic.drawDuringTurn(c.draw);				
 			}
 		}
 		
@@ -48,6 +52,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		gameLogic.updateMoneyCounter(c.value);
 	}
+
 	
 	//returns a DropZone script for the given name
 	public DropZone dropZoneForName(string name){

@@ -29,9 +29,12 @@ public class GameLogic : MonoBehaviour {
 				gainCard(card);
 				updateMoneyCounter(-costOfCard);
 				totalBuys --; 
+			}else{
+				Destroy(card);
 			}
+		}else{
+			Destroy(card);
 		}
-		Debug.Log("The card ID is " +cardScript.id);
 	}
 
 
@@ -128,7 +131,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void setAllPurchasePanels(){
-		List<int> friendlyList = new List<int>(new int[] {6});
+		List<int> friendlyList = new List<int>(new int[] {6, 10});
 		List<int> neutralList = new List<int>(new int[] {0,1,2,3,4});
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");

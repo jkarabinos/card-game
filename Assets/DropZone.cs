@@ -36,7 +36,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
 			if(typeOfCard == c.typeOfCard){
-				d.newParent = this.transform;
+				d.newParent = dropZoneForName("Tabletop").transform;
 
 				//if the card is a treasure card
 				if(c.typeOfCard == CardObject.Type.TREASURE){

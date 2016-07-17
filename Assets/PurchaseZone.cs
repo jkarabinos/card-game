@@ -37,9 +37,10 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 	//subtract the cost from the user's coins add a copy of the card to the discard pile
 	public void purchaseCard(GameObject card){
 		Debug.Log( "Purchase the card" ); 
-
-
-		GameObject card1 = (GameObject)Instantiate(Resources.Load("Card"));
+		Transform canvas = this.transform.parent.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		CardObject cardObject = card.GetComponent<CardObject>();
+		gameLogic.purchaseCard(cardObject.id);
 
 
 	}

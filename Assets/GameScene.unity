@@ -1464,6 +1464,14 @@ Prefab:
       propertyPath: isPurchasable
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 11489078, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
+      propertyPath: cost
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11489078, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
+      propertyPath: id
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
   m_IsPrefabParent: 0

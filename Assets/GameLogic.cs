@@ -13,8 +13,14 @@ public class GameLogic : MonoBehaviour {
 	public List<GameObject> deck;
 	public List<GameObject> discardPile;
 	public DropZone hand;
-
+	public Dictionary< string, Dictionary<string, string> > globalDict;
 	
+	public void purchaseCard (int cardID){
+		GameObject card = createCardForId(cardID, globalDict);
+		CardObject cardScript = card.GetComponent<CardObject>();
+
+		Debug.Log("the card costs this " +cardScript.cost);
+	}
 
 	//draws a card and checks to see if the deck is empty
 	public void drawCard(){
@@ -54,7 +60,7 @@ public class GameLogic : MonoBehaviour {
 
 		CardDictionary cardDictionary = new CardDictionary();
 		cardDictionary.readFile();
-		Dictionary< string, Dictionary<string, string> > globalDict = cardDictionary.globalDictionary;
+		globalDict = cardDictionary.globalDictionary;
 		
 		for( int i = 0; i < 10; i++ ){
 
@@ -97,7 +103,7 @@ public class GameLogic : MonoBehaviour {
 		var cardScript = card.GetComponent<CardObject>();
 		cardScript.value = int.Parse(individualCardDict["value"]);
 		cardScript.damage = int.Parse(individualCardDict["damage"]);
-		
+		cardScript.cost = int.Parse(individualCardDict["cost"]);
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
 		Image cardImage = card.GetComponent<Image>();

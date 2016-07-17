@@ -12,3 +12,10 @@ imagePath:card_game/arrow
 cost:2
 id:1
 ---
+name:BrightLance
+value:0
+damage:0
+imagePath:card_game/bright_lance
+cost:4
+id:2
+---

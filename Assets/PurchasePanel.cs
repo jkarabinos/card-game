@@ -1,27 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
+using System;
 
 public class PurchasePanel : MonoBehaviour {
 
-	public void initializePurchasePanel(GameLogic gameLogic){
+	public void initializePurchasePanel(GameLogic gameLogic, List<int> userBuild){
 		Debug.Log("Purchase Panel Operational!");
-		/*GameObject silver = gameLogic.createCardForId(1, gameLogic.globalDict);
-		GameObject gold = gameLogic.createCardForId(2, gameLogic.globalDict);
-		GameObject tactfulNegotiations = gameLogic.createCardForId(5, gameLogic.globalDict);
-		setPurchasable(silver);
-		setPurchasable(gold);
-		setPurchasable(tactfulNegotiations);
-		silver.transform.SetParent(this.transform);
-		gold.transform.SetParent(this.transform);
-		tactfulNegotiations.transform.SetParent(this.transform);*/
-
-
-		addCard(0, gameLogic);
-		addCard(1, gameLogic);
-		addCard(2, gameLogic);
-		addCard(3, gameLogic);
-		addCard(4, gameLogic);
-		addCard(6, gameLogic);
+		
+		for( int i = 0; i < userBuild.Count; i++ ){
+			int cardID = userBuild[i];
+			addCard(cardID, gameLogic);
+		}
 	}	
 
 

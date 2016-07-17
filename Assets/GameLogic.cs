@@ -16,6 +16,9 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, string> > globalDict;
 	public int totalCoin;
 	public int totalBuys;
+
+	//the list of cards that the user has chosen to include in their deck
+	public List<int> userBuild;
 	
 	public void purchaseCard (int cardID){
 		GameObject card = createCardForId(cardID, globalDict);
@@ -77,6 +80,7 @@ public class GameLogic : MonoBehaviour {
 	//perform the necessary steps at the beginning of the game
 	public void startGame(){
 		setHand();
+		initializeBuild();
 		initializeDeck();
 		initializeDiscard();
 		shuffleDeck();
@@ -86,9 +90,24 @@ public class GameLogic : MonoBehaviour {
 		drawHand();
 	}
 
+	//set the global build variable that defines the list of cards that the user has chosen
+	void initializeBuild(){
+		userBuild = new List<int>();
+
+		//always add copper, silver, gold and both types of arrows
+		for( int i = 0; i < 5; i++ ){
+			userBuild.Add(i);
+		}
+
+		//temporary, for testing purposes
+		userBuild.Add(6);
+		userBuild.Add(5);
+
+	}
+
 	void setPurchase(){
 		PurchasePanel purchasePanel = this.transform.GetComponentInChildren<PurchasePanel>();
-		purchasePanel.initializePurchasePanel(this);
+		purchasePanel.initializePurchasePanel(this, userBuild);
 	}
 
 	//set the deck with 7 coppers and 3 arrows to start the game

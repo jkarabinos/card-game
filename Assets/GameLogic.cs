@@ -87,9 +87,17 @@ public class GameLogic : MonoBehaviour {
 		setAllPurchasePanels();
 		totalCoin = 0;
 		totalBuys = 1;
+		initializeMonsters();
+
 		drawHand();
 	}
 
+	//initializes monsters
+	void initializeMonsters(){
+		List<int> listOfMonsters = new List<int>(new int[] {7});
+		MonsterZone monsterZone = this.transform.GetComponentInChildren<MonsterZone>();
+		monsterZone.initializeMonsterZone(this ,listOfMonsters);
+	}
 	//set the global build variable that defines the list of cards that the user has chosen
 	void initializeBuild(){
 		userBuild = new List<int>();
@@ -171,7 +179,13 @@ public class GameLogic : MonoBehaviour {
 		cardScript.cost = int.Parse(individualCardDict["cost"]);
 		cardScript.draw = int.Parse(individualCardDict["draw"]);
 		cardScript.buys = int.Parse(individualCardDict["buys"]);
+		cardScript.type = individualCardDict["type"];
 		cardScript.id = id;
+
+		if(String.Compare(cardScript.type, "monster") == 0){
+			cardScript.health = int.Parse(individualCardDict["health"]);
+			cardScript.power = int.Parse(individualCardDict["power"]);
+		}
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
 		Image cardImage = card.GetComponent<Image>();

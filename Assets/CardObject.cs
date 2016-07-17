@@ -29,7 +29,16 @@ public class CardObject : MonoBehaviour {
 	//the number of cards we draw when this card is played
 	public int draw;
 
-	//the number of buys a player has
+	//the number of buys a card gives a player
 	public int buys;
+
+	//the type of a card
+	public string type;
+
+	//how much damage a permanent does
+	public int power;
+
+	//how much damage a permanent can take
+	public int health;
 
 }

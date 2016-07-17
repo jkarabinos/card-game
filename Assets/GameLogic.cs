@@ -26,8 +26,8 @@ public class GameLogic : MonoBehaviour {
 		int costOfCard = cardScript.cost;
 		if(totalBuys > 0){
 			if(totalCoin >= costOfCard){
-				DropZone tabletop = dropZoneForName("Tabletop");
-				card.transform.SetParent(tabletop.transform);
+				DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
+				card.transform.SetParent(playedThisTurn.transform);
 				updateMoneyCounter(-costOfCard);
 				totalBuys --; 
 			}
@@ -84,12 +84,20 @@ public class GameLogic : MonoBehaviour {
 		initializeDeck();
 		initializeDiscard();
 		shuffleDeck();
-		setPurchase();
+		setAllPurchasePanels();
 		totalCoin = 0;
 		totalBuys = 1;
+		initializeMonsters();
+
 		drawHand();
 	}
 
+	//initializes monsters
+	void initializeMonsters(){
+		List<int> listOfMonsters = new List<int>(new int[] {7});
+		MonsterZone monsterZone = this.transform.GetComponentInChildren<MonsterZone>();
+		monsterZone.initializeMonsterZone(this ,listOfMonsters);
+	}
 	//set the global build variable that defines the list of cards that the user has chosen
 	void initializeBuild(){
 		userBuild = new List<int>();
@@ -105,9 +113,19 @@ public class GameLogic : MonoBehaviour {
 
 	}
 
-	void setPurchase(){
-		PurchasePanel purchasePanel = this.transform.GetComponentInChildren<PurchasePanel>();
-		purchasePanel.initializePurchasePanel(this, userBuild);
+	void setPurchase(List<int> cardsChosen, string purchasePanelName){
+
+		PurchasePanel purchasePanel = purchasePanelForName(purchasePanelName);
+		purchasePanel.initializePurchasePanel(this, cardsChosen);
+	}
+
+	void setAllPurchasePanels(){
+		List<int> friendlyList = new List<int>(new int[] {6});
+		List<int> neutralList = new List<int>(new int[] {0,1,2,3,4});
+		List<int> enemyList = new List<int>(new int[] {5});
+		setPurchase( friendlyList , "FriendlyPurchasePanel");
+		setPurchase( neutralList, "NeutralPurchasePanel");
+		setPurchase( enemyList, "EnemyPurchasePanel");
 	}
 
 	//set the deck with 7 coppers and 3 arrows to start the game
@@ -161,7 +179,13 @@ public class GameLogic : MonoBehaviour {
 		cardScript.cost = int.Parse(individualCardDict["cost"]);
 		cardScript.draw = int.Parse(individualCardDict["draw"]);
 		cardScript.buys = int.Parse(individualCardDict["buys"]);
+		cardScript.type = individualCardDict["type"];
 		cardScript.id = id;
+
+		if(String.Compare(cardScript.type, "monster") == 0){
+			cardScript.health = int.Parse(individualCardDict["health"]);
+			cardScript.power = int.Parse(individualCardDict["power"]);
+		}
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
 		Image cardImage = card.GetComponent<Image>();
@@ -220,6 +244,19 @@ public class GameLogic : MonoBehaviour {
 		return null;
 	}
 
+	//returns a purchase panel for the given name
+	public PurchasePanel purchasePanelForName(string name){
+		foreach(Transform child in this.transform){
+			PurchasePanel purchasePanel = child.GetComponent<PurchasePanel>();
+			if (purchasePanel != null){
+				if (String.Compare (name, purchasePanel.purchasePanelName) == 0){
+					return purchasePanel;
+				}
+			}
+		}
+		return null;
+	}
+
 	//clears a dropzone for the given dropZone
 	public void clearDropZone(DropZone dropZone){
 		var childList = new List<Transform>();
@@ -235,8 +272,8 @@ public class GameLogic : MonoBehaviour {
 
 	//Ends your turn.  Clears the tabletop and hand.  Draws a new hand.
 	public void endTurn(){
-		DropZone tabletop = dropZoneForName("Tabletop");
-		clearDropZone(tabletop);
+		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
+		clearDropZone(playedThisTurn);
 		clearDropZone(hand);
 		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		updateMoneyCounter(-totalCoin);

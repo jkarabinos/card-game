@@ -39,7 +39,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
 			if(typeOfCard == c.typeOfCard){
-				d.newParent = dropZoneForName("Tabletop").transform;
+				d.newParent = dropZoneForName("PlayedThisTurn").transform;
 				increaseTotalCoin(c);
 				gameLogic.drawDuringTurn(c.draw);
 				gameLogic.updateBuys(c.buys);				

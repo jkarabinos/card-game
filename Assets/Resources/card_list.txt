@@ -5,6 +5,7 @@ imagePath:card_game/copper
 cost:0
 draw:0
 buys:0
+type:treasure
 id:0
 ---
 name:Silver
@@ -14,6 +15,7 @@ imagePath:card_game/silver
 cost:3
 draw:0
 buys:0
+type:treasure
 id:1
 ---
 name:Gold
@@ -23,6 +25,7 @@ imagePath:card_game/gold
 cost:6
 draw:0
 buys:0
+type:treasure
 id:2
 ---
 name:Arrow
@@ -32,6 +35,7 @@ imagePath:card_game/arrow
 cost:2
 draw:0
 buys:0
+type:attack
 id:3
 ---
 name:HeavyArrow
@@ -41,6 +45,7 @@ imagePath:card_game/heavy_arrow
 cost:5
 draw:0
 buys:0
+type:attack
 id:4
 ---
 name:BrightLance
@@ -50,6 +55,7 @@ imagePath:card_game/bright_lance
 cost:4
 draw:0
 buys:0
+type:action
 id:5
 ---
 name:TactfulNegotiations
@@ -59,5 +65,18 @@ imagePath:card_game/tactful
 cost:6
 draw:2
 buys:1
+type:action
 id:6
+---
+name:SilverbackGorilla
+value:0
+damage:0
+imagePath:card_game/gorilla
+cost:0
+draw:0
+buys:0
+health:3
+power:3
+type:monster
+id:7
 ---

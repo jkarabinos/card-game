@@ -10,7 +10,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
 	
 
-	Transform originalParent = null;
+	public Transform originalParent = null;
 	public Transform newParent = null;
 	int siblingIndex = 0;
 	GameObject placeholder = null;

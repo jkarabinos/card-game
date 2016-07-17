@@ -26,13 +26,20 @@ public class GameLogic : MonoBehaviour {
 		int costOfCard = cardScript.cost;
 		if(totalBuys > 0){
 			if(totalCoin >= costOfCard){
-				DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
-				card.transform.SetParent(playedThisTurn.transform);
+				gainCard(card);
 				updateMoneyCounter(-costOfCard);
 				totalBuys --; 
 			}
 		}
 		Debug.Log("The card ID is " +cardScript.id);
+	}
+
+
+	//add the hand to the just played zone and later the player's deck
+	public void gainCard(GameObject card){
+		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
+		card.transform.SetParent(playedThisTurn.transform);
+
 	}
 
 	//draws the correct number of cards if a player plays a card that draws cards
@@ -94,10 +101,11 @@ public class GameLogic : MonoBehaviour {
 
 	//initializes monsters
 	void initializeMonsters(){
-		List<int> listOfMonsters = new List<int>(new int[] {7});
+		List<int> listOfMonsters = new List<int>(new int[] {7, 8, 9});
 		MonsterZone monsterZone = this.transform.GetComponentInChildren<MonsterZone>();
 		monsterZone.initializeMonsterZone(this ,listOfMonsters);
 	}
+
 	//set the global build variable that defines the list of cards that the user has chosen
 	void initializeBuild(){
 		userBuild = new List<int>();

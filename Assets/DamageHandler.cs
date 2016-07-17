@@ -39,7 +39,37 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 	}
 
 	public void removeMonster(Transform deadMonster){
+		gainReward(deadMonster);
 		deadMonster.SetParent(null);
+	}
+
+
+	//gain the necessary reward for the monster that has been killed
+	void gainReward(Transform deadMonster){
+
+		Transform canvas = this.transform.parent.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		CardObject cardObject = deadMonster.GetComponent<CardObject>();
+
+		//for a silverback gorilla
+		if(cardObject.id == 7){
+			//gain a silver
+			GameObject card = gameLogic.createCardForId(1, gameLogic.globalDict);
+			gameLogic.gainCard(card);
+		}
+		//for a rabid wolves
+		else if(cardObject.id == 8){
+			//gain an arrow
+			GameObject card = gameLogic.createCardForId(3, gameLogic.globalDict);
+			gameLogic.gainCard(card);
+		}
+		//for an entrepreneurial ogre
+		else if(cardObject.id == 9){
+			//add two coins to the user's total coin for the turn
+			gameLogic.updateMoneyCounter(2);
+		}
+
+
 	}
 
 }

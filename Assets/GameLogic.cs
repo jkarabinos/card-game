@@ -26,8 +26,8 @@ public class GameLogic : MonoBehaviour {
 				DropZone tabletop = dropZoneForName("Tabletop");
 				card.transform.SetParent(tabletop.transform);
 				updateMoneyCounter(-costOfCard);
+				totalBuys --; 
 			}
-			totalBuys --; 
 		}
 		Debug.Log("The card ID is " +cardScript.id);
 	}

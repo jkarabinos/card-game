@@ -25,7 +25,7 @@ public class GameLogic : MonoBehaviour {
 			card.transform.SetParent(tabletop.transform);
 			updateMoneyCounter(-costOfCard);
 		}
-		Debug.Log("the card costs this " +cardScript.cost);
+		Debug.Log("The card ID is " +cardScript.id);
 	}
 
 	public void updateMoneyCounter(int money){
@@ -63,8 +63,14 @@ public class GameLogic : MonoBehaviour {
 		initializeDeck();
 		initializeDiscard();
 		shuffleDeck();
+		setPurchase();
 		totalCoin = 0;
 		drawHand();
+	}
+
+	void setPurchase(){
+		PurchasePanel purchasePanel = this.transform.GetComponentInChildren<PurchasePanel>();
+		purchasePanel.initializePurchasePanel(this);
 	}
 
 	//set the deck with 7 coppers and 3 arrows to start the game
@@ -88,7 +94,7 @@ public class GameLogic : MonoBehaviour {
 				cardScript.typeOfCard = CardObject.Type.TREASURE;
 
 			}else{
-				card = createCardForId(1, globalDict);
+				card = createCardForId(3, globalDict);
 				cardScript = card.GetComponent<CardObject>();
 				cardScript.typeOfCard = CardObject.Type.ATTACK;
 			}
@@ -116,6 +122,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.value = int.Parse(individualCardDict["value"]);
 		cardScript.damage = int.Parse(individualCardDict["damage"]);
 		cardScript.cost = int.Parse(individualCardDict["cost"]);
+		cardScript.id = id;
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
 		Image cardImage = card.GetComponent<Image>();

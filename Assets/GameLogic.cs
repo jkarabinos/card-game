@@ -216,6 +216,7 @@ public class GameLogic : MonoBehaviour {
 
 
 	//return a random card for the neutral list so far
+	//note that for this to work we must begin id-ing the cards at 0 and not skip any numbers
 	int getRandomCard(List<int> neutralList){
 		string targetRarity = decideTargetRarity();
 
@@ -229,7 +230,9 @@ public class GameLogic : MonoBehaviour {
 				if(String.Compare(individualCardDict["rarity"], targetRarity) == 0){
 					//if the card is the target rarity, and not a monster, add its id to the possible card list
 					if(String.Compare(individualCardDict["type"], "monster") != 0){
-						possibleCardIds.Add(i);
+						if(!listCotainsInt(neutralList, i)){
+							possibleCardIds.Add(i);
+						}
 					}
 				}
 			}
@@ -242,6 +245,17 @@ public class GameLogic : MonoBehaviour {
 		int randIndex = rnd.Next(0, possibleCardIds.Count); 
 		return possibleCardIds[randIndex];
 
+	}
+
+	//returns if an int is contained in a list
+	bool listCotainsInt(List<int> list, int a){
+		Debug.Log("num cards " + list.Count);
+		for(int i = 0; i < list.Count; i++){
+			if(list[i] == a){
+				return true;
+			}
+		}
+		return false;
 	}
 
 

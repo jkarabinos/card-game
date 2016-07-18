@@ -2134,7 +2134,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -2200,6 +2200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3320b6bc95f34bd0a9970bb26548d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heroZoneName: FriendlyHeroes
+  isFriendly: 1
 --- !u!1001 &1584206478
 Prefab:
   m_ObjectHideFlags: 0
@@ -2683,7 +2685,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
@@ -2749,6 +2751,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3320b6bc95f34bd0a9970bb26548d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heroZoneName: 
+  isFriendly: 0
 --- !u!1001 &1792572752
 Prefab:
   m_ObjectHideFlags: 0

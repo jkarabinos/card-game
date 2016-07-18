@@ -11,7 +11,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	public string zoneName;
 	public List<GameObject> discardPile;
 	public CardObject.Type typeOfCard = CardObject.Type.ACTION;
-
+	
 
 	public void OnPointerEnter(PointerEventData eventData){
 		//Debug.Log("OnPointerEnter");

@@ -37,4 +37,30 @@ public class BuildingZone : MonoBehaviour {
 	}
 
 
+	//handle the triggers for any start of turn buildings
+	public void handleBuildingTriggers(GameLogic gameLogic){
+
+		foreach(Transform child in this.transform){
+			BuildingSpot bs = child.GetComponent<BuildingSpot>();
+			if(bs.isOccupied){
+				CardObject card = bs.GetComponentInChildren<CardObject>();
+				handleBuildingTrigger(gameLogic, card);
+
+			}
+		}
+
+	}
+
+	void handleBuildingTrigger(GameLogic gameLogic, CardObject card){
+
+		string cardName = card.cardName;
+
+		if(String.Compare(cardName, "Blacksmith") == 0){
+			GameObject newCard = gameLogic.createCardForId(4, gameLogic.globalDict);
+			gameLogic.gainCard(newCard);
+
+		}
+
+	}
+
 }

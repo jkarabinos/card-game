@@ -52,19 +52,19 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		CardObject cardObject = deadMonster.GetComponent<CardObject>();
 
 		//for a silverback gorilla
-		if(cardObject.id == 7){
+		if(String.Compare(cardObject.cardName, "SilverbackGorilla") == 0){
 			//gain a silver
 			GameObject card = gameLogic.createCardForId(1, gameLogic.globalDict);
 			gameLogic.gainCard(card);
 		}
 		//for a rabid wolves
-		else if(cardObject.id == 8){
+		else if(String.Compare(cardObject.cardName, "RabidWolves") == 0){
 			//gain an arrow
 			GameObject card = gameLogic.createCardForId(3, gameLogic.globalDict);
 			gameLogic.gainCard(card);
 		}
 		//for an entrepreneurial ogre
-		else if(cardObject.id == 9){
+		else if(String.Compare(cardObject.cardName, "EntrepreneurialOgre") == 0){
 			//add two coins to the user's total coin for the turn
 			gameLogic.updateMoneyCounter(2);
 		}

@@ -206,6 +206,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.draw = int.Parse(individualCardDict["draw"]);
 		cardScript.buys = int.Parse(individualCardDict["buys"]);
 		cardScript.type = individualCardDict["type"];
+		cardScript.cardName = individualCardDict["name"];
 		cardScript.id = id;
 
 		if(String.Compare(cardScript.type, "monster") == 0){
@@ -319,5 +320,19 @@ public class GameLogic : MonoBehaviour {
 		updateMoneyCounter(-totalCoin);
 		totalBuys = 1;
 		drawHand();
+
+
+		//temperory, normally this would be called by input from the server
+		startTurn();
 	}
+
+	//check for start of turn triggers, note that the hand was already drawn in end turn
+	public void startTurn(){
+		BuildingZone bz = getFriendlyBuildingZone();
+		bz.handleBuildingTriggers(this);
+
+	}
+
+
+
 }

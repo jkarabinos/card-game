@@ -55,13 +55,13 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		if(String.Compare(cardObject.cardName, "SilverbackGorilla") == 0){
 			//gain a silver
 			GameObject card = gameLogic.createCardForId(1, gameLogic.globalDict);
-			gameLogic.gainCard(card);
+			gameLogic.gainCard(card, "NeutralPurchasePanel");
 		}
 		//for a rabid wolves
 		else if(String.Compare(cardObject.cardName, "RabidWolves") == 0){
 			//gain an arrow
 			GameObject card = gameLogic.createCardForId(3, gameLogic.globalDict);
-			gameLogic.gainCard(card);
+			gameLogic.gainCard(card, "NeutralPurchasePanel");
 		}
 		//for an entrepreneurial ogre
 		else if(String.Compare(cardObject.cardName, "EntrepreneurialOgre") == 0){

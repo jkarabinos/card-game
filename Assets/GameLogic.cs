@@ -16,11 +16,12 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, string> > globalDict;
 	public int totalCoin;
 	public int totalBuys;
+	public List<int> neutralCardList;
 
 	//the list of cards that the user has chosen to include in their deck
 	public List<int> userBuild;
 	
-	public void purchaseCard (int cardID){
+	public void purchaseCard (int cardID, string purchasePanelName){
 		GameObject card = createCardForId(cardID, globalDict);
 		CardObject cardScript = card.GetComponent<CardObject>();
 		int costOfCard = cardScript.cost;
@@ -29,11 +30,11 @@ public class GameLogic : MonoBehaviour {
 
 				//build a building
 				if(String.Compare(cardScript.type, "building")==0){
-					gainBuilding(card);
+					gainBuilding(card, purchasePanelName);
 				}
 				//gain any other type of card
 				else{
-					gainCard(card);
+					gainCard(card, purchasePanelName);
 					updateMoneyCounter(-costOfCard);
 					totalBuys --;
 				}
@@ -46,18 +47,65 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
+	//if the card was gained by the user, check to see if we need to replace the neutral 
+	//zone with a new random card
+	public void didGainCard(GameObject card, string purchasePanelName){
+		//if the user gained the card without buying it
+		if(purchasePanelName == null){
+			return;
+		}
+		Debug.Log("bought from the panel " + purchasePanelName);
+
+		//if the card was bought from the neutral purchase panel, replace it with a new one
+		if(String.Compare(purchasePanelName, "NeutralPurchasePanel") == 0){
+			CardObject c = card.GetComponent<CardObject>();
+			if( String.Compare(c.rarity, "basic") != 0 ){
+				//if the card is not basic
+				replaceNeutralCard(c.id);
+			}
+		}
+
+	}
+
+	//replace the card with a new one
+	void replaceNeutralCard(int cardId){
+
+		PurchasePanel pp = purchasePanelForName("NeutralPurchasePanel");
+		foreach(Transform child in pp.transform){
+			CardObject c = child.GetComponent<CardObject>();
+			if(c.id == cardId){
+				//if the cards match
+				int siblingIndex = child.GetSiblingIndex();
+				Destroy(child.gameObject);
+				neutralCardList.Remove(cardId);
+				int newCardId = getRandomCard(neutralCardList);
+				neutralCardList.Add(newCardId);
+				pp.addCard(newCardId, this, siblingIndex);
+				break;
+			}
+		}
+	}
+
+
+
 	//place the new building in the earliest available buildingzone
-	public void gainBuilding(GameObject building){
+	public void gainBuilding(GameObject building, string purchasePanelName){
 		BuildingZone friendlyBuildingZone = getFriendlyBuildingZone();
-		friendlyBuildingZone.gainBuilding(building, this);
+		bool gainedBuilding = friendlyBuildingZone.gainBuilding(building, this);
+
+		if(gainedBuilding){
+			didGainCard(building, purchasePanelName);
+		}
 	}
 
 
 	//add the hand to the just played zone and later the player's deck
-	public void gainCard(GameObject card){
+	public void gainCard(GameObject card, string purchasePanelName){
+	
 		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
 		card.transform.SetParent(playedThisTurn.transform);
-
+		didGainCard(card, purchasePanelName);
+		
 	}
 
 	//draws the correct number of cards if a player plays a card that draws cards
@@ -147,10 +195,10 @@ public class GameLogic : MonoBehaviour {
 
 	void setAllPurchasePanels(){
 		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13});
-		List<int> neutralList = setNeutralList();
+		neutralCardList = setNeutralList();
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");
-		setPurchase( neutralList, "NeutralPurchasePanel");
+		setPurchase( neutralCardList, "NeutralPurchasePanel");
 		setPurchase( enemyList, "EnemyPurchasePanel");
 	}
 
@@ -179,16 +227,18 @@ public class GameLogic : MonoBehaviour {
 			Dictionary<string, string> individualCardDict = globalDict[idString];
 			if(individualCardDict != null){
 				if(String.Compare(individualCardDict["rarity"], targetRarity) == 0){
-					//if the card is the target rarity, add its id to the possible card list
-					possibleCardIds.Add(i);
+					//if the card is the target rarity, and not a monster, add its id to the possible card list
+					if(String.Compare(individualCardDict["type"], "monster") != 0){
+						possibleCardIds.Add(i);
+					}
 				}
 			}
 		}
 
-		Debug.Log("the number of possible cards " + possibleCardIds.Count +  " for rarity " + targetRarity);
+		//Debug.Log("the number of possible cards " + possibleCardIds.Count +  " for rarity " + targetRarity);
 
 		//now randomly select a card from the possible card list
-		System.Random rnd = new System.Random();
+		CryptoRandom rnd = new CryptoRandom();
 		int randIndex = rnd.Next(0, possibleCardIds.Count); 
 		return possibleCardIds[randIndex];
 
@@ -198,7 +248,7 @@ public class GameLogic : MonoBehaviour {
 	//randomly determines the rarity of the card for the neutral zone
 	string decideTargetRarity(){
 
-		System.Random rnd = new System.Random();
+		CryptoRandom rnd = new CryptoRandom();
 		int randNum = rnd.Next(0, 100); 
 
 		if(randNum < 50){
@@ -291,7 +341,7 @@ public class GameLogic : MonoBehaviour {
 			deck.RemoveAt(0);
 		}
 
-		System.Random rnd = new System.Random();
+		CryptoRandom rnd = new CryptoRandom();
 		
 		
 

@@ -26,7 +26,9 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		CardObject cardObject = card.GetComponent<CardObject>();
 		if(cardObject.isPurchasable == true){
-			gameLogic.purchaseCard(cardObject.id);
+			Transform panel = this.transform.parent;
+			PurchasePanel pp = panel.GetComponent<PurchasePanel>();
+			gameLogic.purchaseCard(cardObject.id, pp.purchasePanelName);
 		}	
 
 	}

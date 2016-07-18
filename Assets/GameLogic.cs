@@ -143,6 +143,10 @@ public class GameLogic : MonoBehaviour {
 		cardObject.isDraggable = true;
 		//move a card into the hand once it is drawn
 		card.transform.SetParent( hand.transform );
+
+
+		CardStack cardDeck = cardStackForName("FriendlyDeck");
+		cardDeck.updateCount(deck.Count);
 	}
 
 	//set the global hand variable at the start of the game
@@ -283,6 +287,8 @@ public class GameLogic : MonoBehaviour {
 		CardDictionary cardDictionary = new CardDictionary();
 		cardDictionary.readFile();
 		globalDict = cardDictionary.globalDictionary;
+
+
 		
 		for( int i = 0; i < 10; i++ ){
 
@@ -302,10 +308,29 @@ public class GameLogic : MonoBehaviour {
 				cardScript.typeOfCard = CardObject.Type.ATTACK;
 			}
 
+
+
 			cardScript.isPurchasable = false;
 
 			deck.Add(card); 
 		}
+
+		CardStack cardDeck = cardStackForName("FriendlyDeck");
+		cardDeck.updateCount(deck.Count);
+	}
+
+
+	public CardStack cardStackForName(string name){
+		foreach(Transform child in this.transform){
+			CardStack cs = child.GetComponent<CardStack>();
+			if(cs != null){
+				if(String.Compare(name, cs.stackName) == 0){
+					return cs;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	//create a discard pile to store used cards
@@ -434,15 +459,23 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
+	void updateDiscard(){
+		CardStack cardStackDiscard = cardStackForName("FriendlyDiscard");
+		cardStackDiscard.updateCount(discardPile.Count);
+	}
+
 	//Ends your turn.  Clears the tabletop and hand.  Draws a new hand.
 	public void endTurn(){
 		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
 		clearDropZone(playedThisTurn);
 		clearDropZone(hand);
+		
 		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		updateMoneyCounter(-totalCoin);
 		totalBuys = 1;
 		drawHand();
+
+		updateDiscard();
 
 
 		//temperory, normally this would be called by input from the server

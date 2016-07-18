@@ -26,15 +26,30 @@ public class GameLogic : MonoBehaviour {
 		int costOfCard = cardScript.cost;
 		if(totalBuys > 0){
 			if(totalCoin >= costOfCard){
-				gainCard(card);
-				updateMoneyCounter(-costOfCard);
-				totalBuys --; 
+
+				//build a building
+				if(String.Compare(cardScript.type, "building")==0){
+					gainBuilding(card);
+				}
+				//gain any other type of card
+				else{
+					gainCard(card);
+					updateMoneyCounter(-costOfCard);
+					totalBuys --;
+				}
+				 
 			}else{
 				Destroy(card);
 			}
 		}else{
 			Destroy(card);
 		}
+	}
+
+	//place the new building in the earliest available buildingzone
+	public void gainBuilding(GameObject building){
+		BuildingZone friendlyBuildingZone = getFriendlyBuildingZone();
+		friendlyBuildingZone.gainBuilding(building, this);
 	}
 
 
@@ -262,6 +277,20 @@ public class GameLogic : MonoBehaviour {
 			if (purchasePanel != null){
 				if (String.Compare (name, purchasePanel.purchasePanelName) == 0){
 					return purchasePanel;
+				}
+			}
+		}
+		return null;
+	}
+
+	//returns a purchase panel for the given name
+	public BuildingZone getFriendlyBuildingZone(){
+		DropZone tabletopDropZone = dropZoneForName("Tabletop");
+		foreach(Transform child in tabletopDropZone.transform){
+			BuildingZone buildingZone = child.GetComponent<BuildingZone>();
+			if (buildingZone != null){
+				if (buildingZone.isFriendly){
+					return buildingZone;
 				}
 			}
 		}

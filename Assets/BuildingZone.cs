@@ -62,6 +62,11 @@ public class BuildingZone : MonoBehaviour {
 			GameObject newCard = gameLogic.createCardForId(4, gameLogic.globalDict);
 			gameLogic.gainCard(newCard, "NeutralPurchasePanel");
 
+		}else if(String.Compare(cardName, "TempleToTheHighGods") == 0){
+			gameLogic.drawCard();
+			gameLogic.updateMoneyCounter(1);
+			gameLogic.totalBuys++;
+			
 		}
 
 	}

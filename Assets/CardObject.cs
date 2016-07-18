@@ -47,4 +47,7 @@ public class CardObject : MonoBehaviour {
 	//the rarity of the card
 	public string rarity;
 
+	//if the cards are purchasable, this will store the number that can still be purchased from this pile
+	public int pileCount;
+
 }

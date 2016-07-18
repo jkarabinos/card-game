@@ -50,10 +50,13 @@ public class GameLogic : MonoBehaviour {
 	//if the card was gained by the user, check to see if we need to replace the neutral 
 	//zone with a new random card
 	public void didGainCard(GameObject card, string purchasePanelName){
+
 		//if the user gained the card without buying it
 		if(purchasePanelName == null){
 			return;
 		}
+
+		updatePileCount(card, purchasePanelName);
 		Debug.Log("bought from the panel " + purchasePanelName);
 
 		//if the card was bought from the neutral purchase panel, replace it with a new one
@@ -66,6 +69,22 @@ public class GameLogic : MonoBehaviour {
 		}
 
 	}
+
+	//subtract 1 from the pile count of the card
+	void updatePileCount(GameObject card, string purchasePanelName){
+		if(String.Compare(purchasePanelName, "FriendlyPurchasePanel") == 0 || 
+			String.Compare(purchasePanelName, "EnemyPurchasePanel") == 0){
+
+			//if the user has bought from the friendly panel or the enemy panel using some card
+			PurchasePanel pp = purchasePanelForName(purchasePanelName);
+			CardObject cardCopy = card.GetComponent<CardObject>();
+			CardObject cardOnPanel = pp.cardForId(cardCopy.id);
+			cardOnPanel.pileCount --;
+
+		}	
+	}
+
+	
 
 	//replace the card with a new one
 	void replaceNeutralCard(int cardId){
@@ -198,7 +217,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void setAllPurchasePanels(){
-		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13});
+		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 25});
 		neutralCardList = setNeutralList();
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");

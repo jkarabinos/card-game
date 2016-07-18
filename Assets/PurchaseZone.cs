@@ -19,13 +19,13 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 	}
 
 
-	//subtract the cost from the user's coins add a copy of the card to the discard pile
+	
 	public void purchaseCard(GameObject card){
 		Debug.Log( "Purchase the card" ); 
 		Transform canvas = this.transform.parent.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		CardObject cardObject = card.GetComponent<CardObject>();
-		if(cardObject.isPurchasable == true){
+		if(cardObject.isPurchasable == true && cardObject.pileCount > 0){
 			Transform panel = this.transform.parent;
 			PurchasePanel pp = panel.GetComponent<PurchasePanel>();
 			gameLogic.purchaseCard(cardObject.id, pp.purchasePanelName);

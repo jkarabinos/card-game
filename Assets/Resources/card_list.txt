@@ -284,4 +284,16 @@ type:action
 rarity:epic
 id:24
 ---
+name:TempleToTheHighGods
+value:1
+damage:1
+imagePath:card_game/temple
+cost:2
+draw:1
+buys:1
+type:building
+health:8
+rarity:legendary
+id:25
+---
 

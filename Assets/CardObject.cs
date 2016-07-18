@@ -44,4 +44,7 @@ public class CardObject : MonoBehaviour {
 	//the name of the card
 	public string cardName;
 
+	//the rarity of the card
+	public string rarity;
+
 }

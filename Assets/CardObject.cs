@@ -41,4 +41,7 @@ public class CardObject : MonoBehaviour {
 	//how much damage a permanent can take
 	public int health;
 
+	//the name of the card
+	public string cardName;
+
 }

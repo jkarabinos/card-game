@@ -26,15 +26,30 @@ public class GameLogic : MonoBehaviour {
 		int costOfCard = cardScript.cost;
 		if(totalBuys > 0){
 			if(totalCoin >= costOfCard){
-				gainCard(card);
-				updateMoneyCounter(-costOfCard);
-				totalBuys --; 
+
+				//build a building
+				if(String.Compare(cardScript.type, "building")==0){
+					gainBuilding(card);
+				}
+				//gain any other type of card
+				else{
+					gainCard(card);
+					updateMoneyCounter(-costOfCard);
+					totalBuys --;
+				}
+				 
 			}else{
 				Destroy(card);
 			}
 		}else{
 			Destroy(card);
 		}
+	}
+
+	//place the new building in the earliest available buildingzone
+	public void gainBuilding(GameObject building){
+		BuildingZone friendlyBuildingZone = getFriendlyBuildingZone();
+		friendlyBuildingZone.gainBuilding(building, this);
 	}
 
 
@@ -191,6 +206,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.draw = int.Parse(individualCardDict["draw"]);
 		cardScript.buys = int.Parse(individualCardDict["buys"]);
 		cardScript.type = individualCardDict["type"];
+		cardScript.cardName = individualCardDict["name"];
 		cardScript.id = id;
 
 		if(String.Compare(cardScript.type, "monster") == 0){
@@ -268,6 +284,20 @@ public class GameLogic : MonoBehaviour {
 		return null;
 	}
 
+	//returns a purchase panel for the given name
+	public BuildingZone getFriendlyBuildingZone(){
+		DropZone tabletopDropZone = dropZoneForName("Tabletop");
+		foreach(Transform child in tabletopDropZone.transform){
+			BuildingZone buildingZone = child.GetComponent<BuildingZone>();
+			if (buildingZone != null){
+				if (buildingZone.isFriendly){
+					return buildingZone;
+				}
+			}
+		}
+		return null;
+	}
+
 	//clears a dropzone for the given dropZone
 	public void clearDropZone(DropZone dropZone){
 		var childList = new List<Transform>();
@@ -290,5 +320,19 @@ public class GameLogic : MonoBehaviour {
 		updateMoneyCounter(-totalCoin);
 		totalBuys = 1;
 		drawHand();
+
+
+		//temperory, normally this would be called by input from the server
+		startTurn();
 	}
+
+	//check for start of turn triggers, note that the hand was already drawn in end turn
+	public void startTurn(){
+		BuildingZone bz = getFriendlyBuildingZone();
+		bz.handleBuildingTriggers(this);
+
+	}
+
+
+
 }

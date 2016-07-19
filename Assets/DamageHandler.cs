@@ -7,7 +7,7 @@ using System;
 
 public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler  {
 	
-
+	//note that this refers to the character of the user rather than the type of card hero
 	public bool isHero;
 
 	public void OnPointerEnter(PointerEventData eventData){

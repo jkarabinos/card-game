@@ -24,23 +24,33 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		CardObject cardObject = d.gameObject.GetComponent<CardObject>();
 		if(String.Compare(cardObject.type, "attack") == 0){
+
 			Transform hand = d.originalParent;
 			DropZone dropZone = hand.GetComponent<DropZone>();
 			d.newParent = dropZone.dropZoneForName("PlayedThisTurn").transform;
 			Transform targetCard = this.transform;
 			CardObject target = targetCard.GetComponent<CardObject>();
 			target.health -= cardObject.damage;
-			Debug.Log("the health of the monster is " + target.health);
-			if(target.health <= 0){
+			
+			//remove a monster if it dies
+			if(target.health <= 0 && String.Compare(target.type, "monster") == 0){
 				removeMonster(targetCard);
+			}
+
+			//remove a building when its health reaches zero
+			if(target.health <= 0 && (String.Compare(target.type, "building") == 0
+									|| String.Compare(target.type, "hero") == 0)){
+				Destroy(targetCard.gameObject);
 			}
 		}
 	
 	}
 
+
 	public void removeMonster(Transform deadMonster){
 		gainReward(deadMonster);
-		deadMonster.SetParent(null);
+		//deadMonster.SetParent(null);
+		Destroy(deadMonster.gameObject);
 	}
 
 

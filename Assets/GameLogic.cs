@@ -18,6 +18,10 @@ public class GameLogic : MonoBehaviour {
 	public int totalBuys;
 	public int totalActions;
 	public List<int> neutralCardList;
+	
+	//the health of the two players
+	public int friendlyHealth;
+	public int enemyHealth;
 
 	//the list of cards that the user has chosen to include in their deck
 	public List<int> userBuild;
@@ -203,9 +207,13 @@ public class GameLogic : MonoBehaviour {
 		initializeDiscard();
 		shuffleDeck();
 		setAllPurchasePanels();
+
 		totalCoin = 0;
 		totalBuys = 0;
 		totalActions = 0;
+		friendlyHealth = 30;
+		enemyHealth = 30;
+
 
 		updateMoneyCounter(0);
 		updateBuys(-totalBuys + 1);

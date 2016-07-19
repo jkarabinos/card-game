@@ -47,24 +47,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 	public void OnPointerClick(PointerEventData eventData){
 		
-		/*CardObject c = this.transform.GetComponent<CardObject>();
-
-
-		HeroZone possibleHeroZone = this.transform.parent.GetComponent<HeroZone>();
-
-		//if we click on a hero in the friendly hero zone
-		if(String.Compare(c.type, "hero") == 0 && possibleHeroZone != null){
-			Debug.Log("clicked a card to attack with");
-
-			//we know this hero is in the friendly herozone, so we can now access the canvas
-			Transform tabletop = this.transform.parent.parent;
-			Transform canvas = tabletop.parent;
-			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
-			gameLogic.selectedHero = c.gameObject;
-		}
-	*/
-		//GameObject card = eventData.pointerEnter;
-		//purchaseCard(card);
+		
 
 		//use the card to get the canvas no matter where we are in the hierarchy
 		Transform canvas = getCanvas();
@@ -75,18 +58,62 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			CardObject c = this.transform.GetComponent<CardObject>();
 			if(isCastle){
 				didAttackCastle(gameLogic.selectedHero.GetComponent<CardObject>());
-				gameLogic.selectedHero.GetComponent<CardObject>().attacks --; 
-				gameLogic.selectedHero = null;
+				heroDidAttack(gameLogic);
 			}
 			else if(String.Compare(c.type, "hero") == 0){
 				if(isLegalHeroTarget(c)){
 					//didAttackHero(gameLogic.selectedHero.GetComponent<CardObject>());
 				}
+			}else if(String.Compare(c.type, "monster") == 0){
+				if(isLegalMonsterTarget(c)){
+					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
+					heroDidAttack(gameLogic);
+				}
+			}else if(String.Compare(c.type, "building") == 0){
+				if(isLegalBuildingTarget(c)){
+					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
+					heroDidAttack(gameLogic);
+				}
 			}
 		}
 	}
 
+	void heroDidAttack(GameLogic gameLogic){
+		gameLogic.selectedHero.GetComponent<CardObject>().attacks --;
+		gameLogic.selectedHero = null;
+	}
 
+	//if the building is in the enemy building zone
+	bool isLegalBuildingTarget(CardObject c){
+		Transform parent = c.transform.parent;
+		BuildingSpot bs = parent.GetComponent<BuildingSpot>();
+		if(bs == null){
+			return false;
+		}
+
+		BuildingZone bz = bs.transform.parent.GetComponent<BuildingZone>();
+		if(bz == null){
+			return false;
+		}
+
+		if(bz.isFriendly){
+			return false;
+		}	
+
+		//if the building is in the enemy building zone
+		return true;
+
+	}
+
+	//if the monster is in the monster zone
+	bool isLegalMonsterTarget(CardObject c)	{
+		Transform parent = c.transform.parent;
+		if(parent.GetComponent<MonsterZone>() == null){
+			return false;
+		}
+
+		return true;
+	}
 
 	bool isLegalHeroTarget(CardObject c){
 		return true;

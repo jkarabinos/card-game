@@ -32,7 +32,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		Transform canvas = this.transform.parent.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
+		HeroZone enemyHeroZone = gameLogic.getEnemyHeroZone();
 		friendlyHeroZone.selectedCard = card;
+		enemyHeroZone.selectedCard = card;
 
 		
 			placeholder = new GameObject();
@@ -120,14 +122,17 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 	public void OnEndDrag(PointerEventData eventData){
 		Debug.Log ("EndDrag");
 
+		Transform canvas = originalParent.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
+		HeroZone enemyHeroZone = gameLogic.getEnemyHeroZone();
+		enemyHeroZone.selectedCard = null;
+		friendlyHeroZone.selectedCard = null;
+
 		if(!cardScript.isDraggable){
 			return;
 		}
 		
-		Transform canvas = originalParent.parent;
-		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
-		HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
-		friendlyHeroZone.selectedCard = null;
 
 		this.transform.SetParent( newParent );
 

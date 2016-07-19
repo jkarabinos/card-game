@@ -12,7 +12,6 @@ public class BuildingZone : MonoBehaviour {
 	public bool isFriendly;
 
 	public bool gainBuilding(GameObject building, GameLogic gameLogic){
-		Debug.Log("add the building");
 		BuildingSpot targetBuildingSpot = null;
 
 		foreach(Transform child in this.transform){
@@ -66,7 +65,7 @@ public class BuildingZone : MonoBehaviour {
 			gameLogic.drawCard();
 			gameLogic.updateMoneyCounter(1);
 			gameLogic.totalBuys++;
-			
+
 		}
 
 	}

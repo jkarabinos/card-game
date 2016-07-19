@@ -14,6 +14,7 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	GameObject placeholder = null;
 	CardObject cardScript;
 
+
 	public void OnPointerEnter(PointerEventData eventData){
 		//Debug.Log("OnPointerEnter");
 
@@ -26,7 +27,8 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 				draggable.createHeroPlaceholder();
 			}else{
 				//if the user is attempting to play something other than a hero
-				GetComponent<CanvasGroup>().blocksRaycasts = false;
+				Debug.Log("the user is attempting to play something other than a hero");
+				
 			}
 		}
 
@@ -80,7 +82,8 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		
 		Destroy(placeholder);
 
-		GetComponent<CanvasGroup>().blocksRaycasts = true;
+		Debug.Log("the pointer has exited");
+
 		
 	}
 
@@ -113,6 +116,10 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 						numHeroes++;
 					}
 				}		
+			}else{
+				//if the user is attempting to drop something other than a hero
+				dropZone.OnDrop(eventData);
+
 			}
 		}
 		

@@ -18,6 +18,8 @@ public class GameLogic : MonoBehaviour {
 	public int totalBuys;
 	public int totalActions;
 	public List<int> neutralCardList;
+
+	public GameObject selectedHero = null;
 	
 	//the health of the two players
 	public int friendlyHealth;
@@ -43,7 +45,6 @@ public class GameLogic : MonoBehaviour {
 					gainCard(card, purchasePanelName);
 					updateMoneyCounter(-costOfCard);
 					updateBuys(-1);
-					//totalBuys --;
 				}
 				 
 			}else{
@@ -64,7 +65,6 @@ public class GameLogic : MonoBehaviour {
 		}
 
 		updatePileCount(card, purchasePanelName);
-		Debug.Log("bought from the panel " + purchasePanelName);
 
 		//if the card was bought from the neutral purchase panel, replace it with a new one
 		if(String.Compare(purchasePanelName, "NeutralPurchasePanel") == 0){
@@ -309,7 +309,7 @@ public class GameLogic : MonoBehaviour {
 
 	//returns if an int is contained in a list
 	bool listCotainsInt(List<int> list, int a){
-		Debug.Log("num cards " + list.Count);
+		
 		for(int i = 0; i < list.Count; i++){
 			if(list[i] == a){
 				return true;
@@ -426,10 +426,20 @@ public class GameLogic : MonoBehaviour {
 		cardScript.rarity = individualCardDict["rarity"];
 		cardScript.id = id;
 
-		if(String.Compare(cardScript.type, "monster") == 0){
+		if(String.Compare(cardScript.type, "monster") == 0 
+		|| String.Compare(cardScript.type, "hero") == 0
+		|| String.Compare(cardScript.type, "building") == 0){
 			cardScript.health = int.Parse(individualCardDict["health"]);
+		}
+
+		if(String.Compare(cardScript.type, "monster") == 0 
+		|| String.Compare(cardScript.type, "hero") == 0 ) {
 			cardScript.power = int.Parse(individualCardDict["power"]);
 		}
+
+		
+		
+
 		//set the appropriate image of the card
 		Sprite spr = Resources.Load <Sprite> (individualCardDict["imagePath"]);
 		Image cardImage = card.GetComponent<Image>();
@@ -529,6 +539,19 @@ public class GameLogic : MonoBehaviour {
 		return null;
 	}
 
+	public HeroZone getEnemyHeroZone(){
+		DropZone tabletopDropZone = dropZoneForName("Tabletop");
+		foreach(Transform child in tabletopDropZone.transform){
+			HeroZone heroZone = child.GetComponent<HeroZone>();
+			if (heroZone != null){
+				if (!heroZone.isFriendly){
+					return heroZone;
+				}
+			}
+		}
+		return null;
+	}
+
 	//clears a dropzone for the given dropZone
 	public void clearDropZone(DropZone dropZone){
 		var childList = new List<Transform>();
@@ -553,7 +576,6 @@ public class GameLogic : MonoBehaviour {
 		clearDropZone(playedThisTurn);
 		clearDropZone(hand);
 		
-		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		updateMoneyCounter(-totalCoin);
 		//totalBuys = 1;
 		updateBuys(-totalBuys + 1);

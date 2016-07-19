@@ -25,7 +25,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 
 	public void OnDrop(PointerEventData eventData){
-		Debug.Log (eventData.pointerDrag.name + "OnDrop to " + gameObject.name);
 
 		CardObject c = eventData.pointerDrag.GetComponent<CardObject>();
 		if(!c.isDraggable){

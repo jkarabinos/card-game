@@ -11,7 +11,6 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 
 
 	public void OnPointerClick(PointerEventData eventData){
-		Debug.Log("clicked a card to buy");
 
 
 		GameObject card = eventData.pointerEnter;
@@ -21,7 +20,7 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 
 	
 	public void purchaseCard(GameObject card){
-		Debug.Log( "Purchase the card" ); 
+		
 		Transform canvas = this.transform.parent.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		CardObject cardObject = card.GetComponent<CardObject>();

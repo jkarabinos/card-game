@@ -5,10 +5,10 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System;
 
-public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler  {
+public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler  {
 	
 	//note that this refers to the character of the user rather than the type of card hero
-	public bool isHero;
+	public bool isCastle;
 
 	public void OnPointerEnter(PointerEventData eventData){
 		//Debug.Log("OnPointerEnter");
@@ -34,30 +34,106 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 
 			//if the attack is targeting a card, perfom the necessary operations
-			if(!isHero){
+			if(!isCastle){
 				didAttackCard(cardObject);
 			}else{
-				didAttackHero(cardObject);
+				didAttackCastle(cardObject);
 			}
 			
 		}
 	
 	}
 
+
+	public void OnPointerClick(PointerEventData eventData){
+		
+		/*CardObject c = this.transform.GetComponent<CardObject>();
+
+
+		HeroZone possibleHeroZone = this.transform.parent.GetComponent<HeroZone>();
+
+		//if we click on a hero in the friendly hero zone
+		if(String.Compare(c.type, "hero") == 0 && possibleHeroZone != null){
+			Debug.Log("clicked a card to attack with");
+
+			//we know this hero is in the friendly herozone, so we can now access the canvas
+			Transform tabletop = this.transform.parent.parent;
+			Transform canvas = tabletop.parent;
+			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+			gameLogic.selectedHero = c.gameObject;
+		}
+	*/
+		//GameObject card = eventData.pointerEnter;
+		//purchaseCard(card);
+
+		//use the card to get the canvas no matter where we are in the hierarchy
+		Transform canvas = getCanvas();
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		if(gameLogic.selectedHero != null){
+			//if the user is attempting to attack with a hero
+
+			CardObject c = this.transform.GetComponent<CardObject>();
+			if(isCastle){
+				didAttackCastle(gameLogic.selectedHero.GetComponent<CardObject>());
+				gameLogic.selectedHero = null;
+			}
+			else if(String.Compare(c.type, "hero") == 0){
+				if(isLegalHeroTarget(c)){
+					//didAttackHero(gameLogic.selectedHero.GetComponent<CardObject>());
+				}
+			}
+		}
+	}
+
+
+
+	bool isLegalHeroTarget(CardObject c){
+		return true;
+	}
+
+
+	public Transform getCanvas(){
+		GameLogic gameLogic = null;
+		Transform currentParent = this.transform;
+		while(gameLogic == null){
+			currentParent = currentParent.parent;
+			gameLogic = currentParent.GetComponent<GameLogic>();
+		}
+
+		return currentParent;
+	}
+
 	//if the user targeted the hero with the attack
-	void didAttackHero(CardObject attackCard){
+	public void didAttackCastle(CardObject attackCard){
+		Debug.Log("did attack castle");
+
+		int damage = 0;
+		if(String.Compare(attackCard.type, "hero") == 0){
+			damage = attackCard.power;
+		}else{
+			damage = attackCard.damage;
+		}
+
+
 		Transform canvas = this.transform.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
-		gameLogic.enemyHealth -= attackCard.damage;
+		gameLogic.enemyHealth -= damage;
 
 		Text textBox = this.transform.GetComponentInChildren<Text>();
 		textBox.text = gameLogic.enemyHealth.ToString();
 	}
 
-	void didAttackCard(CardObject attackCard){
+	public void didAttackCard(CardObject attackCard){
+		int damage = 0;
+		if(String.Compare(attackCard.type, "hero") == 0){
+			damage = attackCard.power;
+		}else{
+			damage = attackCard.damage;
+		}
+
 		Transform targetCard = this.transform;
 		CardObject target = targetCard.GetComponent<CardObject>();
-		target.health -= attackCard.damage;
+		target.health -= damage;
 			
 		//remove a monster if it dies
 		if(target.health <= 0 && String.Compare(target.type, "monster") == 0){
@@ -70,6 +146,8 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			Destroy(targetCard.gameObject);
 		}
 	}
+
+
 
 
 	public void removeMonster(Transform deadMonster){

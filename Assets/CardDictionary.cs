@@ -24,7 +24,7 @@ public class CardDictionary{
 	        while (!sr.EndOfStream) // Keep reading until we get to the end
 	        {
 	            string splitMe = sr.ReadLine();
-	            Debug.Log("line: " + splitMe);
+	       
 	            if( String.Compare (splitMe, "---") == 0 ){
 	            	Debug.Log(cardDictionary.Count);
 	            	addCard(cardDictionary);
@@ -53,6 +53,6 @@ public class CardDictionary{
 
 		string id = cardDictionary["id"];
 		globalDictionary.Add( id, cardDictionary );
-		Debug.Log("the glob dict: " + globalDictionary);
+
 	}
 }

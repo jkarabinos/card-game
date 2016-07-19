@@ -10,7 +10,7 @@ public class PurchasePanel : MonoBehaviour {
 	public string purchasePanelName;
 
 	public void initializePurchasePanel(GameLogic gameLogic, List<int> userBuild){
-		Debug.Log("Purchase Panel Operational!");
+		
 		
 		for( int i = 0; i < userBuild.Count; i++ ){
 			int cardID = userBuild[i];
@@ -31,7 +31,6 @@ public class PurchasePanel : MonoBehaviour {
 		card.transform.SetParent( this.transform ); 
 
 		if(siblingIndex >= 0){
-			Debug.Log("the sib index is " + siblingIndex);
 			card.transform.SetSiblingIndex(siblingIndex);
 		}
 

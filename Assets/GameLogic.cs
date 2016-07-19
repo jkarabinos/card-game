@@ -16,6 +16,7 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, string> > globalDict;
 	public int totalCoin;
 	public int totalBuys;
+	public int totalActions;
 	public List<int> neutralCardList;
 
 	//the list of cards that the user has chosen to include in their deck
@@ -36,7 +37,8 @@ public class GameLogic : MonoBehaviour {
 				else{
 					gainCard(card, purchasePanelName);
 					updateMoneyCounter(-costOfCard);
-					totalBuys --;
+					updateBuys(-1);
+					//totalBuys --;
 				}
 				 
 			}else{
@@ -81,6 +83,11 @@ public class GameLogic : MonoBehaviour {
 			CardObject cardOnPanel = pp.cardForId(cardCopy.id);
 			cardOnPanel.pileCount --;
 
+			if(cardOnPanel.pileCount == 0){
+				Destroy(cardOnPanel.gameObject);
+				//TODO: grey out the card here
+			}
+			
 		}	
 	}
 
@@ -130,21 +137,36 @@ public class GameLogic : MonoBehaviour {
 	//draws the correct number of cards if a player plays a card that draws cards
 	public void drawDuringTurn(int drawNumber){
 		for (int i = 0; i < drawNumber; i++ ){
-		drawCard();
+			drawCard();
 		}
 	}
 
 	//updates totalBuys.  Is called from dropzone like drawDuringTurn()
 	public void updateBuys(int buyNumber){
+		TextHandler th = textHandlerForName("BuyCounter");
+		Text textBox = th.GetComponent<Text>();
 		totalBuys += buyNumber;
+		textBox.text  = "Buys: " + totalBuys.ToString();
 	}
 
 	//is called in the DropZone script when a player drops a treasure onto the tabletop.  Updates the total coin and textual representation
 	public void updateMoneyCounter(int money){
-		Text textBox = this.transform.GetComponentInChildren<Text>();
+		TextHandler th = textHandlerForName("MoneyCounter");
+		Text textBox = th.GetComponent<Text>();
 		totalCoin += money;
-		textBox.text  = totalCoin.ToString();
+		textBox.text  = "Coin: " + totalCoin.ToString();
 	}
+
+
+	//updates the number of actions for the user and displays it in the appropriate text box
+	public void updateActionCounter(int actions){
+		TextHandler th = textHandlerForName("ActionCounter");
+		Text textBox = th.GetComponent<Text>();
+		totalActions += actions;
+		textBox.text  = "Actions: " + totalActions.ToString();
+
+	}
+
 	//draws a card and checks to see if the deck is empty
 	public void drawCard(){
 		if (deck.Count <= 0){
@@ -182,7 +204,12 @@ public class GameLogic : MonoBehaviour {
 		shuffleDeck();
 		setAllPurchasePanels();
 		totalCoin = 0;
-		totalBuys = 1;
+		totalBuys = 0;
+		totalActions = 0;
+
+		updateMoneyCounter(0);
+		updateBuys(-totalBuys + 1);
+		updateActionCounter(-totalActions + 1);
 		initializeMonsters();
 
 		drawHand();
@@ -217,7 +244,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void setAllPurchasePanels(){
-		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 25});
+		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 25, 26});
 		neutralCardList = setNeutralList();
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");
@@ -345,6 +372,19 @@ public class GameLogic : MonoBehaviour {
 			if(cs != null){
 				if(String.Compare(name, cs.stackName) == 0){
 					return cs;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public TextHandler textHandlerForName(string name){
+		foreach(Transform child in this.transform){
+			TextHandler t = child.GetComponent<TextHandler>();
+			if(t != null){
+				if(String.Compare(name, t.textBoxName) == 0){
+					return t;
 				}
 			}
 		}
@@ -491,7 +531,9 @@ public class GameLogic : MonoBehaviour {
 		
 		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		updateMoneyCounter(-totalCoin);
-		totalBuys = 1;
+		//totalBuys = 1;
+		updateBuys(-totalBuys + 1);
+		updateActionCounter(-totalActions + 1);
 		drawHand();
 
 		updateDiscard();

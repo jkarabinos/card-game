@@ -17,6 +17,7 @@ public class GameLogic : MonoBehaviour {
 	public int totalCoin;
 	public int totalBuys;
 
+
 	//the list of cards that the user has chosen to include in their deck
 	public List<int> userBuild;
 	
@@ -146,12 +147,70 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void setAllPurchasePanels(){
-		List<int> friendlyList = new List<int>(new int[] {6, 10, 11});
-		List<int> neutralList = new List<int>(new int[] {0,1,2,3,4});
+		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 11});
+		List<int> neutralList = setNeutralList();
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");
 		setPurchase( neutralList, "NeutralPurchasePanel");
 		setPurchase( enemyList, "EnemyPurchasePanel");
+	}
+
+
+	//randomly set five cards along with the basic 5 cards
+	List<int> setNeutralList(){
+		List<int> neutralList = new List<int> (new int [] {0,1,2,3,4} );
+		for(int i=0; i<5; i++){
+			int cardId = getRandomCard(neutralList);
+			neutralList.Add(cardId);
+		}
+
+		return neutralList;
+	}
+
+
+	//return a random card for the neutral list so far
+	int getRandomCard(List<int> neutralList){
+		string targetRarity = decideTargetRarity();
+
+		//holds all card ids of the target rarity
+		List<int> possibleCardIds = new List<int>();
+
+		for(int i = 0; i < globalDict.Count; i ++){
+			string idString = i.ToString();
+			Dictionary<string, string> individualCardDict = globalDict[idString];
+			if(individualCardDict != null){
+				if(String.Compare(individualCardDict["rarity"], targetRarity) == 0){
+					//if the card is the target rarity, add its id to the possible card list
+					possibleCardIds.Add(i);
+				}
+			}
+		}
+
+		Debug.Log("the number of possible cards " + possibleCardIds.Count +  " for rarity " + targetRarity);
+
+		//now randomly select a card from the possible card list
+		System.Random rnd = new System.Random();
+		int randIndex = rnd.Next(0, possibleCardIds.Count); 
+		return possibleCardIds[randIndex];
+
+	}
+
+
+	//randomly determines the rarity of the card for the neutral zone
+	string decideTargetRarity(){
+
+		System.Random rnd = new System.Random();
+		int randNum = rnd.Next(0, 100); 
+
+		if(randNum < 50){
+			return "common";
+		}else if(randNum < 75){
+			return "rare";
+		}else if(randNum < 90){
+			return "epic";
+		}else {
+			return "epic";
+		}
 	}
 
 	//set the deck with 7 coppers and 3 arrows to start the game
@@ -207,6 +266,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.buys = int.Parse(individualCardDict["buys"]);
 		cardScript.type = individualCardDict["type"];
 		cardScript.cardName = individualCardDict["name"];
+		cardScript.rarity = individualCardDict["rarity"];
 		cardScript.id = id;
 
 		if(String.Compare(cardScript.type, "monster") == 0){
@@ -292,6 +352,20 @@ public class GameLogic : MonoBehaviour {
 			if (buildingZone != null){
 				if (buildingZone.isFriendly){
 					return buildingZone;
+				}
+			}
+		}
+		return null;
+	}
+
+
+	public HeroZone getFriendlyHeroZone(){
+		DropZone tabletopDropZone = dropZoneForName("Tabletop");
+		foreach(Transform child in tabletopDropZone.transform){
+			HeroZone heroZone = child.GetComponent<HeroZone>();
+			if (heroZone != null){
+				if (heroZone.isFriendly){
+					return heroZone;
 				}
 			}
 		}

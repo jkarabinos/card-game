@@ -12,8 +12,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
 	public Transform originalParent = null;
 	public Transform newParent = null;
-	int siblingIndex = 0;
+	public bool inHeroZone = false;
+
 	GameObject placeholder = null;
+	public GameObject heroPlaceholder = null;
 
 	CardObject cardScript;
 
@@ -27,22 +29,25 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		if(!cardScript.isDraggable){
 			return;
 		}
+		Transform canvas = this.transform.parent.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
+		friendlyHeroZone.selectedCard = card;
 
+		
+			placeholder = new GameObject();
+			placeholder.transform.SetParent( this.transform.parent );
+			LayoutElement le = placeholder.AddComponent<LayoutElement>();
+			le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
+			le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
+			le.flexibleWidth = 0;
+			le.flexibleHeight = 0;
 
-		placeholder = new GameObject();
-		placeholder.transform.SetParent( this.transform.parent );
-		LayoutElement le = placeholder.AddComponent<LayoutElement>();
-		le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
-		le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
-		le.flexibleWidth = 0;
-		le.flexibleHeight = 0;
 
 
 		//the original parent is the hand, the new parent might change if we move the card
 		originalParent = this.transform.parent;
 		newParent = originalParent;
-
-		siblingIndex = this.transform.GetSiblingIndex();
 
 		this.transform.SetParent( this.transform.parent.parent );
 
@@ -53,25 +58,63 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 	public void OnDrag(PointerEventData eventData){
 		//Debug.Log ("OnDrag");
 		if(!cardScript.isDraggable){
-			return;
-		}
-
+				return;
+			}
+			
 		this.transform.position = eventData.position;
 
 		int newSiblingIndex = originalParent.childCount;
-
-		for (int i = 0; i < originalParent.childCount; i++) {
-			if(this.transform.position.x < originalParent.GetChild(i).position.x){
-
-				newSiblingIndex = i;
-
-				if (placeholder.transform.GetSiblingIndex() < newSiblingIndex)
-					newSiblingIndex--;
-
-				break;
-			}
+		if(inHeroZone == false){
+			for (int i = 0; i < originalParent.childCount; i++) {
+				if(this.transform.position.x < originalParent.GetChild(i).position.x){
+					newSiblingIndex = i;
+					if (placeholder.transform.GetSiblingIndex() < newSiblingIndex)
+						newSiblingIndex--;
+						break;
+					}
+				}
+			
+			placeholder.transform.SetSiblingIndex(newSiblingIndex);
 		}
-		placeholder.transform.SetSiblingIndex(newSiblingIndex);
+		else if(inHeroZone == true){
+			
+			Transform canvas = originalParent.parent;
+			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+			HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
+			int heroSiblingIndex = friendlyHeroZone.transform.childCount;
+
+			
+
+			for (int i = 0; i < friendlyHeroZone.transform.childCount; i++) {
+				if(this.transform.position.x < friendlyHeroZone.transform.GetChild(i).position.x){
+					heroSiblingIndex = i;
+					if (heroPlaceholder.transform.GetSiblingIndex() < heroSiblingIndex)
+						heroSiblingIndex--;
+						break;
+					}
+				}
+			
+			heroPlaceholder.transform.SetSiblingIndex(heroSiblingIndex);
+		}
+			
+	}
+	
+
+
+	public void createHeroPlaceholder(){
+			
+			Transform canvas = originalParent.parent;
+			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+			HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
+
+			heroPlaceholder = new GameObject();
+			heroPlaceholder.transform.SetParent( friendlyHeroZone.transform );
+			LayoutElement le = heroPlaceholder.AddComponent<LayoutElement>();
+			le.preferredWidth = this.GetComponent<LayoutElement>().preferredWidth;
+			le.preferredHeight = this.GetComponent<LayoutElement>().preferredHeight;
+			le.flexibleWidth = 0;
+			le.flexibleHeight = 0;
+
 	}
 
 	public void OnEndDrag(PointerEventData eventData){
@@ -81,6 +124,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 			return;
 		}
 		
+		Transform canvas = originalParent.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
+		friendlyHeroZone.selectedCard = null;
 
 		this.transform.SetParent( newParent );
 
@@ -96,6 +143,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 			cardScript.isDraggable = false;
 		}
 		Destroy(placeholder);
+		Destroy(heroPlaceholder);
 
 		GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}

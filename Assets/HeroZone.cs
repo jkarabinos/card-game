@@ -24,6 +24,9 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 				Draggable draggable = selectedCard.GetComponent<Draggable>();
 				draggable.inHeroZone = true;
 				draggable.createHeroPlaceholder();
+			}else{
+				//if the user is attempting to play something other than a hero
+				GetComponent<CanvasGroup>().blocksRaycasts = false;
 			}
 		}
 
@@ -76,7 +79,8 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 		
 		Destroy(placeholder);
-		
+
+		GetComponent<CanvasGroup>().blocksRaycasts = true;
 		
 	}
 

@@ -32,6 +32,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			return;
 		}
 
+		//the user is not allowed to play cards onto the played this turn zone
+		if(String.Compare(zoneName, "PlayedThisTurn") == 0){
+			return;
+		}
+
 		Transform canvas = this.transform.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 

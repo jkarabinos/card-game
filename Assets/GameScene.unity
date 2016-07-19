@@ -2440,6 +2440,7 @@ GameObject:
   - 114: {fileID: 1537636065}
   - 114: {fileID: 1537636064}
   - 114: {fileID: 1537636068}
+  - 225: {fileID: 1537636069}
   m_Layer: 5
   m_Name: FriendlyHeroes
   m_TagString: Untagged
@@ -2547,8 +2548,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3320b6bc95f34bd0a9970bb26548d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroZoneName: FriendlyHeroes
   isFriendly: 1
+  numHeroes: 0
+  selectedCard: {fileID: 0}
+--- !u!225 &1537636069
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1537636062}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1584206478
 Prefab:
   m_ObjectHideFlags: 0
@@ -3118,6 +3131,7 @@ GameObject:
   - 114: {fileID: 1754739182}
   - 114: {fileID: 1754739181}
   - 114: {fileID: 1754739185}
+  - 225: {fileID: 1754739186}
   m_Layer: 5
   m_Name: EnemyHeroes
   m_TagString: Untagged
@@ -3225,8 +3239,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3320b6bc95f34bd0a9970bb26548d05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heroZoneName: 
   isFriendly: 0
+  numHeroes: 0
+  selectedCard: {fileID: 0}
+--- !u!225 &1754739186
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1754739179}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1001 &1792572752
 Prefab:
   m_ObjectHideFlags: 0

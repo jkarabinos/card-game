@@ -35,9 +35,16 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Transform canvas = this.transform.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 
-
-		if(gameLogic.totalActions <= 0 && String.Compare(c.type, "action") == 0){
-			return;
+		
+		if(String.Compare(c.type, "action") == 0){
+			//if the user attempts to play an action card when they have no more actions
+			if(gameLogic.totalActions <= 0){
+				return;
+			} 
+			//the user must target a legal target if the action can do damage
+			if(c.damage > 0){
+				return;
+			}
 		}
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();

@@ -254,7 +254,7 @@ public class GameLogic : MonoBehaviour {
 
 	void setAllPurchasePanels(){
 
-		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 25, 26});
+		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 25, 26, 11, 21} );
 		neutralCardList = setNeutralList();
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");

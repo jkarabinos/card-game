@@ -25,7 +25,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		CardObject cardObject = d.gameObject.GetComponent<CardObject>();
-		if(String.Compare(cardObject.type, "attack") == 0){
+		if(cardObject.damage > 0){
 
 			//send the card to the played this turn zone
 			Transform hand = d.originalParent;

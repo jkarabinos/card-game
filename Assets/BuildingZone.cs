@@ -11,7 +11,7 @@ public class BuildingZone : MonoBehaviour {
 	
 	public bool isFriendly;
 
-	public void gainBuilding(GameObject building, GameLogic gameLogic){
+	public bool gainBuilding(GameObject building, GameLogic gameLogic){
 		Debug.Log("add the building");
 		BuildingSpot targetBuildingSpot = null;
 
@@ -31,9 +31,12 @@ public class BuildingZone : MonoBehaviour {
 
 			targetBuildingSpot.isOccupied = true;
 			building.transform.SetParent(targetBuildingSpot.transform);
+			return true;
+			//gameLogic.didGainCard(building);
 		}else{
 			Destroy(building);
 		}
+		return false;
 	}
 
 
@@ -57,8 +60,13 @@ public class BuildingZone : MonoBehaviour {
 
 		if(String.Compare(cardName, "Blacksmith") == 0){
 			GameObject newCard = gameLogic.createCardForId(4, gameLogic.globalDict);
-			gameLogic.gainCard(newCard);
+			gameLogic.gainCard(newCard, "NeutralPurchasePanel");
 
+		}else if(String.Compare(cardName, "TempleToTheHighGods") == 0){
+			gameLogic.drawCard();
+			gameLogic.updateMoneyCounter(1);
+			gameLogic.totalBuys++;
+			
 		}
 
 	}

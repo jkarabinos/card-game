@@ -36,13 +36,21 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 
 
+		if(gameLogic.totalActions <= 0 && String.Compare(c.type, "action") == 0){
+			return;
+		}
+
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
 			if(typeOfCard == c.typeOfCard){
 				d.newParent = dropZoneForName("PlayedThisTurn").transform;
 				increaseTotalCoin(c);
 				gameLogic.drawDuringTurn(c.draw);
-				gameLogic.updateBuys(c.buys);				
+				gameLogic.updateBuys(c.buys);
+				if(String.Compare(c.type, "action") == 0){
+					gameLogic.updateActionCounter(-1);
+				}	
+							
 			}
 		}
 		

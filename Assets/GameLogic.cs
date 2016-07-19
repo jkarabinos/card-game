@@ -16,12 +16,18 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, string> > globalDict;
 	public int totalCoin;
 	public int totalBuys;
+	public int totalActions;
+	public List<int> neutralCardList;
+	
+	//the health of the two players
+	public int friendlyHealth;
+	public int enemyHealth;
 
 
 	//the list of cards that the user has chosen to include in their deck
 	public List<int> userBuild;
 	
-	public void purchaseCard (int cardID){
+	public void purchaseCard (int cardID, string purchasePanelName){
 		GameObject card = createCardForId(cardID, globalDict);
 		CardObject cardScript = card.GetComponent<CardObject>();
 		int costOfCard = cardScript.cost;
@@ -30,13 +36,14 @@ public class GameLogic : MonoBehaviour {
 
 				//build a building
 				if(String.Compare(cardScript.type, "building")==0){
-					gainBuilding(card);
+					gainBuilding(card, purchasePanelName);
 				}
 				//gain any other type of card
 				else{
-					gainCard(card);
+					gainCard(card, purchasePanelName);
 					updateMoneyCounter(-costOfCard);
-					totalBuys --;
+					updateBuys(-1);
+					//totalBuys --;
 				}
 				 
 			}else{
@@ -47,38 +54,124 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
+	//if the card was gained by the user, check to see if we need to replace the neutral 
+	//zone with a new random card
+	public void didGainCard(GameObject card, string purchasePanelName){
+
+		//if the user gained the card without buying it
+		if(purchasePanelName == null){
+			return;
+		}
+
+		updatePileCount(card, purchasePanelName);
+		Debug.Log("bought from the panel " + purchasePanelName);
+
+		//if the card was bought from the neutral purchase panel, replace it with a new one
+		if(String.Compare(purchasePanelName, "NeutralPurchasePanel") == 0){
+			CardObject c = card.GetComponent<CardObject>();
+			if( String.Compare(c.rarity, "basic") != 0 ){
+				//if the card is not basic
+				replaceNeutralCard(c.id);
+			}
+		}
+
+	}
+
+	//subtract 1 from the pile count of the card
+	void updatePileCount(GameObject card, string purchasePanelName){
+		if(String.Compare(purchasePanelName, "FriendlyPurchasePanel") == 0 || 
+			String.Compare(purchasePanelName, "EnemyPurchasePanel") == 0){
+
+			//if the user has bought from the friendly panel or the enemy panel using some card
+			PurchasePanel pp = purchasePanelForName(purchasePanelName);
+			CardObject cardCopy = card.GetComponent<CardObject>();
+			CardObject cardOnPanel = pp.cardForId(cardCopy.id);
+			cardOnPanel.pileCount --;
+
+			if(cardOnPanel.pileCount == 0){
+				Destroy(cardOnPanel.gameObject);
+				//TODO: grey out the card here
+			}
+			
+		}	
+	}
+
+	
+
+	//replace the card with a new one
+	void replaceNeutralCard(int cardId){
+
+		PurchasePanel pp = purchasePanelForName("NeutralPurchasePanel");
+		foreach(Transform child in pp.transform){
+			CardObject c = child.GetComponent<CardObject>();
+			if(c.id == cardId){
+				//if the cards match
+				int siblingIndex = child.GetSiblingIndex();
+				Destroy(child.gameObject);
+				neutralCardList.Remove(cardId);
+				int newCardId = getRandomCard(neutralCardList);
+				neutralCardList.Add(newCardId);
+				pp.addCard(newCardId, this, siblingIndex);
+				break;
+			}
+		}
+	}
+
+
+
 	//place the new building in the earliest available buildingzone
-	public void gainBuilding(GameObject building){
+	public void gainBuilding(GameObject building, string purchasePanelName){
 		BuildingZone friendlyBuildingZone = getFriendlyBuildingZone();
-		friendlyBuildingZone.gainBuilding(building, this);
+		bool gainedBuilding = friendlyBuildingZone.gainBuilding(building, this);
+
+		if(gainedBuilding){
+			didGainCard(building, purchasePanelName);
+		}
 	}
 
 
 	//add the hand to the just played zone and later the player's deck
-	public void gainCard(GameObject card){
+	public void gainCard(GameObject card, string purchasePanelName){
+	
 		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
 		card.transform.SetParent(playedThisTurn.transform);
-
+		didGainCard(card, purchasePanelName);
+		
 	}
 
 	//draws the correct number of cards if a player plays a card that draws cards
 	public void drawDuringTurn(int drawNumber){
 		for (int i = 0; i < drawNumber; i++ ){
-		drawCard();
+			drawCard();
 		}
 	}
 
 	//updates totalBuys.  Is called from dropzone like drawDuringTurn()
 	public void updateBuys(int buyNumber){
+		TextHandler th = textHandlerForName("BuyCounter");
+		Text textBox = th.GetComponent<Text>();
 		totalBuys += buyNumber;
+		textBox.text  = "Buys: " + totalBuys.ToString();
 	}
 
 	//is called in the DropZone script when a player drops a treasure onto the tabletop.  Updates the total coin and textual representation
 	public void updateMoneyCounter(int money){
-		Text textBox = this.transform.GetComponentInChildren<Text>();
+		TextHandler th = textHandlerForName("MoneyCounter");
+		Text textBox = th.GetComponent<Text>();
 		totalCoin += money;
-		textBox.text  = totalCoin.ToString();
+		textBox.text  = "Coin: " + totalCoin.ToString();
 	}
+
+
+	//updates the number of actions for the user and displays it in the appropriate text box
+	public void updateActionCounter(int actions){
+		TextHandler th = textHandlerForName("ActionCounter");
+		Text textBox = th.GetComponent<Text>();
+		totalActions += actions;
+		textBox.text  = "Actions: " + totalActions.ToString();
+
+	}
+
 	//draws a card and checks to see if the deck is empty
 	public void drawCard(){
 		if (deck.Count <= 0){
@@ -96,6 +189,10 @@ public class GameLogic : MonoBehaviour {
 		cardObject.isDraggable = true;
 		//move a card into the hand once it is drawn
 		card.transform.SetParent( hand.transform );
+
+
+		CardStack cardDeck = cardStackForName("FriendlyDeck");
+		cardDeck.updateCount(deck.Count);
 	}
 
 	//set the global hand variable at the start of the game
@@ -111,8 +208,17 @@ public class GameLogic : MonoBehaviour {
 		initializeDiscard();
 		shuffleDeck();
 		setAllPurchasePanels();
+
 		totalCoin = 0;
-		totalBuys = 1;
+		totalBuys = 0;
+		totalActions = 0;
+		friendlyHealth = 30;
+		enemyHealth = 30;
+
+
+		updateMoneyCounter(0);
+		updateBuys(-totalBuys + 1);
+		updateActionCounter(-totalActions + 1);
 		initializeMonsters();
 
 		drawHand();
@@ -147,11 +253,12 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	void setAllPurchasePanels(){
-		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 11});
-		List<int> neutralList = setNeutralList();
+
+		List<int> friendlyList = new List<int>(new int[] {6, 10, 12, 13, 25, 26});
+		neutralCardList = setNeutralList();
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");
-		setPurchase( neutralList, "NeutralPurchasePanel");
+		setPurchase( neutralCardList, "NeutralPurchasePanel");
 		setPurchase( enemyList, "EnemyPurchasePanel");
 	}
 
@@ -169,6 +276,7 @@ public class GameLogic : MonoBehaviour {
 
 
 	//return a random card for the neutral list so far
+	//note that for this to work we must begin id-ing the cards at 0 and not skip any numbers
 	int getRandomCard(List<int> neutralList){
 		string targetRarity = decideTargetRarity();
 
@@ -180,26 +288,41 @@ public class GameLogic : MonoBehaviour {
 			Dictionary<string, string> individualCardDict = globalDict[idString];
 			if(individualCardDict != null){
 				if(String.Compare(individualCardDict["rarity"], targetRarity) == 0){
-					//if the card is the target rarity, add its id to the possible card list
-					possibleCardIds.Add(i);
+					//if the card is the target rarity, and not a monster, add its id to the possible card list
+					if(String.Compare(individualCardDict["type"], "monster") != 0){
+						if(!listCotainsInt(neutralList, i)){
+							possibleCardIds.Add(i);
+						}
+					}
 				}
 			}
 		}
 
-		Debug.Log("the number of possible cards " + possibleCardIds.Count +  " for rarity " + targetRarity);
+		//Debug.Log("the number of possible cards " + possibleCardIds.Count +  " for rarity " + targetRarity);
 
 		//now randomly select a card from the possible card list
-		System.Random rnd = new System.Random();
+		CryptoRandom rnd = new CryptoRandom();
 		int randIndex = rnd.Next(0, possibleCardIds.Count); 
 		return possibleCardIds[randIndex];
 
+	}
+
+	//returns if an int is contained in a list
+	bool listCotainsInt(List<int> list, int a){
+		Debug.Log("num cards " + list.Count);
+		for(int i = 0; i < list.Count; i++){
+			if(list[i] == a){
+				return true;
+			}
+		}
+		return false;
 	}
 
 
 	//randomly determines the rarity of the card for the neutral zone
 	string decideTargetRarity(){
 
-		System.Random rnd = new System.Random();
+		CryptoRandom rnd = new CryptoRandom();
 		int randNum = rnd.Next(0, 100); 
 
 		if(randNum < 50){
@@ -220,6 +343,8 @@ public class GameLogic : MonoBehaviour {
 		CardDictionary cardDictionary = new CardDictionary();
 		cardDictionary.readFile();
 		globalDict = cardDictionary.globalDictionary;
+
+
 		
 		for( int i = 0; i < 10; i++ ){
 
@@ -239,10 +364,42 @@ public class GameLogic : MonoBehaviour {
 				cardScript.typeOfCard = CardObject.Type.ATTACK;
 			}
 
+
+
 			cardScript.isPurchasable = false;
 
 			deck.Add(card); 
 		}
+
+		CardStack cardDeck = cardStackForName("FriendlyDeck");
+		cardDeck.updateCount(deck.Count);
+	}
+
+
+	public CardStack cardStackForName(string name){
+		foreach(Transform child in this.transform){
+			CardStack cs = child.GetComponent<CardStack>();
+			if(cs != null){
+				if(String.Compare(name, cs.stackName) == 0){
+					return cs;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public TextHandler textHandlerForName(string name){
+		foreach(Transform child in this.transform){
+			TextHandler t = child.GetComponent<TextHandler>();
+			if(t != null){
+				if(String.Compare(name, t.textBoxName) == 0){
+					return t;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	//create a discard pile to store used cards
@@ -292,7 +449,7 @@ public class GameLogic : MonoBehaviour {
 			deck.RemoveAt(0);
 		}
 
-		System.Random rnd = new System.Random();
+		CryptoRandom rnd = new CryptoRandom();
 		
 		
 
@@ -385,15 +542,25 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
+	void updateDiscard(){
+		CardStack cardStackDiscard = cardStackForName("FriendlyDiscard");
+		cardStackDiscard.updateCount(discardPile.Count);
+	}
+
 	//Ends your turn.  Clears the tabletop and hand.  Draws a new hand.
 	public void endTurn(){
 		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
 		clearDropZone(playedThisTurn);
 		clearDropZone(hand);
+		
 		Debug.Log("the number of cards in the discard pile is " + discardPile.Count);
 		updateMoneyCounter(-totalCoin);
-		totalBuys = 1;
+		//totalBuys = 1;
+		updateBuys(-totalBuys + 1);
+		updateActionCounter(-totalActions + 1);
 		drawHand();
+
+		updateDiscard();
 
 
 		//temperory, normally this would be called by input from the server

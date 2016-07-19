@@ -8,6 +8,8 @@ using System;
 public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler  {
 	
 
+	public bool isHero;
+
 	public void OnPointerEnter(PointerEventData eventData){
 		//Debug.Log("OnPointerEnter");
 
@@ -25,25 +27,48 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		CardObject cardObject = d.gameObject.GetComponent<CardObject>();
 		if(String.Compare(cardObject.type, "attack") == 0){
 
+			//send the card to the played this turn zone
 			Transform hand = d.originalParent;
 			DropZone dropZone = hand.GetComponent<DropZone>();
 			d.newParent = dropZone.dropZoneForName("PlayedThisTurn").transform;
-			Transform targetCard = this.transform;
-			CardObject target = targetCard.GetComponent<CardObject>();
-			target.health -= cardObject.damage;
-			
-			//remove a monster if it dies
-			if(target.health <= 0 && String.Compare(target.type, "monster") == 0){
-				removeMonster(targetCard);
-			}
 
-			//remove a building when its health reaches zero
-			if(target.health <= 0 && (String.Compare(target.type, "building") == 0
-									|| String.Compare(target.type, "hero") == 0)){
-				Destroy(targetCard.gameObject);
+
+			//if the attack is targeting a card, perfom the necessary operations
+			if(!isHero){
+				didAttackCard(cardObject);
+			}else{
+				didAttackHero(cardObject);
 			}
+			
 		}
 	
+	}
+
+	//if the user targeted the hero with the attack
+	void didAttackHero(CardObject attackCard){
+		Transform canvas = this.transform.parent;
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		gameLogic.enemyHealth -= attackCard.damage;
+
+		Text textBox = this.transform.GetComponentInChildren<Text>();
+		textBox.text = gameLogic.enemyHealth.ToString();
+	}
+
+	void didAttackCard(CardObject attackCard){
+		Transform targetCard = this.transform;
+		CardObject target = targetCard.GetComponent<CardObject>();
+		target.health -= attackCard.damage;
+			
+		//remove a monster if it dies
+		if(target.health <= 0 && String.Compare(target.type, "monster") == 0){
+			removeMonster(targetCard);
+		}
+
+		//remove a building when its health reaches zero
+		if(target.health <= 0 && (String.Compare(target.type, "building") == 0
+								|| String.Compare(target.type, "hero") == 0)){
+			Destroy(targetCard.gameObject);
+		}
 	}
 
 

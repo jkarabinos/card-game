@@ -50,4 +50,7 @@ public class CardObject : MonoBehaviour {
 	//if the cards are purchasable, this will store the number that can still be purchased from this pile
 	public int pileCount;
 
+	//the number of attacks a hero card can make
+	public int attacks;
+
 }

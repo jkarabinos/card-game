@@ -20,6 +20,11 @@ public class HeroAttackHandler : MonoBehaviour, IPointerClickHandler {
 
 		//if we click on a hero in the friendly hero zone
 		if(String.Compare(c.type, "hero") == 0 && possibleHeroZone != null){
+			//if the hero is out of attacks or the hero zone is not friendly
+			if(c.attacks <= 0 || !possibleHeroZone.isFriendly){
+				return;
+			}
+
 			Debug.Log("clicked a card to attack with");
 
 			//we know this hero is in the friendly herozone, so we can now access the canvas

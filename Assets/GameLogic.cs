@@ -589,13 +589,26 @@ public class GameLogic : MonoBehaviour {
 		startTurn();
 	}
 
-	//check for start of turn triggers, note that the hand was already drawn in end turn
+	
 	public void startTurn(){
+		//check for start of turn triggers, note that the hand was already drawn in end turn
 		BuildingZone bz = getFriendlyBuildingZone();
 		bz.handleBuildingTriggers(this);
 
+		//set the number of attacks that a hero can make at the beginning of the turn
+		setHeroAttacks();
+
 	}
 
+	void setHeroAttacks(){
+		HeroZone heroZone = getFriendlyHeroZone();
+		foreach(Transform child in heroZone.transform){
+			CardObject c = child.GetComponent<CardObject>();
+			if(c != null){
+				c.attacks = 1;
+			}
+		}
+	}
 
 
 }

@@ -112,7 +112,8 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 					if(numHeroes < 5){
 						Destroy(placeholder);
 						//Destroy(heroPlaceholder)
-						d.newParent = this.transform;	
+						d.newParent = this.transform;
+						//c.attacks = 1; // if the hero has charge
 						numHeroes++;
 					}
 				}		

@@ -75,6 +75,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			CardObject c = this.transform.GetComponent<CardObject>();
 			if(isCastle){
 				didAttackCastle(gameLogic.selectedHero.GetComponent<CardObject>());
+				gameLogic.selectedHero.GetComponent<CardObject>().attacks --; 
 				gameLogic.selectedHero = null;
 			}
 			else if(String.Compare(c.type, "hero") == 0){

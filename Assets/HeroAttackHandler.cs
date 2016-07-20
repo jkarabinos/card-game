@@ -32,6 +32,7 @@ public class HeroAttackHandler : MonoBehaviour, IPointerClickHandler {
 			Transform canvas = tabletop.parent;
 			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 			gameLogic.selectedHero = c.gameObject;
+			gameLogic.setSelected(c);
 		}
 
 		//GameObject card = eventData.pointerEnter;

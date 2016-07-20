@@ -66,7 +66,8 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			}
 			else if(String.Compare(c.type, "hero") == 0){
 				if(isLegalHeroTarget(c)){
-					//didAttackHero(gameLogic.selectedHero.GetComponent<CardObject>());
+					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
+					heroDidAttack(gameLogic);
 				}
 			}else if(String.Compare(c.type, "monster") == 0){
 				if(isLegalMonsterTarget(c)){
@@ -84,6 +85,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 	void heroDidAttack(GameLogic gameLogic){
 		gameLogic.selectedHero.GetComponent<CardObject>().attacks --;
+		gameLogic.removeSelected(gameLogic.selectedHero.GetComponent<CardObject>());
 		gameLogic.selectedHero = null;
 	}
 
@@ -120,6 +122,16 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 	}
 
 	bool isLegalHeroTarget(CardObject c){
+		Transform parent = c.transform.parent;
+		HeroZone heroZone = parent.GetComponent<HeroZone>();
+		if(heroZone == null){
+			return false;
+		}
+
+		if(heroZone.isFriendly){
+			return false;
+		}
+
 		return true;
 	}
 

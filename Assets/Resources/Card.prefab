@@ -17,6 +17,7 @@ GameObject:
   - 114: {fileID: 11489078}
   - 114: {fileID: 11404756}
   - 114: {fileID: 11414282}
+  - 114: {fileID: 11465786}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -103,6 +104,26 @@ MonoBehaviour:
   m_PreferredHeight: 140
   m_FlexibleWidth: 0
   m_FlexibleHeight: 0
+--- !u!114 &11465786
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 127234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -405508275, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
 --- !u!114 &11482646
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -144,6 +165,7 @@ MonoBehaviour:
   cardName: 
   rarity: 
   pileCount: 0
+  attacks: 0
 --- !u!222 &22250458
 CanvasRenderer:
   m_ObjectHideFlags: 1

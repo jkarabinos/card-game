@@ -449,6 +449,23 @@ public class GameLogic : MonoBehaviour {
 		return card;
 	}
 
+	public void setSelected(CardObject card){
+		Debug.Log("attempting to set the card selected");
+		GameObject border = (GameObject)Instantiate(Resources.Load("Border"));
+		border.transform.SetParent(card.transform);
+		//selectedHero = card;
+	}
+
+	public void removeSelected(CardObject card){
+		foreach(Transform child in card.transform){
+			HighlightHandler h = child.GetComponent<HighlightHandler>();
+			if(h != null){
+				Destroy(child.gameObject);
+			}
+			
+		}
+	}
+
 	//arrange the cards in the deck array in a random order
 	public void shuffleDeck(){
 		List <GameObject> tempDeck = new List<GameObject>();

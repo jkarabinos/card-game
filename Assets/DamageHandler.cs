@@ -154,6 +154,15 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 	public void didAttackCard(CardObject attackCard){
 		int damage = 0;
 		if(String.Compare(attackCard.type, "hero") == 0){
+			CardObject attackedCard = this.transform.GetComponent<CardObject>();
+			if(String.Compare(attackedCard.type, "hero") == 0
+			|| String.Compare(attackedCard.type, "monster") == 0){
+				attackCard.health -= attackedCard.power;
+				Debug.Log("the attacking hero's health is " + attackCard.health);
+				if(attackCard.health <= 0){
+					Destroy(attackCard.gameObject);
+				}
+			}
 			damage = attackCard.power;
 		}else{
 			damage = attackCard.damage;

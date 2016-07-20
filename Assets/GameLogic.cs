@@ -610,5 +610,14 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
+	//add the default card effects to the game scene
+	public void playCard(CardObject c){
+		updateMoneyCounter(c.value);
+		drawDuringTurn(c.draw);
+		updateBuys(c.buys);
+		if(String.Compare(c.type, "action") == 0){
+			updateActionCounter(-1);
+		}
+	}
 
 }

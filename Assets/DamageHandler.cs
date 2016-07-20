@@ -40,6 +40,10 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 				didAttackCastle(cardObject);
 			}
 			
+			Transform canvas = getCanvas();
+			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+			gameLogic.playCard(cardObject);
+
 		}
 	
 	}

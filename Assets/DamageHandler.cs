@@ -44,9 +44,17 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 			gameLogic.playCard(cardObject);
 
+		}else{
+			//for a card that does not do damage but is attempting to be played
+			//yield the drop to the tabletop
+			Transform canvas = getCanvas();
+			DropZone tabletop = canvas.GetComponent<GameLogic>().dropZoneForName("Tabletop");
+			tabletop.OnDrop(eventData);
 		}
 	
 	}
+
+
 
 
 	public void OnPointerClick(PointerEventData eventData){

@@ -31,7 +31,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			return;
 		}
 
-		if(!c.isDraggable){
+		if(!c.isDraggable || String.Compare(c.type, "hero") == 0){
 			return;
 		}
 

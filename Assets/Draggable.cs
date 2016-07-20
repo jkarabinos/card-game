@@ -136,6 +136,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
 		this.transform.SetParent( newParent );
 
+		if(inHeroZone){
+			this.transform.SetSiblingIndex (heroPlaceholder.transform.GetSiblingIndex());
+		}
+
 		//to keep the card in the same place in the hand
 		if(originalParent == newParent){
 			//if the card will remain in the hand of the user, keep it at the same sibling index
@@ -144,11 +148,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
 
 		}
-
-		if(inHeroZone){
-			this.transform.SetSiblingIndex (heroPlaceholder.transform.GetSiblingIndex());
-		}
-
 		else{
 			cardScript.isDraggable = false;
 		}

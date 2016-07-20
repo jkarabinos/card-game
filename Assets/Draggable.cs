@@ -144,6 +144,11 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
 
 		}
+
+		if(inHeroZone){
+			this.transform.SetSiblingIndex (heroPlaceholder.transform.GetSiblingIndex());
+		}
+
 		else{
 			cardScript.isDraggable = false;
 		}

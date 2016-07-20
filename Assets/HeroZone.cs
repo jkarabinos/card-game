@@ -11,7 +11,6 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	public int numHeroes =0;
 	public GameObject selectedCard = null;
 
-	GameObject placeholder = null;
 	CardObject cardScript;
 
 
@@ -32,40 +31,7 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			}
 		}
 
-		/*
-		Debug.Log ("OnEndDrag");
-		//if(String.Compare(c.type , "hero") == 0){
-			placeholder = new GameObject();
-			placeholder.transform.SetParent( this.transform );
-			LayoutElement le = placeholder.AddComponent<LayoutElement>();
-			le.preferredWidth = selectedCard.GetComponent<LayoutElement>().preferredWidth;
-			le.preferredHeight = selectedCard.GetComponent<LayoutElement>().preferredHeight;
-			le.flexibleWidth = 0;
-			le.flexibleHeight = 0;
-			
-			//this.transform.SetParent( this.transform.parent.parent );
-
-
-			int newSiblingIndex = this.transform.childCount;
-
-			for (int i = 0; i < this.transform.childCount; i++) {
-				if(selectedCard.transform.position.x < this.transform.GetChild(i).position.x){
-
-					newSiblingIndex = i;
-
-					if (placeholder.transform.GetSiblingIndex() < newSiblingIndex)
-						newSiblingIndex--;
-
-					break;
-				}
-			}
-			placeholder.transform.SetSiblingIndex(newSiblingIndex);
-		}
-
-			//the original parent is the hand, the new parent might change if we move the card
-			
-		//}
-		*/
+	
 		
 
 	}
@@ -80,7 +46,6 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			}
 		}
 		
-		Destroy(placeholder);
 
 		Debug.Log("the pointer has exited");
 
@@ -110,9 +75,11 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			if(String.Compare(c.type, "hero") == 0){
 				if(isFriendly == true){
 					if(numHeroes < 5){
-						Destroy(placeholder);
+						
+						
 						//Destroy(heroPlaceholder)
 						d.newParent = this.transform;
+						//d.transform.SetSiblingIndex(siblingIndex);
 						//c.attacks = 1; // if the hero has charge
 						numHeroes++;
 					}

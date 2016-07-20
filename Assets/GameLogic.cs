@@ -449,9 +449,37 @@ public class GameLogic : MonoBehaviour {
 		return card;
 	}
 
+	public GameObject getBorderForCard(CardObject card){
+		foreach(Transform child in card.transform){
+			HighlightHandler h = child.GetComponent<HighlightHandler>();
+			if(h != null){
+				return child.gameObject;
+			}
+			
+		}
+		return null;
+	}
+
 	public void setSelected(CardObject card){
+		
+		GameObject border = getBorderForCard(card);
+
+		Sprite spr = Resources.Load <Sprite> ("card_game/selected_border2");
+		Image cardBorder = border.GetComponent<Image>();
+		cardBorder.sprite = spr;
+
+		//border.transform.SetParent(card.transform);
+		//selectedHero = card;
+	}
+
+	public void setAttackable(CardObject card){
 		Debug.Log("attempting to set the card selected");
 		GameObject border = (GameObject)Instantiate(Resources.Load("Border"));
+
+		Sprite spr = Resources.Load <Sprite> ("card_game/selected_border");
+		Image cardImage = border.GetComponent<Image>();
+		cardImage.sprite = spr;
+
 		border.transform.SetParent(card.transform);
 		//selectedHero = card;
 	}
@@ -587,6 +615,17 @@ public class GameLogic : MonoBehaviour {
 		cardStackDiscard.updateCount(discardPile.Count);
 	}
 
+	//remove all of the selected borders on the hero card
+	public void removedAllSelected(){
+		HeroZone hz = getFriendlyHeroZone();
+		foreach(Transform child in hz.transform){
+			CardObject c = child.GetComponent<CardObject>();
+			if(c != null){
+				removeSelected(c);
+			}
+		}
+	}
+
 	//Ends your turn.  Clears the tabletop and hand.  Draws a new hand.
 	public void endTurn(){
 		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
@@ -597,6 +636,7 @@ public class GameLogic : MonoBehaviour {
 		//totalBuys = 1;
 		updateBuys(-totalBuys + 1);
 		updateActionCounter(-totalActions + 1);
+		removedAllSelected();
 		drawHand();
 
 		updateDiscard();
@@ -622,6 +662,7 @@ public class GameLogic : MonoBehaviour {
 		foreach(Transform child in heroZone.transform){
 			CardObject c = child.GetComponent<CardObject>();
 			if(c != null){
+				setAttackable(c);
 				c.attacks = 1;
 			}
 		}

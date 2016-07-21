@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2969170c8bd9446b0b46387de91e3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  purchasePanelName: FriendlyPurchasePanel
+  purchasePanelName: 467269656e646c79507572636861736550616e656c
 --- !u!114 &270386904
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,7 +532,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ffb851107ba4222a1b42a430f41524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textBoxName: BuyCounter
+  textBoxName: 427579436f756e746572
 --- !u!114 &345524059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1762b3ef27c1d434d9064fed0eab2503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackName: FriendlyDiscard
+  stackName: 467269656e646c7944697363617264
 --- !u!1 &408655158
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ffb851107ba4222a1b42a430f41524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textBoxName: ActionCounter
+  textBoxName: 416374696f6e436f756e746572
 --- !u!114 &408655161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,7 +842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2969170c8bd9446b0b46387de91e3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  purchasePanelName: EnemyPurchasePanel
+  purchasePanelName: 456e656d79507572636861736550616e656c
 --- !u!114 &415187323
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1621,7 +1621,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: []
-  zoneName: PlayedThisTurn
+  zoneName: 506c61796564546869735475726e
   discardPile: []
   typeOfCard: 5
 --- !u!114 &937972623
@@ -1691,6 +1691,7 @@ GameObject:
   - 114: {fileID: 1034317658}
   - 114: {fileID: 1034317659}
   - 114: {fileID: 1034317660}
+  - 114: {fileID: 1034317661}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1830,6 +1831,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7e3d1acc6ca54c5fa39a91bd305db6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1034317661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1034317653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31227a5a2bcfa4c399318f3656aabbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1067297179
@@ -2096,7 +2108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2969170c8bd9446b0b46387de91e3333, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  purchasePanelName: NeutralPurchasePanel
+  purchasePanelName: 4e65757472616c507572636861736550616e656c
 --- !u!114 &1238638649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2502,7 +2514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ffb851107ba4222a1b42a430f41524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textBoxName: MoneyCounter
+  textBoxName: 4d6f6e6579436f756e746572
 --- !u!1 &1523466505
 GameObject:
   m_ObjectHideFlags: 0
@@ -2689,6 +2701,7 @@ MonoBehaviour:
   isFriendly: 1
   numHeroes: 0
   selectedCard: {fileID: 0}
+  cardScript: {fileID: 0}
 --- !u!225 &1537636069
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2897,7 +2910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: []
-  zoneName: Hand
+  zoneName: 48616e64
   discardPile: []
   typeOfCard: 0
 --- !u!1 &1666440166
@@ -3381,6 +3394,7 @@ MonoBehaviour:
   isFriendly: 0
   numHeroes: 0
   selectedCard: {fileID: 0}
+  cardScript: {fileID: 0}
 --- !u!225 &1754739186
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3937,7 +3951,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1762b3ef27c1d434d9064fed0eab2503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stackName: FriendlyDeck
+  stackName: 467269656e646c794465636b
 --- !u!1 &2010625724
 GameObject:
   m_ObjectHideFlags: 0
@@ -4133,7 +4147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deck: []
-  zoneName: Tabletop
+  zoneName: 5461626c65746f70
   discardPile: []
   typeOfCard: 5
 --- !u!114 &2074781078

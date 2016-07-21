@@ -1,5 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System;
+using GameSparks;
+using GameSparks.Core;
+using GameSparks.Platforms;
+using GameSparks.Platforms.IOS;
+using GameSparks.Platforms.WebGL;
 
 public class GSConnectionManager : MonoBehaviour {
 
@@ -7,15 +13,14 @@ public class GSConnectionManager : MonoBehaviour {
 
 		Debug.Log("Authorizing Player");
 		new GameSparks.Api.Requests.AuthenticationRequest ()
-			.SetUserName ("johnjohn")
+			.SetUserName ("johnjohnjohn")
 			.SetPassword ("password")
 			.Send ((response) => {
 				if(!response.HasErrors){
 					GameLogic gl = this.transform.GetComponent<GameLogic>();
 					Debug.Log("Player Authenticated");
-					gl.startTheGame();
-					testSavePlayer();
-
+					
+					wasAuthenticated(gl);
 
 				}else{
 					Debug.Log("Error Authenticating Player");
@@ -23,10 +28,15 @@ public class GSConnectionManager : MonoBehaviour {
 					registerPlayer();
 				}
 
-			});
+		});
 
 	}
 
+
+	public void wasAuthenticated(GameLogic gl){
+		gl.startTheGame();
+		findMatch();
+	}
 
 	//register a new player to GameSparks
 	public void registerPlayer(){
@@ -34,19 +44,19 @@ public class GSConnectionManager : MonoBehaviour {
 		Debug.Log ("Registering player");
 		new GameSparks.Api.Requests.RegistrationRequest()
 			.SetDisplayName ("king_john")
-			.SetUserName ("johnjohn")
+			.SetUserName ("johnjohnjohn")
 			.SetPassword ("password")
 			.Send ((response) => {
 
 				if(!response.HasErrors){
 					Debug.Log("Player Registered");
 					GameLogic gl = this.transform.GetComponent<GameLogic>();
-					gl.startTheGame();
+					wasAuthenticated(gl);
 				}else{
 					Debug.Log("Error Registering Player");
 				}
 
-			});
+		});
 	}
 
 
@@ -58,10 +68,49 @@ public class GSConnectionManager : MonoBehaviour {
 
 				if(!response.HasErrors){
 					Debug.Log("Player saved to GameSparks");
+					loadPlayerData();
 				}else{
 					Debug.Log("Error Saving Player Data...");
 				}
-			});
+		});
 	}
+
+
+	//load the simple player data from GameSparks
+	public void loadPlayerData(){
+
+		new GameSparks.Api.Requests.LogEventRequest().SetEventKey("LOAD_PLAYER").Send((response) => {
+			if (!response.HasErrors) {
+				Debug.Log("Received Player Data From GameSparks... " + response.ScriptData);
+
+				GSData data = response.ScriptData.GetGSData("player_Data");
+				//Debug.Log("Player ID: " + data.GetString("playerID"));
+				//print("Player XP: " + data.GetString("playerXP"));
+				//print("Player Gold: " + data.GetString("playerGold"));
+				Debug.Log("Player Pos: " + data.GetString("playerPos"));
+			} else {
+				Debug.Log("Error Loading Player Data...");
+			}
+		});
+	}
+
+	//find a game for the authenticated player
+	public void findMatch(){
+		Debug.Log("attempting to find game");
+
+		new GameSparks.Api.Requests.MatchmakingRequest()
+			.SetMatchShortCode("MULTI_MCH")
+			.SetSkill(0)
+			.Send ((response) => {
+
+				if(!response.HasErrors){
+					Debug.Log("Started searching for a match successfully");
+				}else{
+					Debug.Log("Error Matchmaking...");
+				}
+		});
+	}
+
+
 
 }

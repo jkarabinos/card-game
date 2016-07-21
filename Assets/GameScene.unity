@@ -1689,6 +1689,8 @@ GameObject:
   - 114: {fileID: 1034317655}
   - 114: {fileID: 1034317654}
   - 114: {fileID: 1034317658}
+  - 114: {fileID: 1034317659}
+  - 114: {fileID: 1034317660}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1807,6 +1809,29 @@ MonoBehaviour:
   friendlyHealth: 0
   enemyHealth: 0
   userBuild: 
+--- !u!114 &1034317659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1034317653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1390bc64bbdfc4a954c3dfa8d20406, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings: {fileID: 11400000, guid: 4040d49f328414f869669096f7b564f7, type: 2}
+--- !u!114 &1034317660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1034317653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e3d1acc6ca54c5fa39a91bd305db6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1067297179
 Prefab:
   m_ObjectHideFlags: 0

@@ -202,13 +202,18 @@ public class GameLogic : MonoBehaviour {
 
 	//perform the necessary steps at the beginning of the game
 	public void startGame(){
+		GSConnectionManager cm = this.transform.GetComponent<GSConnectionManager>();
+		cm.authenticateUser();
+		//authenticateDevice();
+	}
+
+	public void startTheGame(){
 		setHand();
 		initializeBuild();
 		initializeDeck();
 		initializeDiscard();
 		shuffleDeck();
 		setAllPurchasePanels();
-
 		totalCoin = 0;
 		totalBuys = 0;
 		totalActions = 0;
@@ -221,8 +226,27 @@ public class GameLogic : MonoBehaviour {
 		updateActionCounter(-totalActions + 1);
 		initializeMonsters();
 
-		drawHand();
+		drawHand();	
 	}
+
+
+	/*void authenticateDevice(){
+
+		new GameSparks.Api.Requests.DeviceAuthenticationRequest().SetDisplayName("Randy").Send((response) => {
+			if (!response.HasErrors) {
+				Debug.Log("Device Authenticated...");
+				startTheGame();
+				testSavePlayer();
+			} else {
+				Debug.Log("Error Authenticating Device...");
+				
+			}
+		});
+	}*/
+
+
+
+	
 
 	//initializes monsters
 	void initializeMonsters(){

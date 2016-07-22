@@ -125,13 +125,15 @@ public class GSConnectionManager : MonoBehaviour {
 
 	// handle the start of game stuff
 	void ChallengeStartedMessageHandler(GameSparks.Api.Messages.ChallengeStartedMessage _message){
-		Debug.Log("a match has been started with the message name " + _message.ScriptData);
-		GSData data = _message.ScriptData.GetGSData("challenge");
+		Debug.Log("a challenge has been started");
+		GSData d  = _message.Challenge.ScriptData.GetGSData("currentHand");
+		string f = _message.Challenge.ScriptData.GetString("testData");
+		Debug.Log("the string: " + f);
+		//JSON j = d.JSON;
 		//Debug.Log("the raw raw data: " + data);
-		//Debug.Log("the current " + data.GetGSData("currentHand"));
+		Debug.Log("the test " + d);
 
-		
-
+		//get the data for the challenge
 	}
 
 	void MatchNotFoundMessageHandler(GameSparks.Api.Messages.MatchNotFoundMessage _message) {

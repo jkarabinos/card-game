@@ -6,10 +6,14 @@ using GameSparks.Core;
 using GameSparks.Platforms;
 using GameSparks.Platforms.IOS;
 using GameSparks.Platforms.WebGL;
+using GameSparks.Api.Responses;
+using GameSparks.Api.Requests;
 
 public class GSConnectionManager : MonoBehaviour {
 
 	public void authenticateUser(){
+
+
 
 		Debug.Log("Authorizing Player");
 		new GameSparks.Api.Requests.AuthenticationRequest ()
@@ -34,8 +38,14 @@ public class GSConnectionManager : MonoBehaviour {
 
 
 	public void wasAuthenticated(GameLogic gl){
+		//listenForMessages();
 		gl.startTheGame();
 		findMatch();
+	}
+
+
+	void listenForMessages(){
+		//ScriptMessage.Listener = ((ScriptMessage message) => { Debug.Log("We just got a message yooooo!!!"); });
 	}
 
 	//register a new player to GameSparks
@@ -104,13 +114,19 @@ public class GSConnectionManager : MonoBehaviour {
 			.Send ((response) => {
 
 				if(!response.HasErrors){
-					Debug.Log("Started searching for a match successfully");
+					Debug.Log("Started searching for a match successfully with response " + response);
 				}else{
 					Debug.Log("Error Matchmaking...");
 				}
 		});
 	}
 
+	void Awake() {
+		GameSparks.Api.Messages.MatchNotFoundMessage.Listener += MatchNotFoundMessageHandler;
+	}
+	void MatchNotFoundMessageHandler(GameSparks.Api.Messages.MatchNotFoundMessage _message) {
+		Debug.Log("Sorry, we could not find a match. Please try again later." );
+	}
 
 
 }

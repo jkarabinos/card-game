@@ -31,7 +31,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			return;
 		}
 
-		if(!c.isDraggable || String.Compare(c.type, "hero") == 0){
+		if(!c.isDraggable || String.Compare(c.type, "hero") == 0 || String.Compare(c.type, "attack") == 0){
 			return;
 		}
 
@@ -49,6 +49,13 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			if(gameLogic.totalActions <= 0){
 				return;
 			} 
+			//the user must target a legal target if the action can do damage
+			if(c.damage > 0){
+				return;
+			}
+		}
+
+		if(String.Compare(c.type, "treasure") == 0){
 			//the user must target a legal target if the action can do damage
 			if(c.damage > 0){
 				return;

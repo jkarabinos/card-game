@@ -38,15 +38,12 @@ public class GSConnectionManager : MonoBehaviour {
 
 
 	public void wasAuthenticated(GameLogic gl){
-		//listenForMessages();
+		
 		gl.startTheGame();
 		findMatch();
+		//testSavePlayer();
 	}
 
-
-	void listenForMessages(){
-		//ScriptMessage.Listener = ((ScriptMessage message) => { Debug.Log("We just got a message yooooo!!!"); });
-	}
 
 	//register a new player to GameSparks
 	public void registerPlayer(){
@@ -123,7 +120,20 @@ public class GSConnectionManager : MonoBehaviour {
 
 	void Awake() {
 		GameSparks.Api.Messages.MatchNotFoundMessage.Listener += MatchNotFoundMessageHandler;
+		GameSparks.Api.Messages.ChallengeStartedMessage.Listener += ChallengeStartedMessageHandler;
 	}
+
+	// handle the start of game stuff
+	void ChallengeStartedMessageHandler(GameSparks.Api.Messages.ChallengeStartedMessage _message){
+		Debug.Log("a match has been started with the message name " + _message.ScriptData);
+		GSData data = _message.ScriptData.GetGSData("challenge");
+		//Debug.Log("the raw raw data: " + data);
+		//Debug.Log("the current " + data.GetGSData("currentHand"));
+
+		
+
+	}
+
 	void MatchNotFoundMessageHandler(GameSparks.Api.Messages.MatchNotFoundMessage _message) {
 		Debug.Log("Sorry, we could not find a match. Please try again later." );
 	}

@@ -205,7 +205,7 @@ public class GameLogic : MonoBehaviour {
 	public void startGame(){
 		GSConnectionManager cm = this.transform.GetComponent<GSConnectionManager>();
 		cm.authenticateUser();
-		//authenticateDevice();
+		//startTheGame();
 	}
 
 

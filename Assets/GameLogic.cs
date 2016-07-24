@@ -802,12 +802,12 @@ public class GameLogic : MonoBehaviour {
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 
 		double enemyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", false);
-		double friendlyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", false);
+		double friendlyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", true);
 
 		int eh = Convert.ToInt32(enemyHealth);
 		int fh = Convert.ToInt32(friendlyHealth);
 		setPlayerHealth(eh, false);
-		//once we have a friendly player health, we will set it here
+		setPlayerHealth(fh, true);
 	}
 
 	//set the number of cards in the deck and 

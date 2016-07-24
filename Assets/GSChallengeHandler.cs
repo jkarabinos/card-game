@@ -16,8 +16,13 @@ public class GSChallengeHandler : MonoBehaviour {
 
 	void Awake() {
 		GameSparks.Api.Messages.ChallengeStartedMessage.Listener += ChallengeStartedMessageHandler;
+		GameSparks.Api.Messages.ChallengeTurnTakenMessage.Listener += PerformedActionHandler;
 	}
 
+	//handle loading the data when some type of action has been played by the user
+	void PerformedActionHandler(GameSparks.Api.Messages.ChallengeTurnTakenMessage _message){
+		loadChallengeData(challengeId, "health");
+	}
 
 	// handle the start of game stuff
 	void ChallengeStartedMessageHandler(GameSparks.Api.Messages.ChallengeStartedMessage _message){
@@ -39,6 +44,7 @@ public class GSChallengeHandler : MonoBehaviour {
 	
 
 	public void attackPlayer(int damage, int isFriendly){
+		Debug.Log("did attack player " + isFriendly);
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)
 			.SetEventKey ("action_attackPlayer")
@@ -48,7 +54,7 @@ public class GSChallengeHandler : MonoBehaviour {
 
 				if(!response.HasErrors){
 					Debug.Log("attacked player");
-					loadChallengeData(challengeId, "health");
+					//loadChallengeData(challengeId, "health");
 				}else{
 					Debug.Log("Error attacking player...");
 				}

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class CardObject : MonoBehaviour {
 
+	//to identify unique cards in the user's hand
+	public string cardId;
+
 	//the id of the card
 	public int id;
 

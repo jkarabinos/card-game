@@ -436,7 +436,7 @@ public class GameLogic : MonoBehaviour {
 		discardPile = new List<GameObject>();
 	}
 
-	public GameObject createCardForStats(Dictionary< string, object > stats){
+	public GameObject createCardForStats(Dictionary< string, object > stats, string key){
 		Debug.Log("the type of value is " + stats["value"].GetType());
 
 		//set the basic properties of the card
@@ -451,6 +451,7 @@ public class GameLogic : MonoBehaviour {
 		cardScript.type = (string) stats["cardType"];
 		//cardScript.cardName = individualCardDict["name"];
 		cardScript.rarity = (string) stats["rarity"];
+		cardScript.cardId = key;
 		//cardScript.id = id;
 
 		if(String.Compare(cardScript.type, "monsterCards") == 0 
@@ -856,7 +857,7 @@ public class GameLogic : MonoBehaviour {
 			//if the card is has not yet been rendered in the user's hand
 			if(!currentHand.ContainsKey(cardKey)){
 				Dictionary<string, object> cardStats = hand[cardKey];
-				GameObject card = createCardForStats(cardStats);
+				GameObject card = createCardForStats(cardStats, cardKey);
 				animateDraw(card);
 			}
 

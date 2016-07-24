@@ -162,23 +162,24 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 	public void didAttackCastle(CardObject attackCard){
 		Debug.Log("did attack castle");
 
-		int damage = 0;
+		/*int damage = 0;
 		if(String.Compare(attackCard.type, "hero") == 0){
 			damage = attackCard.power;
 		}else{
 			damage = attackCard.damage;
-		}
+		}*/
 
-		int isAFriend = 0;
-		if(isFriendly){
-			isAFriend = 1;
-		}
+		Dictionary<string, object> target = new Dictionary<string, object>();
+		target.Add("target", "isPlayer");
+		target.Add("isFriendly", isFriendly);
 
+		
+		
 		//this is where we will send the damage to gamesparks
 
 		Transform canvas = this.getCanvas();
 		GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
-		ch.attackPlayer(damage, isAFriend);
+		ch.playCard(attackCard, target);
 
 /*
 		Transform canvas = this.transform.parent;

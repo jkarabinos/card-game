@@ -8,6 +8,8 @@ using GameSparks.Platforms.IOS;
 using GameSparks.Platforms.WebGL;
 using GameSparks.Api.Responses;
 using GameSparks.Api.Requests;
+using System.Reflection;
+
 
 public class GSChallengeHandler : MonoBehaviour {
 
@@ -21,7 +23,10 @@ public class GSChallengeHandler : MonoBehaviour {
 
 	//handle loading the data when some type of action has been played by the user
 	void PerformedActionHandler(GameSparks.Api.Messages.ChallengeTurnTakenMessage _message){
-		loadChallengeData(challengeId, "everything");
+		//loadChallengeData(challengeId, "everything");
+		GameLogic gl = this.transform.GetComponent<GameLogic>();
+		gl.startChallenge(_message.Challenge.ScriptData);
+
 	}
 
 	// handle the start of game stuff
@@ -40,6 +45,28 @@ public class GSChallengeHandler : MonoBehaviour {
 		challengeId = thisChallengeId;
 		loadChallengeData(challengeId, "everything");
 
+	}
+
+	//send a request to the server to paly the card, the target could be another player, card, or nothing
+	public void playCard(CardObject card, Dictionary<string, object> target){
+		//Debug.Log("did attack player " + isFriendly);
+		GameLogic gl = this.transform.GetComponent<GameLogic>();
+		Dictionary<string, object> cardDict = gl.currentHand[card.cardId];
+
+		new GameSparks.Api.Requests.LogChallengeEventRequest ()
+			.SetChallengeInstanceId (challengeId)
+			.SetEventKey ("action_playCard")
+			.SetEventAttribute ("card", JsonUtility.ToJson(cardDict))
+			.SetEventAttribute ("target", JsonUtility.ToJson(target))
+			.Send ((response) => {
+
+				if(!response.HasErrors){
+					Debug.Log("played card");
+					//loadChallengeData(challengeId, "health");
+				}else{
+					Debug.Log("Error playing card...");
+				}
+		});
 	}
 	
 

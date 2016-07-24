@@ -56,8 +56,8 @@ public class GSChallengeHandler : MonoBehaviour {
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)
 			.SetEventKey ("action_playCard")
-			.SetEventAttribute ("card", JsonUtility.ToJson(cardDict))
-			.SetEventAttribute ("target", JsonUtility.ToJson(target))
+			.SetEventAttribute ("card", dictionaryToJson(cardDict))
+			.SetEventAttribute ("target", dictionaryToJson(target))
 			.Send ((response) => {
 
 				if(!response.HasErrors){
@@ -69,6 +69,29 @@ public class GSChallengeHandler : MonoBehaviour {
 		});
 	}
 	
+	string dictionaryToJson(Dictionary<string, object> dict)
+	{
+		Debug.Log("convert to json");
+    	//var entries = dict.Select(d => string.Format("\"{0}\": {1}", d.Key, string.Join(",", d.Value)));
+    	string json = "";
+    	string[] elements = new string[dict.Count];
+    	int count = 0;
+    	foreach(string key in dict.Keys){
+    		object value = dict[key];
+
+    		if( value.GetType().Equals(typeof(System.String)) ){
+    			value = "\"" + value + "\"";
+    		}
+    		json += "\"" + key + "\" :" + value;
+    		elements[count] = json;
+    		count++;
+    	}
+    	string fullJson = string.Join(",", elements);
+    	fullJson = "{" + fullJson + "}";
+    	Debug.Log(fullJson);
+    	return fullJson;
+	}
+
 
 	public void attackPlayer(int damage, int isFriendly){
 		Debug.Log("did attack player " + isFriendly);

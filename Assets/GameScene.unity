@@ -779,7 +779,7 @@ MonoBehaviour:
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 10
+    m_MinSize: 1
     m_MaxSize: 40
     m_Alignment: 0
     m_AlignByGeometry: 0
@@ -966,7 +966,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 30
+  m_Text: 0
 --- !u!222 &468348275
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1182,6 +1182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCastle: 1
+  isFriendly: 0
 --- !u!1001 &661761240
 Prefab:
   m_ObjectHideFlags: 0
@@ -1623,7 +1624,7 @@ MonoBehaviour:
   deck: []
   zoneName: PlayedThisTurn
   discardPile: []
-  typeOfCard: 5
+  typeOfCard: 0
 --- !u!114 &937972623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1692,6 +1693,8 @@ GameObject:
   - 114: {fileID: 1034317659}
   - 114: {fileID: 1034317660}
   - 114: {fileID: 1034317661}
+  - 114: {fileID: 1034317662}
+  - 114: {fileID: 1034317663}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1821,7 +1824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1390bc64bbdfc4a954c3dfa8d20406, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settings: {fileID: 11400000, guid: 4040d49f328414f869669096f7b564f7, type: 2}
+  settings: {fileID: 0}
 --- !u!114 &1034317660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1844,6 +1847,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31227a5a2bcfa4c399318f3656aabbdb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerId: 
+--- !u!114 &1034317662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1034317653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5392be1176724a82ace0f9b90fcf5b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1034317663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1034317653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c5c0078ddb9b43a4adacd7cc4d6e054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyId: 
 --- !u!1001 &1067297179
 Prefab:
   m_ObjectHideFlags: 0
@@ -4147,7 +4174,7 @@ MonoBehaviour:
   deck: []
   zoneName: Tabletop
   discardPile: []
-  typeOfCard: 5
+  typeOfCard: 0
 --- !u!114 &2074781078
 MonoBehaviour:
   m_ObjectHideFlags: 0

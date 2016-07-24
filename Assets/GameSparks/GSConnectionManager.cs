@@ -20,7 +20,7 @@ public class GSConnectionManager : MonoBehaviour {
 
 		Debug.Log("Authorizing Player");
 		new GameSparks.Api.Requests.AuthenticationRequest ()
-			.SetUserName ("johnjohnjohn")
+			.SetUserName ("johnjohnjohna")
 			.SetPassword ("password")
 			.Send ((response) => {
 				if(!response.HasErrors){
@@ -45,7 +45,7 @@ public class GSConnectionManager : MonoBehaviour {
 
 	public void wasAuthenticated(GameLogic gl){
 		
-		gl.startTheGame();
+		//gl.startTheGame();
 		findMatch();
 		//testSavePlayer();
 	}
@@ -57,7 +57,7 @@ public class GSConnectionManager : MonoBehaviour {
 		Debug.Log ("Registering player");
 		new GameSparks.Api.Requests.RegistrationRequest()
 			.SetDisplayName ("king_john")
-			.SetUserName ("johnjohnjohn")
+			.SetUserName ("johnjohnjohna")
 			.SetPassword ("password")
 			.Send ((response) => {
 
@@ -125,44 +125,14 @@ public class GSConnectionManager : MonoBehaviour {
 		});
 	}
 
-	//get the data for the current challenge of which the user is a part
-	void loadChallengeData(string challengeId){
-
-		new GameSparks.Api.Requests.GetChallengeRequest ()
-			.SetChallengeInstanceId (challengeId)
-			.Send ((response) => {
-				if (!response.HasErrors) {
-					Debug.Log ("Received Chal Data From GameSparks... ");
-					GSData currentHand = response.Challenge.ScriptData.GetGSData("currentHand").GetGSData(playerId);
-					GSData c0 = currentHand.GetGSData("c0");
-					Debug.Log("the first card is of type " + c0.GetString("cardType"));
-				} else {
-					Debug.Log ("Error Loading Challenge Data...");
-				}
-		});
-	}
+	
 
 	void Awake() {
 		GameSparks.Api.Messages.MatchNotFoundMessage.Listener += MatchNotFoundMessageHandler;
-		GameSparks.Api.Messages.ChallengeStartedMessage.Listener += ChallengeStartedMessageHandler;
+		//GameSparks.Api.Messages.ChallengeStartedMessage.Listener += ChallengeStartedMessageHandler;
 	}
 
-	// handle the start of game stuff
-	void ChallengeStartedMessageHandler(GameSparks.Api.Messages.ChallengeStartedMessage _message){
-		Debug.Log("a challenge has been started");
-		/*GSData d  = _message.Challenge.ScriptData.GetGSData("currentHand");
-		string f = _message.Challenge.ScriptData.GetString("testData");
-		Debug.Log("the string: " + f);
-		//JSON j = d.JSON;
-		//Debug.Log("the raw raw data: " + data);
-		Debug.Log("the test " + d);*/
-
-		//get the data for the challenge, note that both players will have access to the same data
-		string challengeId = _message.Challenge.ChallengeId; 
-		Debug.Log ("challenge id is " + challengeId);
-		loadChallengeData(challengeId);
-
-	}
+	
 
 	void MatchNotFoundMessageHandler(GameSparks.Api.Messages.MatchNotFoundMessage _message) {
 		Debug.Log("Sorry, we could not find a match. Please try again later." );

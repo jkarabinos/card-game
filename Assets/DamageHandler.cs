@@ -10,6 +10,9 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 	//note that this refers to the character of the user rather than the type of card hero
 	public bool isCastle;
 
+	//if a castle is friendly or enemy
+	public bool isFriendly;
+
 	public void OnPointerEnter(PointerEventData eventData){
 		//Debug.Log("OnPointerEnter");
 
@@ -166,13 +169,18 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			damage = attackCard.damage;
 		}
 
-
+		//this is where we will send the damage to gamesparks
+/*
 		Transform canvas = this.transform.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		gameLogic.enemyHealth -= damage;
 
+		*/
+	}
+
+	public void displayCastleHealth(int health){
 		Text textBox = this.transform.GetComponentInChildren<Text>();
-		textBox.text = gameLogic.enemyHealth.ToString();
+		textBox.text = health.ToString();
 	}
 
 	public void didAttackCard(CardObject attackCard){

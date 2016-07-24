@@ -20,7 +20,7 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		
 		if(selectedCard != null){
 			CardObject c = selectedCard.GetComponent<CardObject>();
-			if(String.Compare(c.type , "hero") == 0){
+			if(String.Compare(c.type , "heroCards") == 0){
 				Draggable draggable = selectedCard.GetComponent<Draggable>();
 				draggable.inHeroZone = true;
 				draggable.createHeroPlaceholder();
@@ -72,7 +72,7 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
 			
-			if(String.Compare(c.type, "hero") == 0){
+			if(String.Compare(c.type, "heroCards") == 0){
 				if(isFriendly == true){
 					if(numHeroes < 5){
 						

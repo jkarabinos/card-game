@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System;
+using GameSparks.Core;
 //Roman has no dick
 
 //This script handles most of the basic logic of the game
@@ -150,7 +151,7 @@ public class GameLogic : MonoBehaviour {
 	public void updateBuys(int buyNumber){
 		TextHandler th = textHandlerForName("BuyCounter");
 		Text textBox = th.GetComponent<Text>();
-		totalBuys += buyNumber;
+		totalBuys = buyNumber;
 		textBox.text  = "Buys: " + totalBuys.ToString();
 	}
 
@@ -158,7 +159,7 @@ public class GameLogic : MonoBehaviour {
 	public void updateMoneyCounter(int money){
 		TextHandler th = textHandlerForName("MoneyCounter");
 		Text textBox = th.GetComponent<Text>();
-		totalCoin += money;
+		totalCoin = money;
 		textBox.text  = "Coin: " + totalCoin.ToString();
 	}
 
@@ -167,7 +168,7 @@ public class GameLogic : MonoBehaviour {
 	public void updateActionCounter(int actions){
 		TextHandler th = textHandlerForName("ActionCounter");
 		Text textBox = th.GetComponent<Text>();
-		totalActions += actions;
+		totalActions = actions;
 		textBox.text  = "Actions: " + totalActions.ToString();
 
 	}
@@ -206,6 +207,8 @@ public class GameLogic : MonoBehaviour {
 		cm.authenticateUser();
 		//authenticateDevice();
 	}
+
+
 
 	public void startTheGame(){
 		setHand();
@@ -430,6 +433,48 @@ public class GameLogic : MonoBehaviour {
 	public void initializeDiscard(){
 		discardPile = new List<GameObject>();
 	}
+
+	public GameObject createCardForStats(Dictionary< string, object > stats){
+		Debug.Log("the type of value is " + stats["value"].GetType());
+
+		//set the basic properties of the card
+		GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
+
+		var cardScript = card.GetComponent<CardObject>();
+		cardScript.value = Convert.ToInt32( stats["value"] );
+		cardScript.damage = Convert.ToInt32( stats["damage"] );
+		cardScript.cost = Convert.ToInt32( stats["cost"] );
+		cardScript.draw = Convert.ToInt32( stats["draw"] );
+		cardScript.buys = Convert.ToInt32( stats["buys"] );
+		cardScript.type = (string) stats["cardType"];
+		//cardScript.cardName = individualCardDict["name"];
+		cardScript.rarity = (string) stats["rarity"];
+		//cardScript.id = id;
+
+		if(String.Compare(cardScript.type, "monsterCards") == 0 
+		|| String.Compare(cardScript.type, "heroCards") == 0
+		|| String.Compare(cardScript.type, "buildingCards") == 0){
+			cardScript.health = Convert.ToInt32( stats["health"] );
+		}
+
+		if(String.Compare(cardScript.type, "monster") == 0 
+		|| String.Compare(cardScript.type, "hero") == 0 ) {
+			cardScript.power = Convert.ToInt32( stats["power"] );
+		}
+
+		
+		
+
+		//set the appropriate image of the card
+		string imagePath = (string) stats["imagePath"];
+		Sprite spr = Resources.Load <Sprite> (imagePath);
+		Image cardImage = card.GetComponent<Image>();
+		cardImage.sprite = spr;
+
+
+		return card;
+	}
+
 
 	public GameObject createCardForId(int id, Dictionary< string, Dictionary<string, string> > globalDict){
 		//get the dictionary for the individual card, this will hold values like cost and damage
@@ -701,5 +746,111 @@ public class GameLogic : MonoBehaviour {
 			updateActionCounter(-1);
 		}
 	}
+
+
+	//set the appropriate player to this health visually
+	void setPlayerHealth(int health, bool isFriendly){
+
+		foreach(Transform child in this.transform){
+			DamageHandler dh = child.GetComponent<DamageHandler>();
+			if(dh!= null){
+				if(dh.isCastle && dh.isFriendly == isFriendly){
+					dh.displayCastleHealth(health);
+				}
+			}
+		}
+	}
+
+
+	//----------------------------------------//
+	//Updated gamelogic that deals with server//
+	//----------------------------------------//
+
+	//where we will animate the draw card method
+	void animateDraw(GameObject card){
+		DropZone hand = dropZoneForName("Hand");
+		card.GetComponent<CardObject>().isDraggable = true;
+		card.transform.SetParent(hand.transform);
+
+	}
+
+	//right now only takes hand as parameter, but will eventually take all of the challenge data
+	public void startChallenge(GSData challenge){
+
+		//set the health values of the players to the starting health
+		updateHealth(challenge);
+
+		//initialize the actions, buys, and money for the player
+		updateCounters(challenge);
+
+		//initialize the monster zone for the player
+
+		//initialize the purchase panels for the player
+
+		//initialize the deck and discard count icons for both players
+		updateDeckCounts(challenge);
+
+		//draw the hand for the player
+		updateHand(challenge);
+
+		
+	}
+
+
+	//visually set the health of both players 
+	void updateHealth(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+
+		double enemyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", false);
+		double friendlyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", false);
+
+		int eh = Convert.ToInt32(enemyHealth);
+		int fh = Convert.ToInt32(friendlyHealth);
+		setPlayerHealth(eh, false);
+		//once we have a friendly player health, we will set it here
+	}
+
+	//set the number of cards in the deck and 
+	void updateDeckCounts(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+
+		int myDeckCount = dataHandler.getFriendlyDeckCount(challenge);
+
+		CardStack cardDeck = cardStackForName("FriendlyDeck");
+		cardDeck.updateCount(myDeckCount);
+	}
+
+	//update the counters to match the server side
+	void updateCounters(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		//Debug.Log("about to get the stat");
+		//List< Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
+		double actionDouble = (double) dataHandler.getPlayerStat(challenge, "actions", true);
+		double buysDouble = (double) dataHandler.getPlayerStat(challenge, "buys", true);
+		double coinDouble = (double) dataHandler.getPlayerStat(challenge, "coin", true);
+
+		int actions = Convert.ToInt32( actionDouble );
+		int buys = Convert.ToInt32( buysDouble );
+		int coin = Convert.ToInt32( coinDouble );
+
+		updateMoneyCounter(coin);
+		updateActionCounter(actions);
+		updateBuys(buys);
+	}
+
+	//draw until you have the correct number of cards in hand
+	void updateHand(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		List< Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
+
+		for(int i = 0; i < hand.Count; i++){
+			//create the card objects and animate them into the user's hand
+			Dictionary<string, object> cardStats = hand[i];
+			GameObject card = createCardForStats(cardStats);
+			animateDraw(card);
+		}
+	}
+
+
 
 }

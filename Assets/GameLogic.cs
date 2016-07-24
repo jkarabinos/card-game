@@ -798,7 +798,7 @@ public class GameLogic : MonoBehaviour {
 
 
 	//visually set the health of both players 
-	void updateHealth(GSData challenge){
+	public void updateHealth(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 
 		double enemyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", false);
@@ -811,7 +811,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	//set the number of cards in the deck and 
-	void updateDeckCounts(GSData challenge){
+	public void updateDeckCounts(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 
 		int myDeckCount = dataHandler.getFriendlyDeckCount(challenge);
@@ -821,7 +821,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	//update the counters to match the server side
-	void updateCounters(GSData challenge){
+	public void updateCounters(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 		//Debug.Log("about to get the stat");
 		//List< Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
@@ -839,7 +839,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	//draw until you have the correct number of cards in hand
-	void updateHand(GSData challenge){
+	public void updateHand(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 		List< Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
 

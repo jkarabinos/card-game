@@ -12,6 +12,7 @@ using GameSparks.Api.Requests;
 public class GSChallengeHandler : MonoBehaviour {
 
 	public string enemyId;
+	public string challengeId;
 
 	void Awake() {
 		GameSparks.Api.Messages.ChallengeStartedMessage.Listener += ChallengeStartedMessageHandler;
@@ -29,15 +30,33 @@ public class GSChallengeHandler : MonoBehaviour {
 		Debug.Log("the test " + d);*/
 
 		//get the data for the challenge, note that both players will have access to the same data
-		string challengeId = _message.Challenge.ChallengeId; 
-		Debug.Log ("challenge id is " + challengeId);
-		loadChallengeData(challengeId);
+		string thisChallengeId = _message.Challenge.ChallengeId; 
+		//Debug.Log ("challenge id is " + challengeId);
+		challengeId = thisChallengeId;
+		loadChallengeData(challengeId, "everything");
 
 	}
 	
 
+	public void attackPlayer(int damage, int isFriendly){
+		new GameSparks.Api.Requests.LogChallengeEventRequest ()
+			.SetChallengeInstanceId (challengeId)
+			.SetEventKey ("action_attackPlayer")
+			.SetEventAttribute ("damage", damage)
+			.SetEventAttribute ("isFriendly", isFriendly)
+			.Send ((response) => {
+
+				if(!response.HasErrors){
+					Debug.Log("attacked player");
+					loadChallengeData(challengeId, "health");
+				}else{
+					Debug.Log("Error attacking player...");
+				}
+		});
+	}
+
 	//get the data for the current challenge of which the user is a part
-	void loadChallengeData(string challengeId){
+	void loadChallengeData(string challengeId, string info){
 
 		new GameSparks.Api.Requests.GetChallengeRequest ()
 			.SetChallengeInstanceId (challengeId)
@@ -61,13 +80,21 @@ public class GSChallengeHandler : MonoBehaviour {
 					//Debug.Log("num players is " + response.Challenge.Accepted.Count);
 
 					GameLogic gl = this.transform.GetComponent<GameLogic>();
-					gl.startChallenge(response.Challenge.ScriptData);
+
+					if(String.Compare(info, "everything") == 0){
+						gl.startChallenge(response.Challenge.ScriptData);
+					}
+					else if(String.Compare(info, "health") == 0){
+						gl.updateHealth(response.Challenge.ScriptData);
+					}
+					
 					
 				} else {
 					Debug.Log ("Error Loading Challenge Data...");
 				}
 		});
 	}
+
 
 
 	//set the global enemy id property when a new challenge starts, this will be used to get enemy deck count

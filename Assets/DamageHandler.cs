@@ -169,7 +169,17 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			damage = attackCard.damage;
 		}
 
+		int isAFriend = 0;
+		if(isFriendly){
+			isAFriend = 1;
+		}
+
 		//this is where we will send the damage to gamesparks
+
+		Transform canvas = this.getCanvas();
+		GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
+		ch.attackPlayer(damage, isAFriend);
+
 /*
 		Transform canvas = this.transform.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();

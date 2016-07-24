@@ -116,6 +116,7 @@ public class GSChallengeHandler : MonoBehaviour {
 		}
 
 		//Debug.Log("we set the enemy id to " + enemyId);
+		//Debug.Log("the local id is " + localId);
 		
 	}
 

@@ -14,21 +14,22 @@ using GameSparks.Api.Requests;
 public class GSDataHandler : MonoBehaviour {
 
 	
-	public List< Dictionary <string, object> > convertHand(GSData challenge){
+	public Dictionary < string, Dictionary <string, object> > convertHand(GSData challenge){
 		Debug.Log("convert hand");
 		string playerId = this.transform.GetComponent<GSConnectionManager>().playerId;
 
 		GSData currentHand = challenge.GetGSData("currentHand").GetGSData(playerId);
 					
-		List< Dictionary<string, object> > handList = new List< Dictionary<string, object> >();
+		Dictionary< string, Dictionary<string, object> > handDict = new Dictionary< string, Dictionary<string, object> >();
 
 		foreach(KeyValuePair<string, object> cardPair in currentHand.BaseData){
 			GSData cardData = (GSData) cardPair.Value;
 			Dictionary<string, object> card =  (Dictionary<string, object>) cardData.BaseData;
-			handList.Add(card);
+			string key = cardPair.Key;
+			handDict.Add(key, card);
 		}
 
-		return handList;
+		return handDict;
 	}
 
 	

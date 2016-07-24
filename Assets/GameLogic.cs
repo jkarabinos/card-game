@@ -11,6 +11,8 @@ using GameSparks.Core;
 
 public class GameLogic : MonoBehaviour {
 
+	public Dictionary< string, Dictionary<string, object> > currentHand = new Dictionary< string, Dictionary<string, object> >();
+
 	public List<GameObject> deck;
 	public List<GameObject> discardPile;
 	public DropZone hand;
@@ -840,15 +842,27 @@ public class GameLogic : MonoBehaviour {
 
 	//draw until you have the correct number of cards in hand
 	public void updateHand(GSData challenge){
-		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
-		List< Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
+		//draw any cards that are not already in the user's hand
 
-		for(int i = 0; i < hand.Count; i++){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		Dictionary< string, Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
+
+
+		foreach(string cardKey in hand.Keys){
 			//create the card objects and animate them into the user's hand
-			Dictionary<string, object> cardStats = hand[i];
-			GameObject card = createCardForStats(cardStats);
-			animateDraw(card);
+			//Dictionary<string, object> cardStats = hand[i];
+
+
+			//if the card is has not yet been rendered in the user's hand
+			if(!currentHand.ContainsKey(cardKey)){
+				Dictionary<string, object> cardStats = hand[cardKey];
+				GameObject card = createCardForStats(cardStats);
+				animateDraw(card);
+			}
+
+			
 		}
+		currentHand = hand;
 	}
 
 

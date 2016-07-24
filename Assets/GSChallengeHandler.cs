@@ -21,7 +21,7 @@ public class GSChallengeHandler : MonoBehaviour {
 
 	//handle loading the data when some type of action has been played by the user
 	void PerformedActionHandler(GameSparks.Api.Messages.ChallengeTurnTakenMessage _message){
-		loadChallengeData(challengeId, "health");
+		loadChallengeData(challengeId, "everything");
 	}
 
 	// handle the start of game stuff

@@ -85,11 +85,6 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
 					heroDidAttack(gameLogic);
 				}
-			}else if(String.Compare(c.type, "building") == 0){
-				if(isLegalBuildingTarget(c)){
-					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
-					heroDidAttack(gameLogic);
-				}
 			}
 		}
 	}
@@ -100,27 +95,6 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		gameLogic.selectedHero = null;
 	}
 
-	//if the building is in the enemy building zone
-	bool isLegalBuildingTarget(CardObject c){
-		Transform parent = c.transform.parent;
-		BuildingSpot bs = parent.GetComponent<BuildingSpot>();
-		if(bs == null){
-			return false;
-		}
-
-		BuildingZone bz = bs.transform.parent.GetComponent<BuildingZone>();
-		if(bz == null){
-			return false;
-		}
-
-		if(bz.isFriendly){
-			return false;
-		}	
-
-		//if the building is in the enemy building zone
-		return true;
-
-	}
 
 	//if the monster is in the monster zone
 	bool isLegalMonsterTarget(CardObject c)	{
@@ -220,9 +194,8 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			removeMonster(targetCard);
 		}
 
-		//remove a building when its health reaches zero
-		if(target.health <= 0 && (String.Compare(target.type, "building") == 0
-								|| String.Compare(target.type, "hero") == 0)){
+		//remove a hero when its health reaches zero
+		if(String.Compare(target.type, "hero") == 0){
 			Destroy(targetCard.gameObject);
 		}
 	}

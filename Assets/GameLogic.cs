@@ -39,17 +39,11 @@ public class GameLogic : MonoBehaviour {
 		int costOfCard = cardScript.cost;
 		if(totalBuys > 0){
 			if(totalCoin >= costOfCard){
-
-				//build a building
-				if(String.Compare(cardScript.type, "building")==0){
-					gainBuilding(card, purchasePanelName);
-				}
-				//gain any other type of card
-				else{
-					gainCard(card, purchasePanelName);
-					updateMoneyCounter(-costOfCard);
-					updateBuys(-1);
-				}
+				
+				gainCard(card, purchasePanelName);
+				updateMoneyCounter(-costOfCard);
+				updateBuys(-1);
+			
 				 
 			}else{
 				Destroy(card);
@@ -118,18 +112,6 @@ public class GameLogic : MonoBehaviour {
 				pp.addCard(newCardId, this, siblingIndex);
 				break;
 			}
-		}
-	}
-
-
-
-	//place the new building in the earliest available buildingzone
-	public void gainBuilding(GameObject building, string purchasePanelName){
-		BuildingZone friendlyBuildingZone = getFriendlyBuildingZone();
-		bool gainedBuilding = friendlyBuildingZone.gainBuilding(building, this);
-
-		if(gainedBuilding){
-			didGainCard(building, purchasePanelName);
 		}
 	}
 
@@ -456,18 +438,10 @@ public class GameLogic : MonoBehaviour {
 		//cardScript.id = id;
 
 		if(String.Compare(cardScript.type, "monsterCards") == 0 
-		|| String.Compare(cardScript.type, "heroCards") == 0
-		|| String.Compare(cardScript.type, "buildingCards") == 0){
+		|| String.Compare(cardScript.type, "heroCards") == 0){
 			cardScript.health = Convert.ToInt32( stats["health"] );
-		}
-
-		if(String.Compare(cardScript.type, "monster") == 0 
-		|| String.Compare(cardScript.type, "hero") == 0 ) {
 			cardScript.power = Convert.ToInt32( stats["power"] );
 		}
-
-		
-		
 
 		//set the appropriate image of the card
 		string imagePath = (string) stats["imagePath"];
@@ -629,19 +603,6 @@ public class GameLogic : MonoBehaviour {
 		return null;
 	}
 
-	//returns a purchase panel for the given name
-	public BuildingZone getFriendlyBuildingZone(){
-		DropZone tabletopDropZone = dropZoneForName("Tabletop");
-		foreach(Transform child in tabletopDropZone.transform){
-			BuildingZone buildingZone = child.GetComponent<BuildingZone>();
-			if (buildingZone != null){
-				if (buildingZone.isFriendly){
-					return buildingZone;
-				}
-			}
-		}
-		return null;
-	}
 
 
 	public HeroZone getFriendlyHeroZone(){
@@ -726,9 +687,7 @@ public class GameLogic : MonoBehaviour {
 
 	
 	public void startTurn(){
-		//check for start of turn triggers, note that the hand was already drawn in end turn
-		BuildingZone bz = getFriendlyBuildingZone();
-		bz.handleBuildingTriggers(this);
+	
 
 		//set the number of attacks that a hero can make at the beginning of the turn
 		setHeroAttacks();
@@ -748,12 +707,19 @@ public class GameLogic : MonoBehaviour {
 
 	//add the default card effects to the game scene
 	public void playCard(CardObject c){
-		updateMoneyCounter(c.value);
+
+		/*updateMoneyCounter(c.value);
 		drawDuringTurn(c.draw);
 		updateBuys(c.buys);
 		if(String.Compare(c.type, "action") == 0){
 			updateActionCounter(-1);
-		}
+		}*/
+
+		//play a card that does not require a target
+		GSChallengeHandler ch = this.transform.GetComponent<GSChallengeHandler>();
+		Dictionary<string, object> target = new Dictionary<string, object>();
+		target.Add("target", "isFalse");
+		ch.playCard(c, target);
 	}
 
 
@@ -795,6 +761,7 @@ public class GameLogic : MonoBehaviour {
 
 	//right now only takes hand as parameter, but will eventually take all of the challenge data
 	public void startChallenge(GSData challenge, string activeUser){
+		Debug.Log("sync the board with the server");
 
 		//set the health values of the players to the starting health
 		updateHealth(challenge);

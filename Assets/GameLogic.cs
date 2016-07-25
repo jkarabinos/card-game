@@ -191,9 +191,9 @@ public class GameLogic : MonoBehaviour {
 
 	//perform the necessary steps at the beginning of the game
 	public void startGame(){
-		GSConnectionManager cm = this.transform.GetComponent<GSConnectionManager>();
-		cm.authenticateUser();
-		//startTheGame();
+		//GSConnectionManager cm = this.transform.GetComponent<GSConnectionManager>();
+		//cm.authenticateUser();
+		startTheGame();
 	}
 
 
@@ -711,18 +711,18 @@ public class GameLogic : MonoBehaviour {
 	//add the default card effects to the game scene
 	public void playCard(CardObject c){
 
-		/*updateMoneyCounter(c.value);
+		updateMoneyCounter(c.value);
 		drawDuringTurn(c.draw);
 		updateBuys(c.buys);
 		if(String.Compare(c.type, "action") == 0){
 			updateActionCounter(-1);
-		}*/
+		}
 
 		//play a card that does not require a target
-		GSChallengeHandler ch = this.transform.GetComponent<GSChallengeHandler>();
+		/*GSChallengeHandler ch = this.transform.GetComponent<GSChallengeHandler>();
 		Dictionary<string, object> target = new Dictionary<string, object>();
 		target.Add("target", "isFalse");
-		ch.playCard(c, target);
+		ch.playCard(c, target);*/
 	}
 
 

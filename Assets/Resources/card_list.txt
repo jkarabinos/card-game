@@ -5,7 +5,7 @@ imagePath:card_game/copper
 cost:0
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:basic
 id:0
 ---
@@ -16,7 +16,7 @@ imagePath:card_game/silver
 cost:3
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:basic
 id:1
 ---
@@ -27,7 +27,7 @@ imagePath:card_game/gold
 cost:6
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:basic
 id:2
 ---
@@ -38,7 +38,7 @@ imagePath:card_game/arrow
 cost:2
 draw:0
 buys:0
-type:attack
+type:attackCards
 rarity:basic
 id:3
 ---
@@ -49,7 +49,7 @@ imagePath:card_game/heavy_arrow
 cost:5
 draw:0
 buys:0
-type:attack
+type:attackCards
 rarity:basic
 id:4
 ---
@@ -60,7 +60,7 @@ imagePath:card_game/bright_lance
 cost:4
 draw:0
 buys:0
-type:action
+type:actionCards
 rarity:rare
 id:5
 ---
@@ -71,7 +71,7 @@ imagePath:card_game/tactful
 cost:6
 draw:2
 buys:1
-type:action
+type:actionCards
 rarity:epic
 id:6
 ---
@@ -84,7 +84,7 @@ draw:0
 buys:0
 health:3
 power:3
-type:monster
+type:monsterCards
 rarity:common
 id:7
 ---
@@ -97,7 +97,7 @@ draw:0
 buys:0
 health:3
 power:3
-type:monster
+type:monsterCards
 rarity:common
 id:8
 ---
@@ -110,7 +110,7 @@ draw:0
 buys:0
 health:4
 power:4
-type:monster
+type:monsterCards
 rarity:common
 id:9
 ---
@@ -122,7 +122,7 @@ cost:2
 draw:0
 buys:0
 health:3
-type:building
+type:buildingCards
 rarity:common
 id:10
 ---
@@ -135,7 +135,7 @@ draw:0
 buys:0
 power:3
 health:4
-type:hero
+type:heroCards
 rarity:common
 id:11
 ---
@@ -147,7 +147,7 @@ cost:3
 draw:0
 buys:0
 health:3
-type:building
+type:buildingCards
 rarity:common
 id:12
 ---
@@ -159,7 +159,7 @@ cost:3
 draw:0
 buys:0
 health:4
-type:building
+type:buildingCards
 rarity:rare
 id:13
 ---
@@ -170,7 +170,7 @@ imagePath:card_game/bootleg
 cost:4
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:rare
 id:14
 ---
@@ -181,7 +181,7 @@ imagePath:card_game/ruby
 cost:5
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:epic
 id:15
 ---
@@ -192,7 +192,7 @@ imagePath:card_game/diamond
 cost:8
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:epic
 id:16
 ---
@@ -203,7 +203,7 @@ imagePath:card_game/goblin_gold
 cost:2
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:common
 id:17
 ---
@@ -214,7 +214,7 @@ imagePath:card_game/reward
 cost:4
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:common
 id:18
 ---
@@ -225,7 +225,7 @@ imagePath:card_game/ransom
 cost:7
 draw:0
 buys:0
-type:treasure
+type:treasureCards
 rarity:rare
 id:19
 ---
@@ -236,7 +236,7 @@ imagePath:card_game/counterfeit_silver
 cost:7
 draw:0
 buys:1
-type:treasure
+type:treasureCards
 rarity:common
 id:20
 ---
@@ -247,7 +247,7 @@ imagePath:card_game/bolt
 cost:3
 draw:1
 buys:0
-type:action
+type:actionCards
 rarity:rare
 id:21
 ---
@@ -258,7 +258,7 @@ imagePath:card_game/fair-day_fire
 cost:4
 draw:0
 buys:1
-type:action
+type:actionCards
 rarity:rare
 id:22
 ---
@@ -269,7 +269,7 @@ imagePath:card_game/boomstick
 cost:5
 draw:0
 buys:0
-type:action
+type:actionCards
 rarity:epic
 id:23
 ---
@@ -280,7 +280,7 @@ imagePath:card_game/greek_fire
 cost:6
 draw:0
 buys:0
-type:action
+type:actionCards
 rarity:epic
 id:24
 ---
@@ -291,7 +291,7 @@ imagePath:card_game/temple
 cost:2
 draw:1
 buys:1
-type:building
+type:buildingCards
 health:8
 rarity:legendary
 id:25
@@ -303,7 +303,7 @@ imagePath:card_game/knowledge
 cost:1
 draw:3
 buys:0
-type:action
+type:actionCards
 rarity:common
 id:26
 ---

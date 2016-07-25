@@ -12,6 +12,7 @@ using GameSparks.Core;
 public class GameLogic : MonoBehaviour {
 
 	public Dictionary< string, Dictionary<string, object> > currentHand = new Dictionary< string, Dictionary<string, object> >();
+	public bool isMyTurn;
 
 	public List<GameObject> deck;
 	public List<GameObject> discardPile;
@@ -700,6 +701,11 @@ public class GameLogic : MonoBehaviour {
 
 	//Ends your turn.  Clears the tabletop and hand.  Draws a new hand.
 	public void endTurn(){
+
+		GSChallengeHandler ch = this.transform.GetComponent<GSChallengeHandler>();
+		ch.endTurnRequest();
+
+		/*
 		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
 		clearDropZone(playedThisTurn);
 		clearDropZone(hand);
@@ -715,7 +721,7 @@ public class GameLogic : MonoBehaviour {
 
 
 		//temperory, normally this would be called by input from the server
-		startTurn();
+		startTurn();*/
 	}
 
 	
@@ -764,6 +770,16 @@ public class GameLogic : MonoBehaviour {
 		}
 	}
 
+	//get the end turn button 
+	Transform getEndTurnButton(){
+		foreach(Transform child in this.transform){
+			EndTurnButton eb = child.GetComponent<EndTurnButton>();
+			if(eb != null){
+				return child;
+			}
+		}
+		return null;
+	}
 
 	//----------------------------------------//
 	//Updated gamelogic that deals with server//
@@ -778,7 +794,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	//right now only takes hand as parameter, but will eventually take all of the challenge data
-	public void startChallenge(GSData challenge){
+	public void startChallenge(GSData challenge, string activeUser){
 
 		//set the health values of the players to the starting health
 		updateHealth(challenge);
@@ -793,10 +809,30 @@ public class GameLogic : MonoBehaviour {
 		//initialize the deck and discard count icons for both players
 		updateDeckCounts(challenge);
 
+		//show whose turn it currently is
+		updateEndTurnButton(activeUser);
+
 		//draw the hand for the player
 		updateHand(challenge);
 
 		
+	}
+
+
+	//update the button and set the boolean to show if it is the user or opponent turn
+	public void updateEndTurnButton(string activeUser){
+		string localPlayer = this.transform.GetComponent<GSConnectionManager>().playerId;
+		Transform endButton = getEndTurnButton();
+		Text textBox = endButton.GetComponentInChildren<Text>();
+		if(String.Compare(activeUser, localPlayer) == 0){
+			//if it is the local player's turn
+			textBox.text = "End Turn";
+			isMyTurn = true;
+		}else{
+			//if it is the opponent's turn
+			textBox.text = "Enemy Turn";
+			isMyTurn = false;
+		}
 	}
 
 

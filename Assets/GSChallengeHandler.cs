@@ -23,22 +23,15 @@ public class GSChallengeHandler : MonoBehaviour {
 
 	//handle loading the data when some type of action has been played by the user
 	void PerformedActionHandler(GameSparks.Api.Messages.ChallengeTurnTakenMessage _message){
-		//loadChallengeData(challengeId, "everything");
-		Debug.Log("sync data after playing a card");
+
 		GameLogic gl = this.transform.GetComponent<GameLogic>();
-		gl.startChallenge(_message.Challenge.ScriptData);
+		gl.startChallenge(_message.Challenge.ScriptData, _message.Challenge.NextPlayer);
 
 	}
 
+
 	// handle the start of game stuff
 	void ChallengeStartedMessageHandler(GameSparks.Api.Messages.ChallengeStartedMessage _message){
-		Debug.Log("a challenge has been started");
-		/*GSData d  = _message.Challenge.ScriptData.GetGSData("currentHand");
-		string f = _message.Challenge.ScriptData.GetString("testData");
-		Debug.Log("the string: " + f);
-		//JSON j = d.JSON;
-		//Debug.Log("the raw raw data: " + data);
-		Debug.Log("the test " + d);*/
 
 		//get the data for the challenge, note that both players will have access to the same data
 		string thisChallengeId = _message.Challenge.ChallengeId; 
@@ -46,6 +39,25 @@ public class GSChallengeHandler : MonoBehaviour {
 		challengeId = thisChallengeId;
 		loadChallengeData(challengeId, "everything");
 
+	}
+
+	//if the user has pressed the end turn button
+	public void endTurnRequest(){
+		new GameSparks.Api.Requests.LogChallengeEventRequest ()
+			.SetChallengeInstanceId (challengeId)
+			.SetEventKey ("action_endTurn")
+			.Send ((response) => {
+
+				if(!response.HasErrors){
+					Debug.Log("Did End Turn");
+
+					//GameLogic gl = this.transform.GetComponent<GameLogic>();
+					//gl.startChallenge(response.Challenge.ScriptData);
+					
+				}else{
+					Debug.Log("Error ending turn...");
+				}
+		});
 	}
 
 	//send a request to the server to paly the card, the target could be another player, card, or nothing
@@ -132,18 +144,7 @@ public class GSChallengeHandler : MonoBehaviour {
 			.Send ((response) => {
 				if (!response.HasErrors) {
 					Debug.Log ("Received Chal Data From GameSparks... ");
-					/*GSData currentHand = response.Challenge.ScriptData.GetGSData("currentHand").GetGSData(playerId);
 					
-					List< Dictionary<string, object> > handList = new List< Dictionary<string, object> >();
-
-					foreach(KeyValuePair<string, object> cardPair in currentHand.BaseData){
-						GSData cardData = (GSData) cardPair.Value;
-						Dictionary<string, object> card =  (Dictionary<string, object>) cardData.BaseData;
-						handList.Add(card);
-						//string type = (string) card["cardType"];
-					}
-
-					//now we have the cards in a reasonable format. we can now pass them to the game logic script*/
 
 					setEnenmyId(response.Challenge.Accepted);
 					//Debug.Log("num players is " + response.Challenge.Accepted.Count);
@@ -151,7 +152,7 @@ public class GSChallengeHandler : MonoBehaviour {
 					GameLogic gl = this.transform.GetComponent<GameLogic>();
 
 					if(String.Compare(info, "everything") == 0){
-						gl.startChallenge(response.Challenge.ScriptData);
+						gl.startChallenge(response.Challenge.ScriptData, response.Challenge.NextPlayer);
 					}
 					else if(String.Compare(info, "health") == 0){
 						gl.updateHealth(response.Challenge.ScriptData);

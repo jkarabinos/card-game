@@ -36,7 +36,7 @@ public class GSDataHandler : MonoBehaviour {
 	//get the stat for the player for the particular key and challenge info
 	public object getPlayerStat(GSData challenge, string key, bool isFriendly){
 		string playerId = this.transform.GetComponent<GSConnectionManager>().playerId;
-		if(isFriendly){
+		if(!isFriendly){
 			//if we want an enemy stat
 			playerId = this.transform.GetComponent<GSChallengeHandler>().enemyId;
 		}

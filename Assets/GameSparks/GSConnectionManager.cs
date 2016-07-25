@@ -20,7 +20,7 @@ public class GSConnectionManager : MonoBehaviour {
 
 		Debug.Log("Authorizing Player");
 		new GameSparks.Api.Requests.AuthenticationRequest ()
-			.SetUserName ("johnjohnjohna")
+			.SetUserName ("johnjohnjohn")
 			.SetPassword ("password")
 			.Send ((response) => {
 				if(!response.HasErrors){
@@ -57,7 +57,7 @@ public class GSConnectionManager : MonoBehaviour {
 		Debug.Log ("Registering player");
 		new GameSparks.Api.Requests.RegistrationRequest()
 			.SetDisplayName ("king_john")
-			.SetUserName ("johnjohnjohna")
+			.SetUserName ("johnjohnjohn")
 			.SetPassword ("password")
 			.Send ((response) => {
 

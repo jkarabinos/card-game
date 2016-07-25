@@ -71,7 +71,8 @@ public class GSChallengeHandler : MonoBehaviour {
 	
 	string dictionaryToJson(Dictionary<string, object> dict)
 	{
-		Debug.Log("convert to json");
+		Debug.Log("convert to json with this many keys " + dict.Keys.Count);
+
     	//var entries = dict.Select(d => string.Format("\"{0}\": {1}", d.Key, string.Join(",", d.Value)));
     	string json = "";
     	string[] elements = new string[dict.Count];
@@ -82,7 +83,14 @@ public class GSChallengeHandler : MonoBehaviour {
     		if( value.GetType().Equals(typeof(System.String)) ){
     			value = "\"" + value + "\"";
     		}
-    		json += "\"" + key + "\" :" + value;
+    		if( value.GetType().Equals(typeof(System.Boolean)) ){
+    			if((bool) value){
+    				value = "true";
+    			}else{
+    				value = "false";
+    			}
+    		}
+    		json =  "\"" + key + "\" : " + value;
     		elements[count] = json;
     		count++;
     	}

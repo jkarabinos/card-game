@@ -24,6 +24,7 @@ public class GSChallengeHandler : MonoBehaviour {
 	//handle loading the data when some type of action has been played by the user
 	void PerformedActionHandler(GameSparks.Api.Messages.ChallengeTurnTakenMessage _message){
 		//loadChallengeData(challengeId, "everything");
+		Debug.Log("sync data after playing a card");
 		GameLogic gl = this.transform.GetComponent<GameLogic>();
 		gl.startChallenge(_message.Challenge.ScriptData);
 
@@ -62,7 +63,10 @@ public class GSChallengeHandler : MonoBehaviour {
 
 				if(!response.HasErrors){
 					Debug.Log("played card");
-					//loadChallengeData(challengeId, "health");
+
+					//GameLogic gl = this.transform.GetComponent<GameLogic>();
+					//gl.startChallenge(response.Challenge.ScriptData);
+					
 				}else{
 					Debug.Log("Error playing card...");
 				}
@@ -88,6 +92,7 @@ public class GSChallengeHandler : MonoBehaviour {
     				value = "true";
     			}else{
     				value = "false";
+    				Debug.Log("we have a false entry");
     			}
     		}
     		json =  "\"" + key + "\" : " + value;

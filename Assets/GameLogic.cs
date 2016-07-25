@@ -802,6 +802,7 @@ public class GameLogic : MonoBehaviour {
 
 	//visually set the health of both players 
 	public void updateHealth(GSData challenge){
+		Debug.Log("updating the health for both players");
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 
 		double enemyHealth = (double) dataHandler.getPlayerStat(challenge, "playerHealth", false);

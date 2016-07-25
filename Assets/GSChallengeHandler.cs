@@ -17,13 +17,14 @@ public class GSChallengeHandler : MonoBehaviour {
 	public string challengeId;
 
 	void Awake() {
+		Debug.Log("set the turn taken function");
 		GameSparks.Api.Messages.ChallengeStartedMessage.Listener += ChallengeStartedMessageHandler;
 		GameSparks.Api.Messages.ChallengeTurnTakenMessage.Listener += PerformedActionHandler;
 	}
 
 	//handle loading the data when some type of action has been played by the user
 	void PerformedActionHandler(GameSparks.Api.Messages.ChallengeTurnTakenMessage _message){
-
+		Debug.Log("the user took some type of action");
 		GameLogic gl = this.transform.GetComponent<GameLogic>();
 		gl.startChallenge(_message.Challenge.ScriptData, _message.Challenge.NextPlayer);
 
@@ -45,7 +46,7 @@ public class GSChallengeHandler : MonoBehaviour {
 	public void endTurnRequest(){
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)
-			.SetEventKey ("action_endTurn")
+			.SetEventKey ("action_endTurn2")
 			.Send ((response) => {
 
 				if(!response.HasErrors){
@@ -68,7 +69,7 @@ public class GSChallengeHandler : MonoBehaviour {
 
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)
-			.SetEventKey ("action_playCard")
+			.SetEventKey ("action_playCard2")
 			.SetEventAttribute ("card", dictionaryToJson(cardDict))
 			.SetEventAttribute ("target", dictionaryToJson(target))
 			.Send ((response) => {
@@ -76,11 +77,12 @@ public class GSChallengeHandler : MonoBehaviour {
 				if(!response.HasErrors){
 					Debug.Log("played card");
 
-					//GameLogic gl = this.transform.GetComponent<GameLogic>();
-					//gl.startChallenge(response.Challenge.ScriptData);
+					//move the card to the appropriate zone after it is correctly played
 					
 				}else{
 					Debug.Log("Error playing card...");
+
+					//send the card back to the user's hand after an illegal play attemp
 				}
 		});
 	}

@@ -31,7 +31,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			return;
 		}
 
-		if(!c.isDraggable || String.Compare(c.type, "hero") == 0 || String.Compare(c.type, "attack") == 0){
+		if(!c.isDraggable || String.Compare(c.type, "heroCards") == 0 || String.Compare(c.type, "attackCards") == 0){
 			return;
 		}
 
@@ -44,7 +44,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 
 		
-		if(String.Compare(c.type, "action") == 0){
+		if(String.Compare(c.type, "actionCards") == 0){
 			//if the user attempts to play an action card when they have no more actions
 			if(gameLogic.totalActions <= 0){
 				return;
@@ -55,7 +55,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			}
 		}
 
-		if(String.Compare(c.type, "treasure") == 0){
+		if(String.Compare(c.type, "treasureCards") == 0){
 			//the user must target a legal target if the action can do damage
 			if(c.damage > 0){
 				return;
@@ -65,7 +65,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		//if(c != null){
 		
-		d.newParent = dropZoneForName("PlayedThisTurn").transform;
+		//d.newParent = dropZoneForName("PlayedThisTurn").transform;
 		gameLogic.playCard(c);
 					
 							

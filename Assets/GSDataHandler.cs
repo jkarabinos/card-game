@@ -32,6 +32,27 @@ public class GSDataHandler : MonoBehaviour {
 		return handDict;
 	}
 
+	//get a playfield for one of the players
+	public Dictionary<string, Dictionary<string, object> > getPlayField(GSData challenge, bool isFriendly){
+		string playerId = this.transform.GetComponent<GSConnectionManager>().playerId;
+		if(!isFriendly){
+			playerId = this.transform.GetComponent<GSChallengeHandler>().enemyId;
+		}
+
+		GSData playField = challenge.GetGSData("playField").GetGSData(playerId);
+
+		Dictionary< string, Dictionary<string, object> > fieldDict = new Dictionary< string, Dictionary<string, object> >();
+
+		foreach(KeyValuePair<string, object> cardPair in playField.BaseData){
+			GSData cardData = (GSData) cardPair.Value;
+			Dictionary<string, object> card =  (Dictionary<string, object>) cardData.BaseData;
+			string key = cardPair.Key;
+			fieldDict.Add(key, card);
+		}
+
+		return fieldDict;
+	}
+
 	
 	//get the stat for the player for the particular key and challenge info
 	public object getPlayerStat(GSData challenge, string key, bool isFriendly){

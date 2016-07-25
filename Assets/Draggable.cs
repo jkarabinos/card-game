@@ -134,9 +134,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		}
 		
 
-		this.transform.SetParent( newParent );
+		//this.transform.SetParent( newParent );
 
-		if(inHeroZone){
+		/*if(inHeroZone){
 			this.transform.SetSiblingIndex (heroPlaceholder.transform.GetSiblingIndex());
 		}
 
@@ -146,15 +146,17 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 			//this.transform.SetSiblingIndex( siblingIndex );
 			this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() );
 
-
 		}
+
 		else{
 			cardScript.isDraggable = false;
 		}
 		Destroy(placeholder);
-		Destroy(heroPlaceholder);
+		Destroy(heroPlaceholder);*/
 
 		GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
+
+
 
 }

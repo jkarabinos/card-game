@@ -12,6 +12,9 @@ using GameSparks.Core;
 public class GameLogic : MonoBehaviour {
 
 	public Dictionary< string, Dictionary<string, object> > currentHand = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentPlayField = new Dictionary< string, Dictionary<string, object> >();
+
+
 	public bool isMyTurn;
 
 	public List<GameObject> deck;
@@ -759,6 +762,25 @@ public class GameLogic : MonoBehaviour {
 
 	}
 
+	//playing a card on the user's played this turn zone
+	void animatePlay(GameObject card){
+		DropZone played = dropZoneForName("PlayedThisTurn");
+		card.GetComponent<CardObject>().isDraggable = false;
+		card.transform.SetParent(played.transform);
+	}
+
+	GameObject cardOnCanvas(string cardId){
+		foreach(Transform child in this.transform){
+			CardObject c = child.GetComponent<CardObject>();
+			if(c != null ){
+				if(String.Compare(c.cardId, cardId) == 0){
+					return c.gameObject;
+				}
+			}
+		}
+		return null;
+	}
+
 	//right now only takes hand as parameter, but will eventually take all of the challenge data
 	public void startChallenge(GSData challenge, string activeUser){
 		Debug.Log("sync the board with the server");
@@ -773,6 +795,9 @@ public class GameLogic : MonoBehaviour {
 
 		//initialize the purchase panels for the player
 
+		//update the play fields (cards the players have played this turn)
+		updatePlayFields(challenge);
+
 		//initialize the deck and discard count icons for both players
 		updateDeckCounts(challenge);
 
@@ -784,6 +809,7 @@ public class GameLogic : MonoBehaviour {
 
 		
 	}
+
 
 
 	//update the button and set the boolean to show if it is the user or opponent turn
@@ -847,6 +873,40 @@ public class GameLogic : MonoBehaviour {
 		updateMoneyCounter(coin);
 		updateActionCounter(actions);
 		updateBuys(buys);
+	}
+
+		//update the play fields of both players
+	public void updatePlayFields(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		Dictionary< string, Dictionary<string, object> > playField = dataHandler.getPlayField(challenge, true);
+
+		DropZone playFieldZone = dropZoneForName("PlayedThisTurn");
+		//remove all the cards that are no longer in the user's hand
+		foreach(Transform child in playFieldZone.transform){
+			CardObject card = child.GetComponent<CardObject>();
+			if(card != null){
+				if(!playField.ContainsKey(card.cardId)){
+					//Debug.Log("animate a card in the hand to the discard");
+					Destroy(card.gameObject);
+				}
+			}
+		}
+
+
+		foreach(string cardKey in playField.Keys){
+			//if the card is has not yet been rendered in the user's play field
+			if(!currentPlayField.ContainsKey(cardKey)){
+				//find the card, at this point it will be a direct child of the canvas
+
+				GameObject card = cardOnCanvas((string)playField[cardKey]["cardId"]);
+				animatePlay(card);
+			}
+
+			
+		}
+		//store the server play field locally
+		currentPlayField = playField;
+
 	}
 
 	//draw until you have the correct number of cards in hand

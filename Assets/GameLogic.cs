@@ -821,10 +821,14 @@ public class GameLogic : MonoBehaviour {
 	public void updateDeckCounts(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 
-		int myDeckCount = dataHandler.getFriendlyDeckCount(challenge);
+		int myDeckCount = dataHandler.getCardStackCount(challenge, "currentDeck");
+		int myDiscardCount = dataHandler.getCardStackCount(challenge, "currentDiscard");
 
 		CardStack cardDeck = cardStackForName("FriendlyDeck");
 		cardDeck.updateCount(myDeckCount);
+
+		CardStack cardDiscard = cardStackForName("FriendlyDiscard");
+		cardDiscard.updateCount(myDiscardCount);
 	}
 
 	//update the counters to match the server side
@@ -851,6 +855,19 @@ public class GameLogic : MonoBehaviour {
 
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 		Dictionary< string, Dictionary<string, object> > hand = dataHandler.convertHand(challenge);
+
+
+		DropZone myHand = dropZoneForName("Hand");
+		//remove all the cards that are no longer in the user's hand
+		foreach(Transform child in myHand.transform){
+			CardObject card = child.GetComponent<CardObject>();
+			if(card != null){
+				if(!hand.ContainsKey(card.cardId)){
+					//Debug.Log("animate a card in the hand to the discard");
+					Destroy(card.gameObject);
+				}
+			}
+		}
 
 
 		foreach(string cardKey in hand.Keys){

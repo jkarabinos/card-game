@@ -16,6 +16,7 @@ public class GameLogic : MonoBehaviour {
 
 
 	public bool isMyTurn;
+	public bool interactionEnabled = true;
 
 	public List<GameObject> deck;
 	public List<GameObject> discardPile;
@@ -785,6 +786,9 @@ public class GameLogic : MonoBehaviour {
 	public void startChallenge(GSData challenge, string activeUser){
 		Debug.Log("sync the board with the server");
 
+		//remove any placeholders from the hand or user zone that may still exist
+		removePlaceholders();
+
 		//set the health values of the players to the starting health
 		updateHealth(challenge);
 
@@ -808,6 +812,14 @@ public class GameLogic : MonoBehaviour {
 		updateHand(challenge);
 
 		
+	}
+
+	public void removePlaceholders(){
+		//HeroZone heroZone = getFriendlyHeroZone();
+		//heroZone.removeAllPlaceholders();
+
+		DropZone hand = dropZoneForName("Hand");
+		hand.removeAllPlaceholders();
 	}
 
 
@@ -884,12 +896,9 @@ public class GameLogic : MonoBehaviour {
 		//remove all the cards that are no longer in the user's hand
 		foreach(Transform child in playFieldZone.transform){
 			CardObject card = child.GetComponent<CardObject>();
-			Debug.Log("check the child");
 			if(card != null){
-				Debug.Log("the child is not null with id " + card.cardId);
 				if(!playField.ContainsKey(card.cardId)){
 					//Debug.Log("animate a card in the hand to the discard");
-					Debug.Log("destroy the child");
 					Destroy(card.gameObject);
 				}
 			}

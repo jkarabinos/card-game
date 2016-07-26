@@ -14,7 +14,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 	public Transform newParent = null;
 	public bool inHeroZone = false;
 
-	GameObject placeholder = null;
+	public GameObject placeholder = null;
 	public GameObject heroPlaceholder = null;
 
 	CardObject cardScript;

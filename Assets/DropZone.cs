@@ -74,6 +74,17 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		
 	}
 
+	//remove any placeholders associated with the cards on the dropzone
+	public void removeAllPlaceholders(){
+
+		//destory everything that is not a card in the user's hand
+		foreach(Transform child in this.transform){
+			Draggable d = child.GetComponent<Draggable>();
+			if(d == null){
+				Destroy(child.gameObject);
+			}
+		}
+	}
 
 	
 	//returns a DropZone script for the given name

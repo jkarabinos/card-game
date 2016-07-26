@@ -66,7 +66,9 @@ public class GSChallengeHandler : MonoBehaviour {
 		//Debug.Log("did attack player " + isFriendly);
 		GameLogic gl = this.transform.GetComponent<GameLogic>();
 		Dictionary<string, object> cardDict = gl.currentHand[card.cardId];
-		cardDict.Add("cardId", card.cardId);
+
+		//if(!cardDict.ContainsKey("cardId"))
+		//cardDict.Add("cardId", card.cardId);
 
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)

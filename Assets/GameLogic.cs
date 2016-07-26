@@ -884,9 +884,12 @@ public class GameLogic : MonoBehaviour {
 		//remove all the cards that are no longer in the user's hand
 		foreach(Transform child in playFieldZone.transform){
 			CardObject card = child.GetComponent<CardObject>();
+			Debug.Log("check the child");
 			if(card != null){
+				Debug.Log("the child is not null with id " + card.cardId);
 				if(!playField.ContainsKey(card.cardId)){
 					//Debug.Log("animate a card in the hand to the discard");
+					Debug.Log("destroy the child");
 					Destroy(card.gameObject);
 				}
 			}

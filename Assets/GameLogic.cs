@@ -16,7 +16,7 @@ public class GameLogic : MonoBehaviour {
 
 
 	public bool isMyTurn;
-	public bool interactionEnabled = true;
+	public bool interactionEnabled = false;
 
 	public List<GameObject> deck;
 	public List<GameObject> discardPile;
@@ -811,7 +811,19 @@ public class GameLogic : MonoBehaviour {
 		//draw the hand for the player
 		updateHand(challenge);
 
+		//allow the user to interact with the cards
+		setUserInteraction(activeUser);
 		
+	}
+
+	//allow the user to interact with the cards if it is his turn
+	public void setUserInteraction(string activeUser){
+		string localPlayer = this.transform.GetComponent<GSConnectionManager>().playerId;
+		if(String.Compare(activeUser, localPlayer) == 0){
+			interactionEnabled = true;
+		}else{
+			interactionEnabled = false;
+		}
 	}
 
 	public void removePlaceholders(){

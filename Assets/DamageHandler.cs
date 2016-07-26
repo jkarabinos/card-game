@@ -25,6 +25,12 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 
 	public void OnDrop(PointerEventData eventData){
+		
+		Transform canvas = getCanvas();
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+		if(!gameLogic.interactionEnabled){
+			return;
+		}
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		CardObject cardObject = d.gameObject.GetComponent<CardObject>();
@@ -43,14 +49,14 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 				didAttackCastle(cardObject);
 			}
 			
-			Transform canvas = getCanvas();
-			GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+			//Transform canvas = getCanvas();
+			//GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 			gameLogic.playCard(cardObject);
 
 		}else{
 			//for a card that does not do damage but is attempting to be played
 			//yield the drop to the tabletop
-			Transform canvas = getCanvas();
+			//Transform canvas = getCanvas();
 			DropZone tabletop = canvas.GetComponent<GameLogic>().dropZoneForName("Tabletop");
 			tabletop.OnDrop(eventData);
 		}

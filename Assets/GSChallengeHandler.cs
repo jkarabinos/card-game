@@ -65,6 +65,7 @@ public class GSChallengeHandler : MonoBehaviour {
 	public void playCard(CardObject card, Dictionary<string, object> target){
 		//Debug.Log("did attack player " + isFriendly);
 		GameLogic gl = this.transform.GetComponent<GameLogic>();
+		gl.interactionEnabled = false;
 		Dictionary<string, object> cardDict = gl.currentHand[card.cardId];
 
 		//if(!cardDict.ContainsKey("cardId"))

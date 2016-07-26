@@ -26,6 +26,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	public void OnDrop(PointerEventData eventData){
 
+		//if the user attempts to play the card on something other than the tabletop
+		if(String.Compare(zoneName, "Tabletop") != 0){
+			return;
+		}
+
+
 		CardObject c = eventData.pointerDrag.GetComponent<CardObject>();
 		if(c == null){
 			return;
@@ -42,6 +48,11 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 		Transform canvas = this.transform.parent;
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+
+		//if user interaction is not enabled (other players turn or waiting for response)
+		if(!gameLogic.interactionEnabled){
+			return;
+		}
 
 		
 		if(String.Compare(c.type, "actionCards") == 0){
@@ -63,6 +74,7 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
+		d.newParent = canvas;
 		//if(c != null){
 		
 		//d.newParent = dropZoneForName("PlayedThisTurn").transform;

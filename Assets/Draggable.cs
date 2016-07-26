@@ -133,8 +133,14 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 			return;
 		}
 		
+		if(originalParent == newParent){
+			//if the card will remain in the hand of the user, keep it at the same sibling index
+			this.transform.SetParent( newParent );
+			this.transform.SetSiblingIndex( placeholder.transform.GetSiblingIndex() );
+			Destroy(placeholder);
+		}
 
-		//this.transform.SetParent( newParent );
+		
 
 		/*if(inHeroZone){
 			this.transform.SetSiblingIndex (heroPlaceholder.transform.GetSiblingIndex());

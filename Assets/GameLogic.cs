@@ -13,6 +13,7 @@ public class GameLogic : MonoBehaviour {
 
 	public Dictionary< string, Dictionary<string, object> > currentHand = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentPlayField = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentNeutralPurchasePanel = new Dictionary< string, Dictionary<string, object> >();
 
 
 	public bool isMyTurn;
@@ -37,7 +38,12 @@ public class GameLogic : MonoBehaviour {
 	//the list of cards that the user has chosen to include in their deck
 	public List<int> userBuild;
 	
-	public void purchaseCard (int cardID, string purchasePanelName){
+	public void purchaseCard (string cardId, string purchasePanelName){
+		//attempt to purchase the card with a server call
+		Debug.Log("I want to buy the card " + cardId);
+		GSChallengeHandler ch = this.transform.GetComponent<GSChallengeHandler>();
+		ch.buyCard(cardId, purchasePanelName);
+		/*
 		GameObject card = createCardForId(cardID, globalDict);
 		CardObject cardScript = card.GetComponent<CardObject>();
 		int costOfCard = cardScript.cost;
@@ -54,7 +60,7 @@ public class GameLogic : MonoBehaviour {
 			}
 		}else{
 			Destroy(card);
-		}
+		}*/
 	}
 
 	//if the card was gained by the user, check to see if we need to replace the neutral 
@@ -770,6 +776,13 @@ public class GameLogic : MonoBehaviour {
 		card.transform.SetParent(played.transform);
 	}
 
+	void animatePurchasePanelPlacement(GameObject card, PurchasePanel purchasePanel){
+		card.transform.SetParent(purchasePanel.transform);
+		CardObject cardObject = card.GetComponent<CardObject>();
+		cardObject.isPurchasable = true;
+		cardObject.pileCount = 100;
+	}
+
 	GameObject cardOnCanvas(string cardId){
 		foreach(Transform child in this.transform){
 			CardObject c = child.GetComponent<CardObject>();
@@ -798,6 +811,7 @@ public class GameLogic : MonoBehaviour {
 		//initialize the monster zone for the player
 
 		//initialize the purchase panels for the player
+		updatePurchasePanels(challenge);
 
 		//update the play fields (cards the players have played this turn)
 		updatePlayFields(challenge);
@@ -814,6 +828,39 @@ public class GameLogic : MonoBehaviour {
 		//allow the user to interact with the cards
 		setUserInteraction(activeUser);
 		
+	}
+
+	//update the two viewable purchase panels for the user
+	public void updatePurchasePanels(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		Dictionary< string, Dictionary<string, object> > purchasePanelStats = dataHandler.getPurchasePanel(challenge, 0);
+
+		PurchasePanel purchasePanel = purchasePanelForName("NeutralPurchasePanel");
+		//remove all the cards that are no longer on the purchase panel
+		foreach(Transform child in purchasePanel.transform){
+			CardObject card = child.GetComponent<CardObject>();
+			if(card != null){
+				if(!purchasePanelStats.ContainsKey(card.cardId)){
+					//Debug.Log("animate a card in the hand to the discard");
+					Destroy(card.gameObject);
+				}
+			}
+		}
+
+
+		foreach(string cardKey in purchasePanelStats.Keys){
+			//if the card is has not yet been rendered in the user's play field
+			if(!currentNeutralPurchasePanel.ContainsKey(cardKey)){
+				//find the card, at this point it will be a direct child of the canvas
+				Dictionary<string, object> cardStats = purchasePanelStats[cardKey];
+				GameObject card = createCardForStats(cardStats, cardKey);
+				animatePurchasePanelPlacement(card, purchasePanel);
+			}
+
+			
+		}
+		//store the server play field locally
+		currentNeutralPurchasePanel = purchasePanelStats;
 	}
 
 	//allow the user to interact with the cards if it is his turn
@@ -921,9 +968,20 @@ public class GameLogic : MonoBehaviour {
 			//if the card is has not yet been rendered in the user's play field
 			if(!currentPlayField.ContainsKey(cardKey)){
 				//find the card, at this point it will be a direct child of the canvas
+				string a = cardKey.Substring(0, 1);
 
-				GameObject card = cardOnCanvas((string)playField[cardKey]["cardId"]);
-				animatePlay(card);
+				//if we have played the card from our hand
+				if(String.Compare(a, "c") == 0){
+					GameObject card = cardOnCanvas((string)playField[cardKey]["cardId"]);
+					animatePlay(card);
+				}
+
+				//if we have bought the card from a purchase panel
+				else{
+					GameObject card = createCardForStats(playField[cardKey], cardKey);
+					animatePlay(card);
+				}
+				
 			}
 
 			

@@ -61,6 +61,33 @@ public class GSChallengeHandler : MonoBehaviour {
 		});
 	}
 
+	//send a request to the server to buy a card
+	public void buyCard(string cardId, string purchasePanelName){
+		string panelId = "neutral";
+		if(String.Compare("FriendlyPurchasePanel", purchasePanelName) == 0){
+			panelId = this.transform.GetComponent<GSConnectionManager>().playerId;
+		}
+	
+		new GameSparks.Api.Requests.LogChallengeEventRequest ()
+			.SetChallengeInstanceId (challengeId)
+			.SetEventKey ("action_buyCard")
+			.SetEventAttribute ("cardId", cardId)
+			.SetEventAttribute ("panelId", panelId)
+			.Send ((response) => {
+
+				if(!response.HasErrors){
+					Debug.Log("bought card");
+
+					//move the card to the appropriate zone after it is correctly played
+					
+				}else{
+					Debug.Log("Error buying card");
+					
+					//send the card back to the user's hand after an illegal play attemp
+				}
+		});
+	}
+
 	//send a request to the server to paly the card, the target could be another player, card, or nothing
 	public void playCard(CardObject card, Dictionary<string, object> target){
 		//Debug.Log("did attack player " + isFriendly);
@@ -70,6 +97,7 @@ public class GSChallengeHandler : MonoBehaviour {
 
 		//if(!cardDict.ContainsKey("cardId"))
 		//cardDict.Add("cardId", card.cardId);
+		card.isDraggable = false;
 
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)
@@ -85,7 +113,7 @@ public class GSChallengeHandler : MonoBehaviour {
 					
 				}else{
 					Debug.Log("Error playing card...");
-
+					card.isDraggable = true;
 					//send the card back to the user's hand after an illegal play attemp
 				}
 		});

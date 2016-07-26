@@ -53,6 +53,29 @@ public class GSDataHandler : MonoBehaviour {
 		return fieldDict;
 	}
 
+	//get a purchase panel, -1 = enemy, 0 = neutral, 1 = friendly
+	public Dictionary<string, Dictionary<string, object> > getPurchasePanel(GSData challenge, int panelOwner){
+		string panelId = this.transform.GetComponent<GSConnectionManager>().playerId;
+		if(panelOwner == -1){
+			panelId = this.transform.GetComponent<GSChallengeHandler>().enemyId;
+		}else if(panelOwner == 0){
+			panelId = "neutral";
+		}
+
+		GSData purchasePanel = challenge.GetGSData("purchasePanel").GetGSData(panelId);
+
+		Dictionary< string, Dictionary<string, object> > panelDict = new Dictionary< string, Dictionary<string, object> >();
+
+		foreach(KeyValuePair<string, object> cardPair in purchasePanel.BaseData){
+			GSData cardData = (GSData) cardPair.Value;
+			Dictionary<string, object> card =  (Dictionary<string, object>) cardData.BaseData;
+			string key = cardPair.Key;
+			panelDict.Add(key, card);
+		}
+
+		return panelDict;
+	}
+
 	
 	//get the stat for the player for the particular key and challenge info
 	public object getPlayerStat(GSData challenge, string key, bool isFriendly){

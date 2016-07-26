@@ -27,7 +27,7 @@ public class PurchaseZone : MonoBehaviour, IPointerClickHandler  {
 		if(cardObject.isPurchasable == true && cardObject.pileCount > 0){
 			Transform panel = this.transform.parent;
 			PurchasePanel pp = panel.GetComponent<PurchasePanel>();
-			gameLogic.purchaseCard(cardObject.id, pp.purchasePanelName);
+			gameLogic.purchaseCard(cardObject.cardId, pp.purchasePanelName);
 		}	
 
 	}

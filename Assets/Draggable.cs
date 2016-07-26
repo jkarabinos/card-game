@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler {
 
-
+	//TODO: currently a user cannot be holding a card out of his hand when it switches to his turn
 	
 
 	public Transform originalParent = null;

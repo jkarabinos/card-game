@@ -88,6 +88,7 @@ public class GSChallengeHandler : MonoBehaviour {
 		});
 	}
 
+
 	//send a request to the server to paly the card, the target could be another player, card, or nothing
 	public void playCard(CardObject card, Dictionary<string, object> target){
 		//Debug.Log("did attack player " + isFriendly);

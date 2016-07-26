@@ -14,6 +14,8 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, object> > currentHand = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentPlayField = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentNeutralPurchasePanel = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentFriendlyHeroZone = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentEnemyHeroZone = new Dictionary< string, Dictionary<string, object> >();
 
 
 	public bool isMyTurn;
@@ -61,6 +63,14 @@ public class GameLogic : MonoBehaviour {
 		}else{
 			Destroy(card);
 		}*/
+	}
+
+	//play a hero onto the hero zone at the given sibling index
+	public void playHero(CardObject card, int siblingIndex){
+		GSChallengeHandler ch = this.transform.GetComponent<GSChallengeHandler>();
+		Dictionary<string, object> target = new Dictionary<string, object>();
+		target.Add("target", "isFalse");
+		ch.playCard(card, target);
 	}
 
 	//if the card was gained by the user, check to see if we need to replace the neutral 
@@ -774,6 +784,7 @@ public class GameLogic : MonoBehaviour {
 		DropZone played = dropZoneForName("PlayedThisTurn");
 		card.GetComponent<CardObject>().isDraggable = false;
 		card.transform.SetParent(played.transform);
+		Destroy(card.GetComponent<Draggable>().placeholder);
 	}
 
 	void animatePurchasePanelPlacement(GameObject card, PurchasePanel purchasePanel){
@@ -783,6 +794,15 @@ public class GameLogic : MonoBehaviour {
 		cardObject.pileCount = 100;
 	}
 
+	//play a hero from the user's hand to the hero zone
+	void animateHeroPlay(GameObject card, HeroZone heroZone){
+		card.GetComponent<CardObject>().isDraggable = false;
+		Destroy(card.GetComponent<Draggable>().heroPlaceholder);
+		card.transform.SetParent(heroZone.transform);
+
+	}
+
+	//find the card with the given id on the canvas
 	GameObject cardOnCanvas(string cardId){
 		foreach(Transform child in this.transform){
 			CardObject c = child.GetComponent<CardObject>();
@@ -800,13 +820,16 @@ public class GameLogic : MonoBehaviour {
 		Debug.Log("sync the board with the server");
 
 		//remove any placeholders from the hand or user zone that may still exist
-		removePlaceholders();
+		//removePlaceholders();
 
 		//set the health values of the players to the starting health
 		updateHealth(challenge);
 
 		//initialize the actions, buys, and money for the player
 		updateCounters(challenge);
+
+		//update the hero zones for both players
+		updateHeroZones(challenge);
 
 		//initialize the monster zone for the player
 
@@ -829,6 +852,49 @@ public class GameLogic : MonoBehaviour {
 		setUserInteraction(activeUser);
 		
 	}
+
+	//sync the hero zones with the server's
+	public void updateHeroZones(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+
+		Dictionary< string, Dictionary<string, object> > friendlyHeroZoneStats = dataHandler.getHeroZone(challenge, true);
+		HeroZone friendlyHeroZone = getFriendlyHeroZone();
+
+		Dictionary< string, Dictionary<string, object> > enemyHeroZoneStats = dataHandler.getHeroZone(challenge, false);
+		HeroZone enemyHeroZone = getEnemyHeroZone();
+		
+		updateHeroZone(friendlyHeroZone, friendlyHeroZoneStats, currentFriendlyHeroZone);
+		updateHeroZone(enemyHeroZone, enemyHeroZoneStats, currentEnemyHeroZone);
+	}
+
+	//update the individual hero zone 
+	public void updateHeroZone(HeroZone heroZone, Dictionary< string, Dictionary<string, object> > heroZoneStats, 
+	Dictionary< string, Dictionary<string, object> > localHeroZone){
+		//remove all the cards that are no longer on the purchase panel
+		foreach(Transform child in heroZone.transform){
+			CardObject card = child.GetComponent<CardObject>();
+			if(card != null){
+				if(!heroZoneStats.ContainsKey(card.cardId)){
+					//Debug.Log("animate a card in the hand to the discard");
+					Destroy(card.gameObject);
+				}
+			}
+		}
+
+
+		foreach(string cardKey in heroZoneStats.Keys){
+			//if the card is has not yet been rendered in the user's play field
+			if(!localHeroZone.ContainsKey(cardKey)){
+				//find the card, at this point it will be a direct child of the canvas
+				Dictionary<string, object> cardStats = heroZoneStats[cardKey];
+				GameObject card = cardOnCanvas(cardKey);
+				animateHeroPlay(card, heroZone);
+			}
+		}
+		//store the server play field locally
+		localHeroZone = heroZoneStats;
+	}
+
 
 	//update the two viewable purchase panels for the user
 	public void updatePurchasePanels(GSData challenge){
@@ -879,6 +945,7 @@ public class GameLogic : MonoBehaviour {
 
 		DropZone hand = dropZoneForName("Hand");
 		hand.removeAllPlaceholders();
+
 	}
 
 

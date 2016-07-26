@@ -53,6 +53,27 @@ public class GSDataHandler : MonoBehaviour {
 		return fieldDict;
 	}
 
+	public Dictionary<string, Dictionary<string, object> > getHeroZone(GSData challenge, bool isFriendly){
+		string playerId = this.transform.GetComponent<GSConnectionManager>().playerId;
+		if(!isFriendly){
+			playerId = this.transform.GetComponent<GSChallengeHandler>().enemyId;
+		}
+
+		GSData heroZone = challenge.GetGSData("heroZone").GetGSData(playerId);
+
+		Dictionary< string, Dictionary<string, object> > heroDict = new Dictionary< string, Dictionary<string, object> >();
+
+		foreach(KeyValuePair<string, object> cardPair in heroZone.BaseData){
+			GSData cardData = (GSData) cardPair.Value;
+			Dictionary<string, object> card =  (Dictionary<string, object>) cardData.BaseData;
+			string key = cardPair.Key;
+			heroDict.Add(key, card);
+		}
+
+		return heroDict;
+	}
+
+
 	//get a purchase panel, -1 = enemy, 0 = neutral, 1 = friendly
 	public Dictionary<string, Dictionary<string, object> > getPurchasePanel(GSData challenge, int panelOwner){
 		string panelId = this.transform.GetComponent<GSConnectionManager>().playerId;

@@ -56,4 +56,6 @@ public class CardObject : MonoBehaviour {
 	//the number of attacks a hero card can make
 	public int attacks;
 
+
+
 }

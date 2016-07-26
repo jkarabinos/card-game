@@ -55,10 +55,10 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	public void OnDrop(PointerEventData eventData){
 		
-
+		Debug.Log("Attempting to play a card on the hero zone");
 		
 
-		Debug.Log (eventData.pointerDrag.name + "OnDrop to " + gameObject.name);
+		//Debug.Log (eventData.pointerDrag.name + "OnDrop to " + gameObject.name);
 
 		CardObject c = eventData.pointerDrag.GetComponent<CardObject>();
 		if(!c.isDraggable){
@@ -76,12 +76,15 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 				if(isFriendly == true){
 					if(numHeroes < 5){
 						
-						
+						Transform canvas = tabletop.parent;
+						GameLogic gl = canvas.GetComponent<GameLogic>();
+
+						gl.playHero(c, d.heroPlaceholder.transform.GetSiblingIndex());
 						//Destroy(heroPlaceholder)
-						d.newParent = this.transform;
+						//d.newParent = this.transform;
 						//d.transform.SetSiblingIndex(siblingIndex);
 						//c.attacks = 1; // if the hero has charge
-						numHeroes++;
+						//numHeroes++;
 					}
 				}		
 			}else{

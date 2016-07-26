@@ -798,6 +798,7 @@ public class GameLogic : MonoBehaviour {
 	void animateHeroPlay(GameObject card, HeroZone heroZone){
 		card.GetComponent<CardObject>().isDraggable = false;
 		Destroy(card.GetComponent<Draggable>().heroPlaceholder);
+		Destroy(card.GetComponent<Draggable>().placeholder);
 		card.transform.SetParent(heroZone.transform);
 
 	}
@@ -865,6 +866,9 @@ public class GameLogic : MonoBehaviour {
 		
 		updateHeroZone(friendlyHeroZone, friendlyHeroZoneStats, currentFriendlyHeroZone);
 		updateHeroZone(enemyHeroZone, enemyHeroZoneStats, currentEnemyHeroZone);
+
+		currentFriendlyHeroZone = friendlyHeroZoneStats;
+		currentEnemyHeroZone = enemyHeroZoneStats;
 	}
 
 	//update the individual hero zone 
@@ -887,12 +891,18 @@ public class GameLogic : MonoBehaviour {
 			if(!localHeroZone.ContainsKey(cardKey)){
 				//find the card, at this point it will be a direct child of the canvas
 				Dictionary<string, object> cardStats = heroZoneStats[cardKey];
-				GameObject card = cardOnCanvas(cardKey);
+
+				GameObject card;
+				if(heroZone.isFriendly){
+					card = cardOnCanvas(cardKey);
+				}else{
+					card = createCardForStats(cardStats, cardKey);
+				} 
 				animateHeroPlay(card, heroZone);
 			}
 		}
 		//store the server play field locally
-		localHeroZone = heroZoneStats;
+		//localHeroZone = heroZoneStats;
 	}
 
 

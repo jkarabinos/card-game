@@ -461,6 +461,9 @@ public class GameLogic : MonoBehaviour {
 		|| String.Compare(cardScript.type, "heroCards") == 0){
 			cardScript.health = Convert.ToInt32( stats["health"] );
 			cardScript.power = Convert.ToInt32( stats["power"] );
+			if(String.Compare(cardScript.type, "heroCards") == 0){
+				cardScript.attacks = Convert.ToInt32( stats["attacks"] );
+			}
 		}
 
 		//set the appropriate image of the card
@@ -869,6 +872,8 @@ public class GameLogic : MonoBehaviour {
 
 		currentFriendlyHeroZone = friendlyHeroZoneStats;
 		currentEnemyHeroZone = enemyHeroZoneStats;
+
+		setHeroesAttackable(friendlyHeroZone);
 	}
 
 	//update the individual hero zone 
@@ -881,13 +886,16 @@ public class GameLogic : MonoBehaviour {
 				if(!heroZoneStats.ContainsKey(card.cardId)){
 					//Debug.Log("animate a card in the hand to the discard");
 					Destroy(card.gameObject);
+				}else{
+					//simply update the properties of the hero in the zone (power, health, number of attacks)
+					updateHero(card, heroZoneStats);
 				}
 			}
 		}
 
 
 		foreach(string cardKey in heroZoneStats.Keys){
-			//if the card is has not yet been rendered in the user's play field
+			//if the card is has not yet been rendered in the user's hero zone
 			if(!localHeroZone.ContainsKey(cardKey)){
 				//find the card, at this point it will be a direct child of the canvas
 				Dictionary<string, object> cardStats = heroZoneStats[cardKey];
@@ -903,8 +911,24 @@ public class GameLogic : MonoBehaviour {
 		}
 		//store the server play field locally
 		//localHeroZone = heroZoneStats;
+		
 	}
 
+	//update the modifiable properties of a hero card
+	public void updateHero(CardObject card, Dictionary< string, Dictionary<string, object> > heroZoneStats){
+		card.attacks = Convert.ToInt32( heroZoneStats[card.cardId]["attacks"] );
+	}
+
+	public void setHeroesAttackable(HeroZone heroZone){
+		foreach(Transform child in heroZone.transform){
+			CardObject card = child.GetComponent<CardObject>();
+			if(card != null){
+				if(card.attacks > 0){
+					setAttackable(card);
+				}
+			}
+		}
+	}
 
 	//update the two viewable purchase panels for the user
 	public void updatePurchasePanels(GSData challenge){

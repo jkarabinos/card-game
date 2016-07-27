@@ -39,7 +39,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			//send the card to the played this turn zone
 			Transform hand = d.originalParent;
 			DropZone dropZone = hand.GetComponent<DropZone>();
-			d.newParent = dropZone.dropZoneForName("PlayedThisTurn").transform;
+			d.newParent = dropZone.dropZoneForName("FriendlyPlayField").transform;
 
 
 			//if the attack is targeting a card, perfom the necessary operations

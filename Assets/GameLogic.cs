@@ -12,7 +12,8 @@ using GameSparks.Core;
 public class GameLogic : MonoBehaviour {
 
 	public Dictionary< string, Dictionary<string, object> > currentHand = new Dictionary< string, Dictionary<string, object> >();
-	public Dictionary< string, Dictionary<string, object> > currentPlayField = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentFriendlyPlayField = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentEnemyPlayField = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentNeutralPurchasePanel = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentFriendlyHeroZone = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentEnemyHeroZone = new Dictionary< string, Dictionary<string, object> >();
@@ -139,7 +140,7 @@ public class GameLogic : MonoBehaviour {
 	//add the hand to the just played zone and later the player's deck
 	public void gainCard(GameObject card, string purchasePanelName){
 	
-		DropZone playedThisTurn = dropZoneForName("PlayedThisTurn");
+		DropZone playedThisTurn = dropZoneForName("FriendlyPlayField");
 		card.transform.SetParent(playedThisTurn.transform);
 		didGainCard(card, purchasePanelName);
 		
@@ -788,10 +789,10 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	//playing a card on the user's played this turn zone
-	void animatePlay(GameObject card){
-		DropZone played = dropZoneForName("PlayedThisTurn");
+	void animatePlay(GameObject card, DropZone playField){
+		//DropZone played = dropZoneForName("FriendlyPlayField");
 		card.GetComponent<CardObject>().isDraggable = false;
-		card.transform.SetParent(played.transform);
+		card.transform.SetParent(playField.transform);
 		Destroy(card.GetComponent<Draggable>().placeholder);
 		card.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
@@ -1082,14 +1083,29 @@ public class GameLogic : MonoBehaviour {
 		//update the play fields of both players
 	public void updatePlayFields(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
-		Dictionary< string, Dictionary<string, object> > playField = dataHandler.getPlayField(challenge, true);
 
-		DropZone playFieldZone = dropZoneForName("PlayedThisTurn");
+		Dictionary< string, Dictionary<string, object> > friendlyPlayField = dataHandler.getPlayField(challenge, true);
+		Dictionary< string, Dictionary<string, object> > enemyPlayField = dataHandler.getPlayField(challenge, false);
+
+		DropZone friendlyPlayFieldZone = dropZoneForName("FriendlyPlayField");
+		DropZone enemyPlayFieldZone = dropZoneForName("EnemyPlayField");
+
+		updatePlayField(friendlyPlayFieldZone, friendlyPlayField, currentFriendlyPlayField);
+		updatePlayField(enemyPlayFieldZone, enemyPlayField, currentEnemyPlayField);
+
+		
+		//store the server play field locally
+		currentFriendlyPlayField = friendlyPlayField;
+		currentEnemyPlayField = enemyPlayField;
+	}
+
+	public void updatePlayField(DropZone playField, Dictionary< string, Dictionary<string, object> > playFieldStats, 
+	Dictionary< string, Dictionary<string, object> > localPlayField){
 		//remove all the cards that are no longer in the user's hand
-		foreach(Transform child in playFieldZone.transform){
+		foreach(Transform child in playField.transform){
 			CardObject card = child.GetComponent<CardObject>();
 			if(card != null){
-				if(!playField.ContainsKey(card.cardId)){
+				if(!playFieldStats.ContainsKey(card.cardId)){
 					//Debug.Log("animate a card in the hand to the discard");
 					Destroy(card.gameObject);
 				}
@@ -1097,31 +1113,31 @@ public class GameLogic : MonoBehaviour {
 		}
 
 
-		foreach(string cardKey in playField.Keys){
+		foreach(string cardKey in playFieldStats.Keys){
 			//if the card is has not yet been rendered in the user's play field
-			if(!currentPlayField.ContainsKey(cardKey)){
+			if(!localPlayField.ContainsKey(cardKey)){
 				//find the card, at this point it will be a direct child of the canvas
 				string a = cardKey.Substring(0, 1);
 
 				//if we have played the card from our hand
 				if(String.Compare(a, "c") == 0){
-					GameObject card = cardOnCanvas((string)playField[cardKey]["cardId"]);
-					animatePlay(card);
+					GameObject card;
+					if(String.Compare(playField.zoneName, "FriendlyPlayField") == 0){
+						card = cardOnCanvas(cardKey);
+					}else{
+						card = createCardForStats(playFieldStats[cardKey], cardKey);
+					} 
+					//GameObject card = cardOnCanvas((string)playFieldStats[cardKey]["cardId"]);
+					animatePlay(card, playField);
 				}
 
 				//if we have bought the card from a purchase panel
 				else{
-					GameObject card = createCardForStats(playField[cardKey], cardKey);
-					animatePlay(card);
+					GameObject card = createCardForStats(playFieldStats[cardKey], cardKey);
+					animatePlay(card, playField);
 				}
-				
 			}
-
-			
 		}
-		//store the server play field locally
-		currentPlayField = playField;
-
 	}
 
 	//draw until you have the correct number of cards in hand

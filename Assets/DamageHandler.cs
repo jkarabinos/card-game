@@ -90,7 +90,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			}else if(String.Compare(c.type, "monsterCards") == 0){
 				if(isLegalMonsterTarget(c)){
 					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
-					heroDidAttack(gameLogic);
+					//heroDidAttack(gameLogic);
 				}
 			}
 		}
@@ -184,6 +184,8 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		textBox.text = health.ToString();
 	}
 
+
+
 	public void didAttackCard(CardObject attackCard){
 		/*
 		int damage = 0;
@@ -239,8 +241,17 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		
 		//this is where we will send the damage to gamesparks
 
-		GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
-		ch.playCard(attackCard, target);
+		//if we are attacking a hero or monster with a hero
+		if(String.Compare(attackCard.type, "heroCards") == 0){
+			GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
+			ch.attackWithHero(attackCard, target);
+		}else{
+			//if we are attacking a hero or monster with some type of damage spell
+			GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
+			ch.playCard(attackCard, target);
+		}
+
+		
 
 	}
 

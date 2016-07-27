@@ -1052,14 +1052,23 @@ public class GameLogic : MonoBehaviour {
 	public void updateDeckCounts(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 
-		int myDeckCount = dataHandler.getCardStackCount(challenge, "currentDeck");
-		int myDiscardCount = dataHandler.getCardStackCount(challenge, "currentDiscard");
+		int myDeckCount = dataHandler.getCardStackCount(challenge, "currentDeck", true);
+		int myDiscardCount = dataHandler.getCardStackCount(challenge, "currentDiscard", true);
 
 		CardStack cardDeck = cardStackForName("FriendlyDeck");
 		cardDeck.updateCount(myDeckCount);
 
 		CardStack cardDiscard = cardStackForName("FriendlyDiscard");
 		cardDiscard.updateCount(myDiscardCount);
+
+		int enemyDeckCount = dataHandler.getCardStackCount(challenge, "currentDeck", false);
+		int enemyDiscardCount = dataHandler.getCardStackCount(challenge, "currentDiscard", false);
+
+		CardStack enemyCardDeck = cardStackForName("EnemyDeck");
+		enemyCardDeck.updateCount(enemyDeckCount);
+
+		CardStack enemyCardDiscard = cardStackForName("EnemyDiscard");
+		enemyCardDiscard.updateCount(enemyDiscardCount);
 	}
 
 	//update the counters to match the server side

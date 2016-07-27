@@ -117,8 +117,11 @@ public class GSDataHandler : MonoBehaviour {
 
 
 	//get the number of cards in the player's deck
-	public int getCardStackCount(GSData challenge, string stackName){
+	public int getCardStackCount(GSData challenge, string stackName, bool isFriendly){
 		string playerId = this.transform.GetComponent<GSConnectionManager>().playerId;
+		if(!isFriendly){
+			playerId = this.transform.GetComponent<GSChallengeHandler>().enemyId;
+		}
 
 		GSData cd = challenge.GetGSData(stackName);
 		//GSData deckData = cd.GetGSData(playerId);

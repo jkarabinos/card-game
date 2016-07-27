@@ -932,6 +932,7 @@ public class GameLogic : MonoBehaviour {
 	public void updateHero(CardObject card, Dictionary< string, Dictionary<string, object> > heroZoneStats){
 		Debug.Log("update the hero with the new number of attacks");
 		card.attacks = Convert.ToInt32( heroZoneStats[card.cardId]["attacks"] );
+		card.health = Convert.ToInt32( heroZoneStats[card.cardId]["health"] );
 	}
 
 	//remove a border from a card if it did not attack

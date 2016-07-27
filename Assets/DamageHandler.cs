@@ -51,7 +51,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			
 			//Transform canvas = getCanvas();
 			//GameLogic gameLogic = canvas.GetComponent<GameLogic>();
-			gameLogic.playCard(cardObject);
+			//gameLogic.playCard(cardObject);
 
 		}else{
 			//for a card that does not do damage but is attempting to be played
@@ -79,16 +79,15 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			CardObject c = this.transform.GetComponent<CardObject>();
 			if(isCastle){
 				heroAttackedCastle(gameLogic.selectedHero.GetComponent<CardObject>());
-				gameLogic.selectedHero = null;
 				//didAttackCastle(gameLogic.selectedHero.GetComponent<CardObject>());
 				//heroDidAttack(gameLogic);
 			}
-			else if(String.Compare(c.type, "hero") == 0){
+			else if(String.Compare(c.type, "heroCards") == 0){
 				if(isLegalHeroTarget(c)){
 					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
-					heroDidAttack(gameLogic);
+					//heroDidAttack(gameLogic);
 				}
-			}else if(String.Compare(c.type, "monster") == 0){
+			}else if(String.Compare(c.type, "monsterCards") == 0){
 				if(isLegalMonsterTarget(c)){
 					didAttackCard(gameLogic.selectedHero.GetComponent<CardObject>());
 					heroDidAttack(gameLogic);
@@ -165,8 +164,6 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		Dictionary<string, object> target = new Dictionary<string, object>();
 		target.Add("target", "isPlayer");
 		target.Add("isFriendly", isFriendly);
-
-		
 		
 		//this is where we will send the damage to gamesparks
 
@@ -188,6 +185,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 	}
 
 	public void didAttackCard(CardObject attackCard){
+		/*
 		int damage = 0;
 		if(String.Compare(attackCard.type, "hero") == 0){
 			CardObject attackedCard = this.transform.GetComponent<CardObject>();
@@ -216,7 +214,34 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		//remove a hero when its health reaches zero
 		if(String.Compare(target.type, "hero") == 0){
 			Destroy(targetCard.gameObject);
+		}*/
+
+		//the user has targeted a hero or monster with an attack coming from something other than a hero
+		CardObject c = this.transform.GetComponent<CardObject>();
+
+		Dictionary<string, object> target = new Dictionary<string, object>();
+
+		Transform canvas = getCanvas();
+		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
+
+		if(String.Compare(c.type, "heroCards") == 0){
+			
+			HeroZone hz = this.transform.parent.GetComponent<HeroZone>();
+			if(hz.isFriendly){
+				target = gameLogic.currentFriendlyHeroZone[c.cardId];
+			}else{
+				target = gameLogic.currentEnemyHeroZone[c.cardId];
+			}
+			target.Add("isFriendly", hz.isFriendly);
 		}
+		target.Add("target", "isCard");
+		//target.Add("isFriendly", isFriendly);
+		
+		//this is where we will send the damage to gamesparks
+
+		GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
+		ch.playCard(attackCard, target);
+
 	}
 
 

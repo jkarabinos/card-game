@@ -83,7 +83,7 @@ public class GameLogic : MonoBehaviour {
 			return;
 		}
 
-		updatePileCount(card, purchasePanelName);
+		//updatePileCount(card, purchasePanelName);
 
 		//if the card was bought from the neutral purchase panel, replace it with a new one
 		if(String.Compare(purchasePanelName, "NeutralPurchasePanel") == 0){
@@ -97,7 +97,7 @@ public class GameLogic : MonoBehaviour {
 	}
 
 	//subtract 1 from the pile count of the card
-	void updatePileCount(GameObject card, string purchasePanelName){
+	/*void updatePileCount(GameObject card, string purchasePanelName){
 		if(String.Compare(purchasePanelName, "FriendlyPurchasePanel") == 0 || 
 			String.Compare(purchasePanelName, "EnemyPurchasePanel") == 0){
 
@@ -113,7 +113,7 @@ public class GameLogic : MonoBehaviour {
 			}
 			
 		}	
-	}
+	}*/
 
 	
 
@@ -292,7 +292,7 @@ public class GameLogic : MonoBehaviour {
 		List<int> enemyList = new List<int>(new int[] {5});
 		setPurchase( friendlyList , "FriendlyPurchasePanel");
 		setPurchase( neutralCardList, "NeutralPurchasePanel");
-		setPurchase( enemyList, "EnemyPurchasePanel");
+		//setPurchase( enemyList, "EnemyPurchasePanel");
 	}
 
 
@@ -472,7 +472,6 @@ public class GameLogic : MonoBehaviour {
 		Sprite spr = Resources.Load <Sprite> (imagePath);
 		Image cardImage = card.GetComponent<Image>();
 		cardImage.sprite = spr;
-
 
 		return card;
 	}
@@ -812,6 +811,35 @@ public class GameLogic : MonoBehaviour {
 		card.transform.SetParent(heroZone.transform);
 		card.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
+	}
+
+	//animate the enemy drawing the cards 
+	void animateEnemyDraw(int numCards){
+		for(int i = 0; i < numCards; i++){
+			GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
+			string imagePath = "card_game/card_back";
+			Sprite spr = Resources.Load <Sprite> (imagePath);
+			Image cardImage = card.GetComponent<Image>();
+			cardImage.sprite = spr;
+
+			Transform enemyHand = dropZoneForName("EnemyHand").transform;
+			card.transform.SetParent(enemyHand);
+		}
+		
+	}
+
+	//remove a given amount of cards from the enemy's hand (most likey a temporary method)
+	void removeEnemyCardsFromHand(int numCards){
+		Transform enemyHand = dropZoneForName("EnemyHand").transform;
+		int count = 0;
+		foreach(Transform child in enemyHand){
+			if(count < numCards){
+				Destroy(child.gameObject);
+				count++;
+			}else{
+				break;
+			}
+		}
 	}
 
 	//find the card with the given id on the canvas
@@ -1185,6 +1213,22 @@ public class GameLogic : MonoBehaviour {
 			
 		}
 		currentHand = hand;
+
+		updateEnemyHand(challenge);
+	}
+
+	//display the number of cards in the enemy player's hand without revealing them
+	public void updateEnemyHand(GSData challenge){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		int cardCount = dataHandler.getEnemyCardCount(challenge);
+		Transform enemyHand = dropZoneForName("EnemyHand").transform;
+		if(cardCount < enemyHand.childCount){
+			//remove cards from the hand
+			removeEnemyCardsFromHand(enemyHand.childCount - cardCount);
+		}else if(cardCount > enemyHand.childCount){
+			//add more cards to the hand
+			animateEnemyDraw(cardCount - enemyHand.childCount);
+		}
 	}
 
 

@@ -115,6 +115,15 @@ public class GSDataHandler : MonoBehaviour {
 
 	}
 
+	public int getEnemyCardCount(GSData challenge){
+		string playerId = this.transform.GetComponent<GSChallengeHandler>().enemyId;
+
+		GSData ch = challenge.GetGSData("currentHand").GetGSData(playerId);
+		Dictionary<string, object> handDict = (Dictionary<string, object>) ch.BaseData;
+		
+		return handDict.Count;
+	}
+
 
 	//get the number of cards in the player's deck
 	public int getCardStackCount(GSData challenge, string stackName, bool isFriendly){

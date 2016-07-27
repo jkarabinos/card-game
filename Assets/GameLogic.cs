@@ -544,13 +544,18 @@ public class GameLogic : MonoBehaviour {
 
 	public void setAttackable(CardObject card){
 		Debug.Log("attempting to set the card selected");
-		GameObject border = (GameObject)Instantiate(Resources.Load("Border"));
 
-		Sprite spr = Resources.Load <Sprite> ("card_game/selected_border");
-		Image cardImage = border.GetComponent<Image>();
-		cardImage.sprite = spr;
+		GameObject border = getBorderForCard(card);
+		if(border == null){
+			border = (GameObject)Instantiate(Resources.Load("Border"));
 
-		border.transform.SetParent(card.transform);
+			Sprite spr = Resources.Load <Sprite> ("card_game/selected_border");
+			Image cardImage = border.GetComponent<Image>();
+			cardImage.sprite = spr;
+
+			border.transform.SetParent(card.transform);
+		}
+		
 		//selectedHero = card;
 	}
 
@@ -788,6 +793,7 @@ public class GameLogic : MonoBehaviour {
 		card.GetComponent<CardObject>().isDraggable = false;
 		card.transform.SetParent(played.transform);
 		Destroy(card.GetComponent<Draggable>().placeholder);
+		card.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	void animatePurchasePanelPlacement(GameObject card, PurchasePanel purchasePanel){
@@ -803,6 +809,7 @@ public class GameLogic : MonoBehaviour {
 		Destroy(card.GetComponent<Draggable>().heroPlaceholder);
 		Destroy(card.GetComponent<Draggable>().placeholder);
 		card.transform.SetParent(heroZone.transform);
+		card.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
 	}
 
@@ -825,6 +832,9 @@ public class GameLogic : MonoBehaviour {
 
 		//remove any placeholders from the hand or user zone that may still exist
 		//removePlaceholders();
+
+		//allow the user to interact with the cards
+		setUserInteraction(activeUser);
 
 		//set the health values of the players to the starting health
 		updateHealth(challenge);
@@ -852,8 +862,7 @@ public class GameLogic : MonoBehaviour {
 		//draw the hand for the player
 		updateHand(challenge);
 
-		//allow the user to interact with the cards
-		setUserInteraction(activeUser);
+		
 		
 	}
 
@@ -873,7 +882,12 @@ public class GameLogic : MonoBehaviour {
 		currentFriendlyHeroZone = friendlyHeroZoneStats;
 		currentEnemyHeroZone = enemyHeroZoneStats;
 
-		setHeroesAttackable(friendlyHeroZone);
+		if(interactionEnabled){
+			setHeroesAttackable(friendlyHeroZone);
+		}else{
+			removeHeroesSelected(friendlyHeroZone);
+		}
+		
 	}
 
 	//update the individual hero zone 
@@ -916,15 +930,32 @@ public class GameLogic : MonoBehaviour {
 
 	//update the modifiable properties of a hero card
 	public void updateHero(CardObject card, Dictionary< string, Dictionary<string, object> > heroZoneStats){
+		Debug.Log("update the hero with the new number of attacks");
 		card.attacks = Convert.ToInt32( heroZoneStats[card.cardId]["attacks"] );
 	}
 
+	//remove a border from a card if it did not attack
+	public void removeHeroesSelected(HeroZone heroZone){
+		foreach(Transform child in heroZone.transform){
+			CardObject card = child.GetComponent<CardObject>();
+			if(card != null){
+				if(card.attacks > 0){
+					removeSelected(card);
+				}
+			}
+		}
+	}
+
+	//set the green attackable borders on a card at the start of a user's turn
 	public void setHeroesAttackable(HeroZone heroZone){
 		foreach(Transform child in heroZone.transform){
 			CardObject card = child.GetComponent<CardObject>();
 			if(card != null){
 				if(card.attacks > 0){
 					setAttackable(card);
+				}else{
+					//if the hero has no more attacks, remove the border
+					removeSelected(card);
 				}
 			}
 		}

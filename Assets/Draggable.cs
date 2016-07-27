@@ -122,7 +122,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 	public void OnEndDrag(PointerEventData eventData){
 		Debug.Log ("EndDrag");
 
-		Transform canvas = originalParent.parent;
+		Transform canvas = getCanvas();
 		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
 		HeroZone friendlyHeroZone = gameLogic.getFriendlyHeroZone();
 		HeroZone enemyHeroZone = gameLogic.getEnemyHeroZone();
@@ -132,6 +132,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 		if(!cardScript.isDraggable){
 			return;
 		}
+
+
 		
 		if(originalParent == newParent){
 			//if the card will remain in the hand of the user, keep it at the same sibling index
@@ -164,5 +166,15 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 	}
 
 
+	public Transform getCanvas(){
+		GameLogic gameLogic = null;
+		Transform currentParent = this.transform;
+		while(gameLogic == null){
+			currentParent = currentParent.parent;
+			gameLogic = currentParent.GetComponent<GameLogic>();
+		}
+
+		return currentParent;
+	}
 
 }

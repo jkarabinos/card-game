@@ -44,6 +44,9 @@ public class GSChallengeHandler : MonoBehaviour {
 
 	//if the user has pressed the end turn button
 	public void endTurnRequest(){
+		GameLogic gl = this.transform.GetComponent<GameLogic>();
+		gl.interactionEnabled = false;
+
 		new GameSparks.Api.Requests.LogChallengeEventRequest ()
 			.SetChallengeInstanceId (challengeId)
 			.SetEventKey ("action_endTurn2")
@@ -63,6 +66,9 @@ public class GSChallengeHandler : MonoBehaviour {
 
 	//send a request to the server to buy a card
 	public void buyCard(string cardId, string purchasePanelName){
+		GameLogic gl = this.transform.GetComponent<GameLogic>();
+		gl.interactionEnabled = false;
+
 		string panelId = "neutral";
 		if(String.Compare("FriendlyPurchasePanel", purchasePanelName) == 0){
 			panelId = this.transform.GetComponent<GSConnectionManager>().playerId;
@@ -116,6 +122,35 @@ public class GSChallengeHandler : MonoBehaviour {
 					Debug.Log("Error playing card...");
 					card.isDraggable = true;
 					//send the card back to the user's hand after an illegal play attemp
+				}
+		});
+	}
+
+	//send a request to the server to paly the card, the target could be another player, card, or nothing
+	public void attackWithHero(CardObject card, Dictionary<string, object> target){
+		//Debug.Log("did attack player " + isFriendly);
+		GameLogic gl = this.transform.GetComponent<GameLogic>();
+		gl.interactionEnabled = false;
+		Dictionary<string, object> cardDict = gl.currentFriendlyHeroZone[card.cardId];
+
+		//if(!cardDict.ContainsKey("cardId"))
+		//cardDict.Add("cardId", card.cardId);
+		//card.isDraggable = false;
+
+		new GameSparks.Api.Requests.LogChallengeEventRequest ()
+			.SetChallengeInstanceId (challengeId)
+			.SetEventKey ("action_attackWithHero")
+			.SetEventAttribute ("card", dictionaryToJson(cardDict))
+			.SetEventAttribute ("target", dictionaryToJson(target))
+			.Send ((response) => {
+
+				if(!response.HasErrors){
+					Debug.Log("attacked with hero");
+					gl.selectedHero = null;
+					
+				}else{
+					Debug.Log("Error attacking with hero...");
+					gl.selectedHero = null;
 				}
 		});
 	}

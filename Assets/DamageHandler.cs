@@ -78,8 +78,10 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 			CardObject c = this.transform.GetComponent<CardObject>();
 			if(isCastle){
-				didAttackCastle(gameLogic.selectedHero.GetComponent<CardObject>());
-				heroDidAttack(gameLogic);
+				heroAttackedCastle(gameLogic.selectedHero.GetComponent<CardObject>());
+				gameLogic.selectedHero = null;
+				//didAttackCastle(gameLogic.selectedHero.GetComponent<CardObject>());
+				//heroDidAttack(gameLogic);
 			}
 			else if(String.Compare(c.type, "hero") == 0){
 				if(isLegalHeroTarget(c)){
@@ -95,10 +97,21 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 		}
 	}
 
+	void heroAttackedCastle(CardObject hero){
+		Dictionary<string, object> target = new Dictionary<string, object>();
+		target.Add("target", "isPlayer");
+		target.Add("isFriendly", isFriendly);
+
+		Transform canvas = this.getCanvas();
+		GSChallengeHandler ch = canvas.GetComponent<GSChallengeHandler>();
+		ch.attackWithHero(hero, target);
+	}
+
 	void heroDidAttack(GameLogic gameLogic){
-		gameLogic.selectedHero.GetComponent<CardObject>().attacks --;
-		gameLogic.removeSelected(gameLogic.selectedHero.GetComponent<CardObject>());
-		gameLogic.selectedHero = null;
+		//gameLogic.selectedHero.GetComponent<CardObject>().attacks --;
+		//gameLogic.removeSelected(gameLogic.selectedHero.GetComponent<CardObject>());
+		//gameLogic.selectedHero = null;
+		//gameLogic.
 	}
 
 

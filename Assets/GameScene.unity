@@ -1282,6 +1282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMyTurn: 0
+  interactionEnabled: 0
   deck: []
   discardPile: []
   hand: {fileID: 0}

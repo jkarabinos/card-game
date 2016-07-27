@@ -12,6 +12,7 @@ public class HeroAttackHandler : MonoBehaviour, IPointerClickHandler {
 	//public GameObject selectedHero;
 
 	public void OnPointerClick(PointerEventData eventData){
+		Debug.Log("hero attack handler pointer click");
 		
 		CardObject c = this.transform.GetComponent<CardObject>();
 
@@ -19,7 +20,9 @@ public class HeroAttackHandler : MonoBehaviour, IPointerClickHandler {
 		HeroZone possibleHeroZone = this.transform.parent.GetComponent<HeroZone>();
 
 		//if we click on a hero in the friendly hero zone
-		if(String.Compare(c.type, "hero") == 0 && possibleHeroZone != null){
+		if(String.Compare(c.type, "heroCards") == 0 && possibleHeroZone != null){
+			Debug.Log("attempt to attack with hero");
+
 			//if the hero is out of attacks or the hero zone is not friendly
 			if(c.attacks <= 0 || !possibleHeroZone.isFriendly){
 				return;

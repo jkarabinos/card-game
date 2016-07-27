@@ -17,8 +17,15 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 	public void OnPointerEnter(PointerEventData eventData){
 		//Debug.Log("OnPointerEnter");
 
+		Transform tabletop = this.transform.parent;
+		Transform canvas = tabletop.parent;
+		GameLogic gl = canvas.GetComponent<GameLogic>();
+		/*if(!gl.interactionEnabled){
+			return;
+		}*/
+
 		
-		if(selectedCard != null){
+		if(selectedCard != null && gl.interactionEnabled){
 			CardObject c = selectedCard.GetComponent<CardObject>();
 			if(String.Compare(c.type , "heroCards") == 0){
 				Draggable draggable = selectedCard.GetComponent<Draggable>();
@@ -38,7 +45,16 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 
 	public void OnPointerExit(PointerEventData eventData){
 		//Debug.Log("OnPointerExit");
-		if(selectedCard != null){
+
+		Transform tabletop = this.transform.parent;
+		Transform canvas = tabletop.parent;
+		GameLogic gl = canvas.GetComponent<GameLogic>();
+		/*if(!gl.interactionEnabled){
+			return;
+		}*/
+
+
+		if(selectedCard != null && gl.interactionEnabled){
 			Draggable draggable = selectedCard.GetComponent<Draggable>();
 			if(draggable.inHeroZone == true){
 				draggable.inHeroZone = false;
@@ -47,7 +63,7 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		}
 		
 
-		Debug.Log("the pointer has exited");
+		//Debug.Log("the pointer has exited");
 
 		
 	}
@@ -68,6 +84,11 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 		Transform tabletop = this.transform.parent;
 		DropZone dropZone = tabletop.GetComponent<DropZone>();
 
+		Transform canvas = tabletop.parent;
+		GameLogic gl = canvas.GetComponent<GameLogic>();
+		if(!gl.interactionEnabled){
+			return;
+		}
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		if(c != null){
@@ -75,9 +96,6 @@ public class HeroZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			if(String.Compare(c.type, "heroCards") == 0){
 				if(isFriendly == true){
 					if(numHeroes < 5){
-						
-						Transform canvas = tabletop.parent;
-						GameLogic gl = canvas.GetComponent<GameLogic>();
 
 						gl.playHero(c, d.heroPlaceholder.transform.GetSiblingIndex());
 						//Destroy(heroPlaceholder)

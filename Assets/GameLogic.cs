@@ -925,10 +925,14 @@ public class GameLogic : MonoBehaviour {
 			currentMonsterZones = new Dictionary < string, Dictionary<string, object> >();
 			currentMonsterZones["neutral1"] = getInitialMonsterDict();
 			currentMonsterZones["neutral2"] = getInitialMonsterDict();
+			currentMonsterZones[this.transform.GetComponent<GSConnectionManager>().playerId] = getInitialMonsterDict();
+			currentMonsterZones[this.transform.GetComponent<GSChallengeHandler>().enemyId] = getInitialMonsterDict();
 		}
 
 		updateMonsterZone(challenge, "NeutralMonsterZone1", "neutral1");
 		updateMonsterZone(challenge, "NeutralMonsterZone2", "neutral2");
+		updateMonsterZone(challenge, "FriendlyMonsterZone", this.transform.GetComponent<GSConnectionManager>().playerId);
+		updateMonsterZone(challenge, "EnemyMonsterZone", this.transform.GetComponent<GSChallengeHandler>().enemyId);
 	}
 
 	public Dictionary<string, object> getInitialMonsterDict(){

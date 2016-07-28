@@ -56,6 +56,14 @@ public class CardObject : MonoBehaviour {
 	//the number of attacks a hero card can make
 	public int attacks;
 
+	//if the card has a trigger ability (something that triggers when some other action takes place)
+	public bool activeTrigger;
+
+	//the kind of cards that the card can target (monsterCards, heroCards, nothing, everything)
+	public string canTarget;
+
+	//if the card has a special ability when played (note this is a one time effect, different than a lasting trigger)
+	public bool hasAbility;
 
 
 }

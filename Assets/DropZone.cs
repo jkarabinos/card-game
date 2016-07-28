@@ -31,18 +31,12 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			return;
 		}
 
-
 		CardObject c = eventData.pointerDrag.GetComponent<CardObject>();
 		if(c == null){
 			return;
 		}
 
-		if(!c.isDraggable || String.Compare(c.type, "heroCards") == 0 || String.Compare(c.type, "attackCards") == 0){
-			return;
-		}
-
-		//the user is not allowed to play cards onto the played this turn zone
-		if(String.Compare(zoneName, "PlayedThisTurn") == 0){
+		if(!c.isDraggable || String.Compare(c.type, "heroCards") == 0 || String.Compare(c.canTarget, "nothing") != 0){
 			return;
 		}
 
@@ -60,17 +54,6 @@ public class DropZone : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
 			if(gameLogic.totalActions <= 0){
 				return;
 			} 
-			//the user must target a legal target if the action can do damage
-			if(c.damage > 0){
-				return;
-			}
-		}
-
-		if(String.Compare(c.type, "treasureCards") == 0){
-			//the user must target a legal target if the action can do damage
-			if(c.damage > 0){
-				return;
-			}
 		}
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();

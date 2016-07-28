@@ -34,24 +34,39 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		CardObject cardObject = d.gameObject.GetComponent<CardObject>();
-		if(cardObject.damage > 0){
+		if(String.Compare(cardObject.canTarget, "nothing") != 0){
+			//if the card can target something
 
-			//send the card to the played this turn zone
-			Transform hand = d.originalParent;
-			DropZone dropZone = hand.GetComponent<DropZone>();
-			d.newParent = dropZone.dropZoneForName("FriendlyPlayField").transform;
+			
 
 
 			//if the attack is targeting a card, perfom the necessary operations
-			if(!isCastle){
-				didAttackCard(cardObject);
-			}else{
+			if(!isCastle ){
+				if(String.Compare(cardObject.canTarget, this.transform.GetComponent<CardObject>().type) == 0 || 
+					String.Compare(cardObject.canTarget, "everything") == 0){
+					//if the card can target the type of card it is attempting to target
+
+					//check for odd card rules (think finishing blow)
+					if(!isLegalTarget(cardObject)){
+						return;
+					}
+
+					//send the card to the played this turn zone
+					Transform hand = d.originalParent;
+					DropZone dropZone = hand.GetComponent<DropZone>();
+					d.newParent = dropZone.dropZoneForName("FriendlyPlayField").transform;
+
+					didAttackCard(cardObject);
+				}
+			}else if(isCastle && String.Compare(cardObject.canTarget, "everything") == 0){
+				Transform hand = d.originalParent;
+				DropZone dropZone = hand.GetComponent<DropZone>();
+				d.newParent = dropZone.dropZoneForName("FriendlyPlayField").transform;
+
 				didAttackCastle(cardObject);
 			}
 			
-			//Transform canvas = getCanvas();
-			//GameLogic gameLogic = canvas.GetComponent<GameLogic>();
-			//gameLogic.playCard(cardObject);
+		
 
 		}else{
 			//for a card that does not do damage but is attempting to be played
@@ -94,6 +109,25 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 				}
 			}
 		}
+	}
+
+
+	bool isLegalTarget(CardObject attackCard){
+		CardObject attackedCard = this.transform.GetComponent<CardObject>();
+
+		//for finishing blow
+		if(String.Compare("FinishingBlow", attackCard.name) == 0){
+			Debug.Log("playing a fin blow");
+			if(String.Compare(attackedCard.type, "monsterCards") == 0){
+				Debug.Log("on a monster");
+				if(attackedCard.health <= 4){
+					Debug.Log("the health looks good");
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
 	}
 
 	void heroAttackedCastle(CardObject hero){
@@ -187,6 +221,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 
 	public void didAttackCard(CardObject attackCard){
+		Debug.Log("DID ATTACK CARD");
 		/*
 		int damage = 0;
 		if(String.Compare(attackCard.type, "hero") == 0){
@@ -220,6 +255,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 		//the user has targeted a hero or monster with an attack coming from something other than a hero
 		CardObject c = this.transform.GetComponent<CardObject>();
+		Debug.Log("the card is of type " + c.type);
 
 		Dictionary<string, object> target = new Dictionary<string, object>();
 
@@ -237,6 +273,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			target.Add("isFriendly", hz.isFriendly);
 		}
 		else if(String.Compare(c.type, "monsterCards") == 0){
+
 			target = gameLogic.currentMonsterZones[c.cardId];
 		}
 		target.Add("target", "isCard");
@@ -260,40 +297,6 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 
 
-
-	public void removeMonster(Transform deadMonster){
-		gainReward(deadMonster);
-		//deadMonster.SetParent(null);
-		Destroy(deadMonster.gameObject);
-	}
-
-
-	//gain the necessary reward for the monster that has been killed
-	void gainReward(Transform deadMonster){
-
-		Transform canvas = this.transform.parent.parent;
-		GameLogic gameLogic = canvas.GetComponent<GameLogic>();
-		CardObject cardObject = deadMonster.GetComponent<CardObject>();
-
-		//for a silverback gorilla
-		if(String.Compare(cardObject.cardName, "SilverbackGorilla") == 0){
-			//gain a silver
-			GameObject card = gameLogic.createCardForId(1, gameLogic.globalDict);
-			gameLogic.gainCard(card, "NeutralPurchasePanel");
-		}
-		//for a rabid wolves
-		else if(String.Compare(cardObject.cardName, "RabidWolves") == 0){
-			//gain an arrow
-			GameObject card = gameLogic.createCardForId(3, gameLogic.globalDict);
-			gameLogic.gainCard(card, "NeutralPurchasePanel");
-		}
-		//for an entrepreneurial ogre
-		else if(String.Compare(cardObject.cardName, "EntrepreneurialOgre") == 0){
-			//add two coins to the user's total coin for the turn
-			gameLogic.updateMoneyCounter(2);
-		}
-
-
-	}
+	
 
 }

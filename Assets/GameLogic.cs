@@ -18,6 +18,8 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, object> > currentFriendlyHeroZone = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentEnemyHeroZone = new Dictionary< string, Dictionary<string, object> >();
 
+	public Dictionary<string, Dictionary<string, object> > currentMonsterZones;
+
 
 	public bool isMyTurn;
 	public bool interactionEnabled = false;
@@ -40,6 +42,8 @@ public class GameLogic : MonoBehaviour {
 
 	//the list of cards that the user has chosen to include in their deck
 	public List<int> userBuild;
+
+
 	
 	public void purchaseCard (string cardId, string purchasePanelName){
 		//attempt to purchase the card with a server call
@@ -618,6 +622,19 @@ public class GameLogic : MonoBehaviour {
 		return null;
 	}
 
+	//returns a MonsterZone script for the given name
+	public MonsterZone monsterZoneForName(string name){
+		foreach(Transform child in this.transform){
+			MonsterZone monsterZone = child.GetComponent<MonsterZone>();
+			if (monsterZone != null){
+				if (String.Compare (name, monsterZone.monsterZoneName) == 0){
+					return monsterZone;
+				}
+			}
+		}
+		return null;
+	}
+
 	//returns a purchase panel for the given name
 	public PurchasePanel purchasePanelForName(string name){
 		foreach(Transform child in this.transform){
@@ -828,6 +845,11 @@ public class GameLogic : MonoBehaviour {
 		
 	}
 
+	//spawn the given monster on the given zone
+	void animateMonsterToZone(GameObject card, MonsterZone monsterZone){
+		card.transform.SetParent(monsterZone.transform);
+	}
+
 	//remove a given amount of cards from the enemy's hand (most likey a temporary method)
 	void removeEnemyCardsFromHand(int numCards){
 		Transform enemyHand = dropZoneForName("EnemyHand").transform;
@@ -875,6 +897,7 @@ public class GameLogic : MonoBehaviour {
 		updateHeroZones(challenge);
 
 		//initialize the monster zone for the player
+		updateMonsterZones(challenge);
 
 		//initialize the purchase panels for the player
 		updatePurchasePanels(challenge);
@@ -893,6 +916,71 @@ public class GameLogic : MonoBehaviour {
 
 		
 		
+	}
+
+	//update all of the monster zones with their new monsters and updated stats of existing monsters
+	public void updateMonsterZones(GSData challenge){
+		if(currentMonsterZones == null){
+			//initialize the local monster zone data with nonexistent monsters to simplify the next steps
+			currentMonsterZones = new Dictionary < string, Dictionary<string, object> >();
+			currentMonsterZones["neutral1"] = getInitialMonsterDict();
+			currentMonsterZones["neutral2"] = getInitialMonsterDict();
+		}
+
+		updateMonsterZone(challenge, "NeutralMonsterZone1", "neutral1");
+		updateMonsterZone(challenge, "NeutralMonsterZone2", "neutral2");
+	}
+
+	public Dictionary<string, object> getInitialMonsterDict(){
+		Dictionary <string, object> monsterDict = new Dictionary<string, object>();
+		monsterDict.Add("name", "nonexistent");
+		return monsterDict;
+	}
+
+	//update an individual monster zone
+	public void updateMonsterZone(GSData challenge, string localZoneName, string serverZoneName){
+		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
+		MonsterZone monsterZone = monsterZoneForName(localZoneName);
+
+		Dictionary<string, object> monster = dataHandler.getMonster(challenge, serverZoneName);
+
+
+		if(String.Compare((string) monster["name"], "nonexistent") == 0){
+			if(String.Compare((string) currentMonsterZones[serverZoneName]["name"], "nonexistent") != 0){
+				//if we need to remove a slain monster from the zone without adding a new one
+				removeMonster(monsterZone);
+			}
+		}
+
+		else if(String.Compare((string) currentMonsterZones[serverZoneName]["name"], (string) monster["name"]) != 0){
+			//if one monster has died and we need to replace it with another
+			if(String.Compare((string) currentMonsterZones[serverZoneName]["name"], "nonexistent") !=0){
+				removeMonster(monsterZone);
+			}
+			addMonsterToZone(monster, monsterZone, serverZoneName);
+		}
+
+		else{
+			//upadte the living monster
+		}
+
+		currentMonsterZones[serverZoneName] = monster;
+	}
+
+	//remove the current monster from the zone
+	public void removeMonster(MonsterZone monsterZone){
+		foreach(Transform child in monsterZone.transform){
+			CardObject c = child.GetComponent<CardObject>();
+			if(c != null){
+				Destroy(c.gameObject);
+			}
+		}
+	}
+
+	//add a monster to the zone by creating a new card
+	public void addMonsterToZone(Dictionary<string, object> monster, MonsterZone monsterZone, string serverZoneName){
+		GameObject card = createCardForStats(monster, serverZoneName);
+		animateMonsterToZone(card, monsterZone);
 	}
 
 	//sync the hero zones with the server's

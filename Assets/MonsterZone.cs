@@ -7,6 +7,8 @@ using System;
 
 public class MonsterZone : MonoBehaviour {
 
+	public string monsterZoneName;
+
 	public void initializeMonsterZone(GameLogic gameLogic, List<int> listOfMonsters){
 		Debug.Log("MonsterPanel Operational!");
 		

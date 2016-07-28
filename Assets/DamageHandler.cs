@@ -236,6 +236,9 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 			}
 			target.Add("isFriendly", hz.isFriendly);
 		}
+		else if(String.Compare(c.type, "monsterCards") == 0){
+			target = gameLogic.currentMonsterZones[c.cardId];
+		}
 		target.Add("target", "isCard");
 		//target.Add("isFriendly", isFriendly);
 		

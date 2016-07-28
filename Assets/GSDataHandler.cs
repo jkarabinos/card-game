@@ -124,6 +124,11 @@ public class GSDataHandler : MonoBehaviour {
 		return handDict.Count;
 	}
 
+	//get a monster for the given zone name
+	public Dictionary<string, object> getMonster(GSData challenge, string zoneName){
+		GSData monsterZone = challenge.GetGSData("monsterZone").GetGSData(zoneName);
+		return (Dictionary<string, object>) monsterZone.BaseData;
+	}
 
 	//get the number of cards in the player's deck
 	public int getCardStackCount(GSData challenge, string stackName, bool isFriendly){

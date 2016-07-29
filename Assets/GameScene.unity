@@ -199,6 +199,7 @@ GameObject:
   - 114: {fileID: 270386905}
   - 114: {fileID: 270386904}
   - 114: {fileID: 270386903}
+  - 114: {fileID: 270386907}
   m_Layer: 5
   m_Name: FriendlyPurchasePanel
   m_TagString: Untagged
@@ -255,7 +256,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 25, y: 35}
+  m_CellSize: {x: 80, y: 112}
   m_Spacing: {x: 3, y: 3}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -292,6 +293,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 270386901}
+--- !u!114 &270386907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 270386901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1741964061, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 0
 --- !u!1 &345524056
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,7 +1453,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -1627,19 +1641,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 228
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -43.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 87
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_AnchorMin.x
@@ -1647,7 +1661,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_AnchorMax.x
@@ -1655,7 +1669,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400322, guid: 64a89f450481d45749d162ef1881b29d, type: 2}
       propertyPath: m_Pivot.x
@@ -1770,7 +1784,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 25, y: 35}
+  m_CellSize: {x: 40, y: 56}
   m_Spacing: {x: 3, y: 3}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -2254,8 +2268,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 314.5, y: -193}
-  m_SizeDelta: {x: 456, y: 87}
+  m_AnchoredPosition: {x: 314.5, y: -193.1}
+  m_SizeDelta: {x: 456, y: 87.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1537636064
 MonoBehaviour:

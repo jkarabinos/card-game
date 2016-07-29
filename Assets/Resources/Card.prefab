@@ -37,6 +37,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCastle: 0
+  isFriendly: 0
 --- !u!114 &11414282
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -100,10 +101,10 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: 100
-  m_PreferredHeight: 140
-  m_FlexibleWidth: 0
-  m_FlexibleHeight: 0
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: 1
+  m_FlexibleHeight: 1
 --- !u!114 &11465786
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,6 +139,7 @@ MonoBehaviour:
   originalParent: {fileID: 0}
   newParent: {fileID: 0}
   inHeroZone: 0
+  placeholder: {fileID: 0}
   heroPlaceholder: {fileID: 0}
 --- !u!114 &11489078
 MonoBehaviour:
@@ -150,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39770749f74cb43d890beba741f62a2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cardId: 
   id: 0
   typeOfCard: 5
   value: 0
@@ -166,6 +169,9 @@ MonoBehaviour:
   rarity: 
   pileCount: 0
   attacks: 0
+  activeTrigger: 0
+  canTarget: 
+  hasAbility: 0
 --- !u!222 &22250458
 CanvasRenderer:
   m_ObjectHideFlags: 1

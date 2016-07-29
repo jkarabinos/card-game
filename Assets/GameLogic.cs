@@ -15,6 +15,7 @@ public class GameLogic : MonoBehaviour {
 	public Dictionary< string, Dictionary<string, object> > currentFriendlyPlayField = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentEnemyPlayField = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentNeutralPurchasePanel = new Dictionary< string, Dictionary<string, object> >();
+	public Dictionary< string, Dictionary<string, object> > currentFriendlyPurchasePanel = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentFriendlyHeroZone = new Dictionary< string, Dictionary<string, object> >();
 	public Dictionary< string, Dictionary<string, object> > currentEnemyHeroZone = new Dictionary< string, Dictionary<string, object> >();
 
@@ -657,8 +658,24 @@ public class GameLogic : MonoBehaviour {
 	public void updatePurchasePanels(GSData challenge){
 		GSDataHandler dataHandler = this.transform.GetComponent<GSDataHandler>();
 		Dictionary< string, Dictionary<string, object> > purchasePanelStats = dataHandler.getPurchasePanel(challenge, 0);
+		Dictionary< string, Dictionary<string, object> > friendlyPurchasePanelStats = dataHandler.getPurchasePanel(challenge, 1);
 
-		PurchasePanel purchasePanel = purchasePanelForName("NeutralPurchasePanel");
+		PurchasePanel neutralPurchasePanel = purchasePanelForName("NeutralPurchasePanel");
+		PurchasePanel friendlyPurchasePanel = purchasePanelForName("FriendlyPurchasePanel");
+
+		updatePurchasePanel(purchasePanelStats, neutralPurchasePanel, currentNeutralPurchasePanel);
+		updatePurchasePanel(friendlyPurchasePanelStats, friendlyPurchasePanel, currentFriendlyPurchasePanel);
+		
+		//store the server play field locally
+		currentNeutralPurchasePanel = purchasePanelStats;
+		currentFriendlyPurchasePanel = friendlyPurchasePanelStats;
+	}
+
+	//update one of the purchase panels
+	public void updatePurchasePanel(Dictionary< string, Dictionary<string, object> > purchasePanelStats, PurchasePanel purchasePanel,
+	Dictionary< string, Dictionary<string, object> > localPurchasePanel){
+
+
 		//remove all the cards that are no longer on the purchase panel
 		foreach(Transform child in purchasePanel.transform){
 			CardObject card = child.GetComponent<CardObject>();
@@ -673,7 +690,7 @@ public class GameLogic : MonoBehaviour {
 
 		foreach(string cardKey in purchasePanelStats.Keys){
 			//if the card is has not yet been rendered in the user's play field
-			if(!currentNeutralPurchasePanel.ContainsKey(cardKey)){
+			if(!localPurchasePanel.ContainsKey(cardKey)){
 				//find the card, at this point it will be a direct child of the canvas
 				Dictionary<string, object> cardStats = purchasePanelStats[cardKey];
 				GameObject card = createCardForStats(cardStats, cardKey);
@@ -682,8 +699,6 @@ public class GameLogic : MonoBehaviour {
 
 			
 		}
-		//store the server play field locally
-		currentNeutralPurchasePanel = purchasePanelStats;
 	}
 
 	//allow the user to interact with the cards if it is his turn

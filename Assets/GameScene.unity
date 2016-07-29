@@ -427,7 +427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9d4d26abf514e9f971d79458de54af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterZoneName: NeutralMonsterZone1
+  monsterZoneName: NeutralMonsterZone2
 --- !u!114 &382016912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2738,7 +2738,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9d4d26abf514e9f971d79458de54af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monsterZoneName: NeutralMonsterZone2
+  monsterZoneName: NeutralMonsterZone1
 --- !u!114 &1681621881
 MonoBehaviour:
   m_ObjectHideFlags: 0

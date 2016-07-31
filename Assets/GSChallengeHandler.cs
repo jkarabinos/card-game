@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Collections;
 using GameSparks;
 using GameSparks.Core;
 using GameSparks.Platforms;
@@ -164,22 +165,26 @@ public class GSChallengeHandler : MonoBehaviour {
     	string[] elements = new string[dict.Count];
     	int count = 0;
     	foreach(string key in dict.Keys){
-    		object value = dict[key];
 
-    		if( value.GetType().Equals(typeof(System.String)) ){
-    			value = "\"" + value + "\"";
-    		}
-    		if( value.GetType().Equals(typeof(System.Boolean)) ){
-    			if((bool) value){
-    				value = "true";
-    			}else{
-    				value = "false";
-    				Debug.Log("we have a false entry");
-    			}
-    		}
-    		json =  "\"" + key + "\" : " + value;
-    		elements[count] = json;
-    		count++;
+    		object value = dict[key];
+    		if(!(value is IList && value.GetType().IsGenericType)) {
+	    		
+
+	    		if( value.GetType().Equals(typeof(System.String)) ){
+	    			value = "\"" + value + "\"";
+	    		}
+	    		if( value.GetType().Equals(typeof(System.Boolean)) ){
+	    			if((bool) value){
+	    				value = "true";
+	    			}else{
+	    				value = "false";
+	    				Debug.Log("we have a false entry");
+	    			}
+	    		}
+	    		json =  "\"" + key + "\" : " + value;
+	    		elements[count] = json;
+	    		count++;
+	    	}
     	}
     	string fullJson = string.Join(",", elements);
     	fullJson = "{" + fullJson + "}";

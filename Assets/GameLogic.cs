@@ -128,7 +128,7 @@ public class GameLogic : MonoBehaviour {
 		Debug.Log("the type of value is " + stats["value"].GetType());
 
 		//set the basic properties of the card
-		GameObject card = (GameObject)Instantiate(Resources.Load("Card2"));
+		GameObject card = (GameObject)Instantiate(Resources.Load("Card3"));
 
 		var cardScript = card.GetComponent<CardObject>();
 		cardScript.value = Convert.ToInt32( stats["value"] );

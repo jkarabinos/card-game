@@ -128,7 +128,7 @@ public class GameLogic : MonoBehaviour {
 		Debug.Log("the type of value is " + stats["value"].GetType());
 
 		//set the basic properties of the card
-		GameObject card = (GameObject)Instantiate(Resources.Load("Card"));
+		GameObject card = (GameObject)Instantiate(Resources.Load("Card2"));
 
 		var cardScript = card.GetComponent<CardObject>();
 		cardScript.value = Convert.ToInt32( stats["value"] );
@@ -147,14 +147,28 @@ public class GameLogic : MonoBehaviour {
 		cardScript.activeTrigger = (bool) stats["activeTrigger"];
 		cardScript.canTarget = (string) stats["canTarget"];
 
+		setCardText(card, "Cost", cardScript.cost.ToString());
+
 		if(String.Compare(cardScript.type, "monsterCards") == 0 
 		|| String.Compare(cardScript.type, "heroCards") == 0){
 			cardScript.health = Convert.ToInt32( stats["health"] );
 			cardScript.power = Convert.ToInt32( stats["power"] );
+			setCardText(card, "Power", cardScript.power.ToString());
+			setCardText(card, "Health", cardScript.health.ToString());
+
 			if(String.Compare(cardScript.type, "heroCards") == 0){
 				cardScript.attacks = Convert.ToInt32( stats["attacks"] );
+			}else{
+				//monsters don't have a cost
+				setCardText(card, "Cost", "");
 			}
+		}else{
+			//for cards that don't have power and health
+			setCardText(card, "Power", "");
+			setCardText(card, "Health", "");
 		}
+
+		
 
 		//set the appropriate image of the card
 		string imagePath = (string) stats["imagePath"];
@@ -165,6 +179,17 @@ public class GameLogic : MonoBehaviour {
 		return card;
 	}
 
+	//set a changable value of text on the card
+	public void setCardText(GameObject card, string textName, string value){
+		foreach(Transform child in card.transform){
+			Text textBox = child.GetComponent<Text>();
+			if(textBox){
+				if(String.Compare(textBox.name, textName) == 0){
+					textBox.text = value;
+				}
+			}
+		}
+	}
 
 	public GameObject getBorderForCard(CardObject card){
 		foreach(Transform child in card.transform){
@@ -200,7 +225,7 @@ public class GameLogic : MonoBehaviour {
 			Image cardImage = border.GetComponent<Image>();
 			cardImage.sprite = spr;
 
-			border.transform.SetParent(card.transform);
+			border.transform.SetParent(card.transform, false);
 		}
 		
 		//selectedHero = card;
@@ -359,7 +384,7 @@ public class GameLogic : MonoBehaviour {
 	void animateDraw(GameObject card){
 		DropZone hand = dropZoneForName("Hand");
 		card.GetComponent<CardObject>().isDraggable = true;
-		card.transform.SetParent(hand.transform);
+		card.transform.SetParent(hand.transform, false);
 
 	}
 
@@ -367,13 +392,13 @@ public class GameLogic : MonoBehaviour {
 	void animatePlay(GameObject card, DropZone playField){
 		//DropZone played = dropZoneForName("FriendlyPlayField");
 		card.GetComponent<CardObject>().isDraggable = false;
-		card.transform.SetParent(playField.transform);
+		card.transform.SetParent(playField.transform, false);
 		Destroy(card.GetComponent<Draggable>().placeholder);
 		card.GetComponent<CanvasGroup>().blocksRaycasts = true;
 	}
 
 	void animatePurchasePanelPlacement(GameObject card, PurchasePanel purchasePanel){
-		card.transform.SetParent(purchasePanel.transform);
+		card.transform.SetParent(purchasePanel.transform, false);
 		CardObject cardObject = card.GetComponent<CardObject>();
 		cardObject.isPurchasable = true;
 		cardObject.pileCount = 100;
@@ -384,7 +409,7 @@ public class GameLogic : MonoBehaviour {
 		card.GetComponent<CardObject>().isDraggable = false;
 		Destroy(card.GetComponent<Draggable>().heroPlaceholder);
 		Destroy(card.GetComponent<Draggable>().placeholder);
-		card.transform.SetParent(heroZone.transform);
+		card.transform.SetParent(heroZone.transform, false);
 		card.GetComponent<CanvasGroup>().blocksRaycasts = true;
 
 	}
@@ -399,14 +424,14 @@ public class GameLogic : MonoBehaviour {
 			cardImage.sprite = spr;
 
 			Transform enemyHand = dropZoneForName("EnemyHand").transform;
-			card.transform.SetParent(enemyHand);
+			card.transform.SetParent(enemyHand, false);
 		}
 		
 	}
 
 	//spawn the given monster on the given zone
 	void animateMonsterToZone(GameObject card, MonsterZone monsterZone){
-		card.transform.SetParent(monsterZone.transform);
+		card.transform.SetParent(monsterZone.transform, false);
 	}
 
 	//remove a given amount of cards from the enemy's hand (most likey a temporary method)
@@ -540,6 +565,8 @@ public class GameLogic : MonoBehaviour {
 
 	public void updateMonster(CardObject card, Dictionary<string, object> monsterStats){
 		card.health =  Convert.ToInt32( monsterStats["health"] ); 
+		//setCardText(card, "Power", cardScript.power.ToString());
+		setCardText(card.gameObject, "Health", card.health.ToString());
 	}
 
 	//remove the current monster from the zone
@@ -622,9 +649,13 @@ public class GameLogic : MonoBehaviour {
 
 	//update the modifiable properties of a hero card
 	public void updateHero(CardObject card, Dictionary< string, Dictionary<string, object> > heroZoneStats){
-		Debug.Log("update the hero with the new number of attacks");
+		//Debug.Log("update the hero with the new number of attacks");
 		card.attacks = Convert.ToInt32( heroZoneStats[card.cardId]["attacks"] );
 		card.health = Convert.ToInt32( heroZoneStats[card.cardId]["health"] );
+		card.power = Convert.ToInt32( heroZoneStats[card.cardId]["power"] );
+
+		setCardText(card.gameObject, "Health", card.health.ToString());
+		setCardText(card.gameObject, "Power", card.power.ToString());
 	}
 
 	//remove a border from a card if it did not attack
@@ -683,6 +714,8 @@ public class GameLogic : MonoBehaviour {
 				if(!purchasePanelStats.ContainsKey(card.cardId)){
 					//Debug.Log("animate a card in the hand to the discard");
 					Destroy(card.gameObject);
+				}else{
+					updatePurchasableCard(card, purchasePanelStats[card.cardId]);
 				}
 			}
 		}
@@ -699,6 +732,12 @@ public class GameLogic : MonoBehaviour {
 
 			
 		}
+	}
+
+	//update the cost of the card if it has changed
+	public void updatePurchasableCard(CardObject card, Dictionary<string, object> cardStats){
+		card.cost =  Convert.ToInt32( cardStats["cost"] ); 
+		setCardText(card.gameObject, "Cost", card.cost.ToString());
 	}
 
 	//allow the user to interact with the cards if it is his turn

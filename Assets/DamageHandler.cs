@@ -34,7 +34,7 @@ public class DamageHandler : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
 		Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
 		CardObject cardObject = d.gameObject.GetComponent<CardObject>();
-		if(String.Compare(cardObject.canTarget, "nothing") != 0){
+		if(String.Compare(cardObject.canTarget, "nothing") != 0 && String.Compare(cardObject.type, "heroCards") != 0){
 			//if the card can target something
 
 			
